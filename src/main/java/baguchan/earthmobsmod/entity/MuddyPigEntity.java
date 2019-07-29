@@ -1,13 +1,11 @@
 package baguchan.earthmobsmod.entity;
 
-import baguchan.earthmobsmod.handler.EarthEntity;
+import baguchan.earthmobsmod.handler.EarthEntitys;
 import com.google.common.collect.Maps;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -172,7 +170,7 @@ public class MuddyPigEntity extends PigEntity {
                     return true;
                 }
             } else if (item instanceof ShearsItem) {
-                if (this.getHasFlower()) {
+                if (this.getHasFlower() && this.isDry()) {
 
                     if (!this.world.isRemote) {
                         this.setHasFlower(false);
@@ -243,7 +241,7 @@ public class MuddyPigEntity extends PigEntity {
                 dryTime = 0;
             }
 
-            if (this.isInWaterRainOrBubbleColumn() && !this.isWet && !isShaking) {
+            if (this.isInWaterRainOrBubbleColumn() && !this.isWet && !isShaking && !this.isDry()) {
                 this.isWet = true;
                 this.isShaking = true;
                 this.timeIsShaking = 0.0F;
@@ -258,6 +256,7 @@ public class MuddyPigEntity extends PigEntity {
                 if (this.prevTimeIsShaking >= 2.0F) {
                     if (this.isWet) {
                         this.setDry(true);
+                        this.setHasFlower(false);
                     }
                     this.isWet = false;
                     this.isShaking = false;
@@ -336,7 +335,7 @@ public class MuddyPigEntity extends PigEntity {
 
     @Override
     public MuddyPigEntity createChild(AgeableEntity ageable) {
-        return EarthEntity.MUDDYPIG.create(this.world);
+        return EarthEntitys.MUDDYPIG.create(this.world);
     }
 
     @Override

@@ -1,23 +1,26 @@
 package baguchan.earthmobsmod;
 
-import baguchan.client.EarthRender;
-import baguchan.earthmobsmod.handler.EarthEntity;
+import baguchan.earthmobsmod.client.EarthRender;
+import baguchan.earthmobsmod.handler.EarthBlocks;
+import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.handler.EarthFluids;
+import baguchan.earthmobsmod.handler.EarthItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.*;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("earthmobsmod")
@@ -41,11 +44,16 @@ public class EarthMobsMod
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::onBlockRegistry);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onItemRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::onEntityRegistry);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Fluid.class, this::onFluidRegistry);
+
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        EarthEntitys.spawnEntity();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -61,21 +69,34 @@ public class EarthMobsMod
         EarthRender.entityRender();
     }
 
-    public void onLoadComplete(FMLLoadCompleteEvent event) {
-
-        EarthEntity.spawnEntity();
-
-    }
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
 
     }
 
-    @SubscribeEvent
+    public void onBlockRegistry(final RegistryEvent.Register<Block> event) {
+        IForgeRegistry<Block> registry = event.getRegistry();
+
+        EarthBlocks.registerBlocks(registry);
+    }
+
+    public void onItemRegistry(final RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> registry = event.getRegistry();
+
+        EarthBlocks.registerItemBlocks(registry);
+        EarthItems.registerItems(registry);
+    }
+
     public void onEntityRegistry(final RegistryEvent.Register<EntityType<?>> event) {
         IForgeRegistry<EntityType<?>> registry = event.getRegistry();
 
-        EarthEntity.registerEntity(registry);
+        EarthEntitys.registerEntity(registry);
+    }
+
+    public void onFluidRegistry(final RegistryEvent.Register<Fluid> event) {
+        IForgeRegistry<Fluid> registry = event.getRegistry();
+
+        EarthFluids.register(registry);
     }
 }

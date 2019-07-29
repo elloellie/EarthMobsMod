@@ -1,0 +1,8 @@
+{
+  "parent": "block/template_farmland",
+  "textures": {
+    "particle": "earthmobsmod:blocks/mud",
+    "dirt": "earthmobsmod:blocks/mud",
+    "top": "earthmobsmod:blocks/mud"
+  }
+}

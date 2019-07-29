@@ -1,10 +1,9 @@
-package baguchan.client.model;
+package baguchan.earthmobsmod.client.model;
 
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
 /**

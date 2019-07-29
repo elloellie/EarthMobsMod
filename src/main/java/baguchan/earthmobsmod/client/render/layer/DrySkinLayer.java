@@ -1,23 +1,17 @@
-package baguchan.client.render.layer;
+package baguchan.earthmobsmod.client.render.layer;
 
-import baguchan.client.model.ModelMuddyPig;
-import baguchan.client.render.MuddyPigRender;
 import baguchan.earthmobsmod.EarthMobsMod;
+import baguchan.earthmobsmod.client.model.ModelMuddyPig;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DrySkinLayer extends LayerRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> {
-    private static final ResourceLocation DRY_MADSKIN = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/pig_dry_mud.png");
+    private static final ResourceLocation DRY_MADSKIN = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/pig_dry_mud.png");
 
     public DrySkinLayer(IEntityRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> p_i50921_1_) {
         super(p_i50921_1_);
