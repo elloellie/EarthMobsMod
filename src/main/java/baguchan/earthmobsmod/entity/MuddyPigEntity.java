@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -29,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class MuddyPigEntity extends PigEntity {
+public class MuddyPigEntity extends PigEntity implements net.minecraftforge.common.IShearable {
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(Items.CARROT, Items.POTATO, Items.BEETROOT);
     private static final DataParameter<Integer> FLOWER_COLOR = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> HAS_FLOWER = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.BOOLEAN);
@@ -169,29 +168,27 @@ public class MuddyPigEntity extends PigEntity {
 
                     return true;
                 }
-            } else if (item instanceof ShearsItem) {
-                if (this.getHasFlower() && this.isDry()) {
-
-                    if (!this.world.isRemote) {
-                        this.setHasFlower(false);
-                        if (!player.abilities.isCreativeMode) {
-                            itemstack.damageItem(1, player, (p_213613_1_) -> {
-                                p_213613_1_.sendBreakAnimation(hand);
-                            });
-                        }
-
-                        ItemEntity itementity = this.entityDropItem(DYE_BY_COLOR.get(this.getFlowerColor()), 1);
-                        if (itementity != null) {
-                            itementity.setMotion(itementity.getMotion().add((double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F), (double) (this.rand.nextFloat() * 0.05F), (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F)));
-                        }
-                    }
-                    this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-                }
             } else if (item instanceof SaddleItem) {
                 return false;
             }
         }
         return super.processInteract(player, hand);
+    }
+
+    @Override
+    public boolean isShearable(ItemStack item, net.minecraft.world.IWorldReader world, BlockPos pos) {
+        return this.getHasFlower() && !this.isDry();
+    }
+
+    @Override
+    public java.util.List<ItemStack> onSheared(ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
+        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
+        if (!this.world.isRemote) {
+            this.setHasFlower(false);
+            ret.add(new ItemStack(DYE_BY_COLOR.get(this.getFlowerColor())));
+        }
+        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+        return ret;
     }
 
     @Override

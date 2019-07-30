@@ -2,8 +2,10 @@ package baguchan.earthmobsmod.client;
 
 
 import baguchan.earthmobsmod.client.render.CluckShroomRender;
+import baguchan.earthmobsmod.client.render.MooBloomRender;
 import baguchan.earthmobsmod.client.render.MuddyPigRender;
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
+import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,5 +16,6 @@ public class EarthRender {
     public static void entityRender() {
         RenderingRegistry.registerEntityRenderingHandler(MuddyPigEntity.class, MuddyPigRender::new);
         RenderingRegistry.registerEntityRenderingHandler(CluckShroomEntity.class, CluckShroomRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(MooBloomEntity.class, MooBloomRender::new);
     }
 }

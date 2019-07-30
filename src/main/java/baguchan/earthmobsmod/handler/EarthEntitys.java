@@ -2,6 +2,7 @@ package baguchan.earthmobsmod.handler;
 
 import baguchan.earthmobsmod.EarthMobsMod;
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
+import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -10,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Set;
@@ -21,7 +21,7 @@ public class EarthEntitys {
 
     public static final EntityType<MuddyPigEntity> MUDDYPIG = createEntity(MuddyPigEntity::new, EntityClassification.CREATURE, "muddypig", 0.8F, 0.8F);
     public static final EntityType<CluckShroomEntity> CLUCKSHROOM = createEntity(CluckShroomEntity::new, EntityClassification.CREATURE, "cluckshroom", 0.4F, 0.7F);
-
+    public static final EntityType<MooBloomEntity> MOOBLOOM = createEntity(MooBloomEntity::new, EntityClassification.CREATURE, "moobloom", 0.9F, 1.4F);
 
     private static <T extends Entity> EntityType<T> createEntity(EntityType.IFactory<T> factory, EntityClassification entityClassification, String name, float width, float height) {
         ResourceLocation location = new ResourceLocation(EarthMobsMod.MODID + ":" + name);
@@ -32,12 +32,11 @@ public class EarthEntitys {
         return entity;
     }
 
-    @SubscribeEvent
     public static void registerEntity(IForgeRegistry<EntityType<?>> event) {
         event.register(MUDDYPIG);
         event.register(CLUCKSHROOM);
+        event.register(MOOBLOOM);
     }
-
 
     private static String prefix(String path) {
 

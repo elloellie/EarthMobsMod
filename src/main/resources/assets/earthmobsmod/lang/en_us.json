@@ -1,6 +1,11 @@
 {
+  "block.earthmobsmod.golden_gloom": "Goolden Bloom",
   "item.earthmobsmod.mud_bucket": "Mud Bucket",
   "item.earthmobsmod.smelly_egg": "Smelly Egg",
+  "item.earthmobsmod.cluckshroom_spawnegg": "CluckShroom SpawnEgg",
+  "item.earthmobsmod.moobloom_spawnegg": "Moobloom SpawnEgg",
+
   "entity.earthmobsmod.muddy_pig": "Muddy Pig",
-  "entity.earthmobsmod.cluckshroom": "Cluck Shroom"
+  "entity.earthmobsmod.cluckshroom": "Cluck Shroom",
+  "entity.earthmobsmod.moobloom": "Moobloom"
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "earthmobsmod:blocks/golden_bloom"
+  }
+}

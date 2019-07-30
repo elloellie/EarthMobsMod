@@ -1,6 +1,7 @@
 package baguchan.earthmobsmod.client.model;
 
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.util.math.MathHelper;
@@ -76,12 +77,30 @@ public class ModelCluckShroom<T extends CluckShroomEntity> extends EntityModel<T
 
     @Override
     public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        this.RightLeg.render(scale);
-        this.Body.render(scale);
-        this.LeftLeg.render(scale);
-        this.RightWing.render(scale);
-        this.Head.render(scale);
-        this.LeftWing.render(scale);
+
+        if (this.isChild) {
+            float f = 2.0F;
+            GlStateManager.pushMatrix();
+            GlStateManager.translatef(0.0F, 5.0F * scale, 2.0F * scale);
+            this.Head.render(scale);
+            GlStateManager.popMatrix();
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+            GlStateManager.translatef(0.0F, 24.0F * scale, 0.0F);
+            this.RightLeg.render(scale);
+            this.Body.render(scale);
+            this.LeftLeg.render(scale);
+            this.RightWing.render(scale);
+            this.LeftWing.render(scale);
+            GlStateManager.popMatrix();
+        } else {
+            this.Head.render(scale);
+            this.RightLeg.render(scale);
+            this.Body.render(scale);
+            this.LeftLeg.render(scale);
+            this.RightWing.render(scale);
+            this.LeftWing.render(scale);
+        }
     }
 
     @Override

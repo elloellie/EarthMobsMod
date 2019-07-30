@@ -3,25 +3,29 @@ package baguchan.earthmobsmod.handler;
 import baguchan.earthmobsmod.block.EarthFluidBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowerBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class EarthBlocks {
 
-
-    public static final NonNullList<Block> FLUIDBLOCKS = NonNullList.create();
-
     public static final Block MUDWATER = new EarthFluidBlock(EarthFluids.MUD_WATER, Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).lootFrom(Blocks.AIR));
+    public static final Block GOLDENBLOOM = new FlowerBlock(Effects.REGENERATION, 160, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT));
+
 
     public static void registerBlocks(IForgeRegistry<Block> registry) {
         //Terrain
         registry.register(MUDWATER.setRegistryName("mud"));
-        FLUIDBLOCKS.add(MUDWATER);
+        registry.register(GOLDENBLOOM.setRegistryName("golden_bloom"));
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
+        EarthItems.register(registry, new BlockItem(GOLDENBLOOM, (new Item.Properties()).group(ItemGroup.DECORATIONS)));
     }
 
 }

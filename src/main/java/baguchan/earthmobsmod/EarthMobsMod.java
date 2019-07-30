@@ -1,15 +1,26 @@
 package baguchan.earthmobsmod;
 
 import baguchan.earthmobsmod.client.EarthRender;
+import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthFluids;
 import baguchan.earthmobsmod.handler.EarthItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -49,6 +60,7 @@ public class EarthMobsMod
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::onEntityRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Fluid.class, this::onFluidRegistry);
 
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -70,9 +82,41 @@ public class EarthMobsMod
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
 
+    }
+
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onEntityRightClick(PlayerInteractEvent.EntityInteract event) {
+        ItemStack stack = event.getItemStack();
+        World world = event.getWorld();
+        if (event.getTarget() instanceof CowEntity && !(event.getTarget() instanceof MooBloomEntity)) {
+            if (stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE) {
+
+
+                MooBloomEntity cowBloomEntity = EarthEntitys.MOOBLOOM.create(world);
+                cowBloomEntity.setLocationAndAngles(event.getTarget().posX, event.getTarget().posY, event.getTarget().posZ, event.getTarget().rotationYaw, event.getTarget().rotationPitch);
+                cowBloomEntity.setNoAI(((AnimalEntity) event.getTarget()).isAIDisabled());
+                if (event.getTarget().hasCustomName()) {
+                    cowBloomEntity.setCustomName(event.getTarget().getCustomName());
+                    cowBloomEntity.setCustomNameVisible(event.getTarget().isCustomNameVisible());
+                }
+
+                if (((AnimalEntity) event.getTarget()).isChild()) {
+                    cowBloomEntity.setGrowingAge(((AnimalEntity) event.getTarget()).getGrowingAge());
+                }
+
+                if (!event.getEntityPlayer().isCreative()) {
+                    stack.shrink(1);
+                }
+
+                event.getWorld().addEntity(cowBloomEntity);
+
+                event.getWorld().playSound(null, cowBloomEntity.getPosition(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.NEUTRAL, 1.5F, 1.0F);
+                event.getTarget().remove();
+            }
+        }
     }
 
     public void onBlockRegistry(final RegistryEvent.Register<Block> event) {
