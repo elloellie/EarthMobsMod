@@ -1,7 +1,9 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
+import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
+import net.minecraft.block.FlowerBlock;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -9,12 +11,18 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -25,8 +33,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class MooBloomEntity extends CowEntity {
-    private static final Ingredient BREEDING_ITEMS = Ingredient.fromItems(Items.GOLDEN_APPLE);
+public class MooBloomEntity extends CowEntity implements net.minecraftforge.common.IShearable {
+    private static final Ingredient BREEDING_ITEMS = Ingredient.fromItems(Items.GOLDEN_APPLE, EarthBlocks.GOLDENBLOOM);
+    private static final DataParameter<Boolean> SLEEP = EntityDataManager.createKey(MooBloomEntity.class, DataSerializers.BOOLEAN);
+
+
     private int grassEatTimer;
     private EatGrassOrBloomGoal eatGrassGoal;
     @Nullable
@@ -40,15 +51,17 @@ public class MooBloomEntity extends CowEntity {
     protected void registerGoals() {
         this.eatGrassGoal = new EatGrassOrBloomGoal(this);
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.3D, false));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.25D, Ingredient.fromItems(Items.GOLDEN_APPLE), false));
-        this.goalSelector.addGoal(4, new MoveToGoal(this, 4.5D, 1.25D));
-        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
-        this.goalSelector.addGoal(6, this.eatGrassGoal);
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1, new DoNothingGoal());
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.8D, false));
+        this.goalSelector.addGoal(3, new PanicGoal(this, 2.0D));
+        this.goalSelector.addGoal(4, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new TemptGoal(this, 1.25D, BREEDING_ITEMS, false));
+        this.goalSelector.addGoal(6, new MoveToGoal(this, 4.5D, 1.25D));
+        this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.25D));
+        this.goalSelector.addGoal(8, this.eatGrassGoal);
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp());
     }
 
@@ -58,12 +71,33 @@ public class MooBloomEntity extends CowEntity {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(12.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double) 0.2F);
         this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(0.4D);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(0.8D);
+    }
+
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(SLEEP, false);
     }
 
     protected void updateAITasks() {
         this.grassEatTimer = this.eatGrassGoal.getEatingGrassTimer();
         super.updateAITasks();
+
+        if (this.onGround && this.ticksExisted % 180 == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
+            FlowerBlock flowerBlock = EarthBlocks.GOLDENBLOOM;
+            BlockPos blockpos = this.getPosition().down();
+            if (flowerBlock.isValidPosition(flowerBlock.getDefaultState(), world, blockpos) && this.world.isAirBlock(this.getPosition())) {
+                this.world.setBlockState(this.getPosition(), flowerBlock.getDefaultState());
+            }
+        }
+
+        if (isSleep() && this.world.isDaytime() || isSleep() && this.getAttackTarget() != null) {
+            setSleep(false);
+        }
+
+        if (!isSleep() && !this.world.isDaytime() && this.getAttackTarget() == null) {
+            setSleep(true);
+        }
     }
 
     public void livingTick() {
@@ -74,8 +108,58 @@ public class MooBloomEntity extends CowEntity {
         super.livingTick();
     }
 
+    protected SoundEvent getAmbientSound() {
+
+        if (!isSleep()) {
+            return SoundEvents.ENTITY_COW_AMBIENT;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean isShearable(ItemStack item, net.minecraft.world.IWorldReader world, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public java.util.List<ItemStack> onSheared(ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
+        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
+        if (!this.world.isRemote) {
+            ret.add(new ItemStack(Item.getItemFromBlock(EarthBlocks.GOLDENBLOOM)));
+        }
+
+        CowEntity cowEntity = EntityType.COW.create(this.world);
+        cowEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+        cowEntity.setNoAI(this.isAIDisabled());
+        if (this.hasCustomName()) {
+            cowEntity.setCustomName(this.getCustomName());
+            cowEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+
+        if (this.isChild()) {
+            cowEntity.setGrowingAge(this.getGrowingAge());
+        }
+
+        this.world.addEntity(cowEntity);
+
+        this.remove();
+
+        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+        return ret;
+    }
+
+    public boolean isSleep() {
+        return this.dataManager.get(SLEEP);
+    }
+
+    public void setSleep(boolean sleep) {
+        this.dataManager.set(SLEEP, sleep);
+    }
+
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
+        compound.putBoolean("Sleep", this.isSleep());
         if (this.flowerHomeTarget != null) {
             compound.put("HomeTarget", NBTUtil.writeBlockPos(this.flowerHomeTarget));
         }
@@ -87,6 +171,7 @@ public class MooBloomEntity extends CowEntity {
      */
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
+        this.setSleep(compound.getBoolean("Sleep"));
         if (compound.contains("HomeTarget")) {
             this.flowerHomeTarget = NBTUtil.readBlockPos(compound.getCompound("HomeTarget"));
         }
@@ -200,6 +285,40 @@ public class MooBloomEntity extends CowEntity {
 
         private boolean func_220846_a(BlockPos p_220846_1_, double p_220846_2_) {
             return !p_220846_1_.withinDistance(this.moobloom.getPositionVec(), p_220846_2_);
+        }
+    }
+
+    class DoNothingGoal extends Goal {
+        public DoNothingGoal() {
+            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP, Goal.Flag.LOOK));
+        }
+
+
+        public boolean shouldContinueExecuting() {
+            return MooBloomEntity.this.isSleep();
+        }
+
+        /**
+         * Returns whether the EntityAIBase should begin execution.
+         */
+        public boolean shouldExecute() {
+            return MooBloomEntity.this.isSleep();
+        }
+
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void startExecuting() {
+            MooBloomEntity.this.setJumping(false);
+            MooBloomEntity.this.setSleep(true);
+            MooBloomEntity.this.getMoveHelper().setMoveTo(MooBloomEntity.this.posX, MooBloomEntity.this.posY, MooBloomEntity.this.posZ, 0.0D);
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            MooBloomEntity.this.getNavigator().clearPath();
         }
     }
 }

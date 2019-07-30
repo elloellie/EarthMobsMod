@@ -50,6 +50,10 @@ public class EarthEntitys {
 
             Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(biome);
 
+            if (biome == Biomes.FLOWER_FOREST) {
+                biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MOOBLOOM, 8, 3, 4));
+            }
+
             if (biome == Biomes.MUSHROOM_FIELDS || biome == Biomes.MUSHROOM_FIELD_SHORE) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 3, 2, 3));
             }

@@ -11,15 +11,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DrySkinLayer extends LayerRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> {
-    private static final ResourceLocation DRY_MADSKIN = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/pig_dry_mud.png");
+    private static final ResourceLocation DRY_MUDSKIN = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/pig_dry_mud.png");
 
-    public DrySkinLayer(IEntityRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> p_i50921_1_) {
-        super(p_i50921_1_);
+    public DrySkinLayer(IEntityRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> render) {
+        super(render);
     }
 
     public void render(MuddyPigEntity entityIn, float p_212842_2_, float p_212842_3_, float p_212842_4_, float p_212842_5_, float p_212842_6_, float p_212842_7_, float p_212842_8_) {
         if(entityIn.isDry()) {
-            this.bindTexture(DRY_MADSKIN);
+            this.bindTexture(DRY_MUDSKIN);
 
             ((ModelMuddyPig) this.getEntityModel()).render(entityIn, p_212842_2_, p_212842_3_, p_212842_5_, p_212842_6_, p_212842_7_, p_212842_8_);
         }

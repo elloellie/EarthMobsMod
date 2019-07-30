@@ -32,10 +32,12 @@ public class EatGrassOrBloomGoal extends Goal {
      * Returns whether the EntityAIBase should begin execution.
      */
     public boolean shouldExecute() {
-        if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 50 : 1000) != 0) {
+        BlockPos blockpos = new BlockPos(this.grassEaterEntity);
+        if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
+            return true;
+        } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 80 : 1000) != 0) {
             return false;
         } else {
-            BlockPos blockpos = new BlockPos(this.grassEaterEntity);
             if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
                 return true;
             } else if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos))) {

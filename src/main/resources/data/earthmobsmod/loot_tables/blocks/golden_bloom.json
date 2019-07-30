@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "earthmobmod:golden_bloom"
+          "name": "earthmobsmod:golden_bloom"
         }
       ],
       "conditions": [

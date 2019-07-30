@@ -15,7 +15,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class EarthBlocks {
 
     public static final Block MUDWATER = new EarthFluidBlock(EarthFluids.MUD_WATER, Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).lootFrom(Blocks.AIR));
-    public static final Block GOLDENBLOOM = new FlowerBlock(Effects.REGENERATION, 160, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT));
+    public static final FlowerBlock GOLDENBLOOM = new FlowerBlock(Effects.REGENERATION, 160, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT));
 
 
     public static void registerBlocks(IForgeRegistry<Block> registry) {

@@ -1,7 +1,7 @@
 {
-  "variant": {
+  "variants": {
     "": {
-      "model": "earthmobmod:block/golden_bloom"
+      "model": "earthmobsmod:block/golden_bloom"
     }
   }
 }
