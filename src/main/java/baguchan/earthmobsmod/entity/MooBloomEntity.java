@@ -26,6 +26,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class MooBloomEntity extends CowEntity implements net.minecraftforge.common.IShearable {
-    private static final Ingredient BREEDING_ITEMS = Ingredient.fromItems(Items.GOLDEN_APPLE, EarthBlocks.GOLDENBLOOM);
+    private static final Ingredient BREEDING_ITEMS = Ingredient.fromItems(Items.GOLDEN_APPLE);
     private static final DataParameter<Boolean> SLEEP = EntityDataManager.createKey(MooBloomEntity.class, DataSerializers.BOOLEAN);
 
 
@@ -52,17 +53,18 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.eatGrassGoal = new EatGrassOrBloomGoal(this);
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new DoNothingGoal());
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.8D, false));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.45D, false));
         this.goalSelector.addGoal(3, new PanicGoal(this, 2.0D));
         this.goalSelector.addGoal(4, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.25D, BREEDING_ITEMS, false));
         this.goalSelector.addGoal(6, new MoveToGoal(this, 4.5D, 1.25D));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.25D));
         this.goalSelector.addGoal(8, this.eatGrassGoal);
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp());
+        this.goalSelector.addGoal(9, new MoveToBloom(this, 1.4D));
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
     }
 
     @Override
@@ -83,7 +85,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.grassEatTimer = this.eatGrassGoal.getEatingGrassTimer();
         super.updateAITasks();
 
-        if (this.onGround && this.ticksExisted % 180 == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
+        if (this.onGround && this.ticksExisted % 200 == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
             FlowerBlock flowerBlock = EarthBlocks.GOLDENBLOOM;
             BlockPos blockpos = this.getPosition().down();
             if (flowerBlock.isValidPosition(flowerBlock.getDefaultState(), world, blockpos) && this.world.isAirBlock(this.getPosition())) {
@@ -127,23 +129,23 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!this.world.isRemote) {
             ret.add(new ItemStack(Item.getItemFromBlock(EarthBlocks.GOLDENBLOOM)));
+
+            CowEntity cowEntity = EntityType.COW.create(this.world);
+            cowEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+            cowEntity.setNoAI(this.isAIDisabled());
+            if (this.hasCustomName()) {
+                cowEntity.setCustomName(this.getCustomName());
+                cowEntity.setCustomNameVisible(this.isCustomNameVisible());
+            }
+
+            if (this.isChild()) {
+                cowEntity.setGrowingAge(this.getGrowingAge());
+            }
+
+            this.world.addEntity(cowEntity);
+
+            this.remove();
         }
-
-        CowEntity cowEntity = EntityType.COW.create(this.world);
-        cowEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-        cowEntity.setNoAI(this.isAIDisabled());
-        if (this.hasCustomName()) {
-            cowEntity.setCustomName(this.getCustomName());
-            cowEntity.setCustomNameVisible(this.isCustomNameVisible());
-        }
-
-        if (this.isChild()) {
-            cowEntity.setGrowingAge(this.getGrowingAge());
-        }
-
-        this.world.addEntity(cowEntity);
-
-        this.remove();
 
         this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
         return ret;
@@ -237,6 +239,50 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     @Override
     public MooBloomEntity createChild(AgeableEntity ageable) {
         return EarthEntitys.MOOBLOOM.create(this.world);
+    }
+
+    class MoveToBloom extends MoveToBlockGoal {
+        private final MooBloomEntity cow;
+
+        public MoveToBloom(MooBloomEntity p_i48911_1_, double p_i48911_2_) {
+            super(p_i48911_1_, p_i48911_2_, 6, 1);
+            this.cow = p_i48911_1_;
+        }
+
+        /**
+         * Returns whether the EntityAIBase should begin execution.
+         */
+        public boolean shouldExecute() {
+            return super.shouldExecute();
+        }
+
+        /**
+         * Returns whether an in-progress EntityAIBase should continue executing
+         */
+        public boolean shouldContinueExecuting() {
+            return super.shouldContinueExecuting();
+        }
+
+        /**
+         * Return true to set given position as destination
+         */
+        protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
+            return worldIn.getBlockState(pos) == EarthBlocks.GOLDENBLOOM.getDefaultState() && worldIn.isAirBlock(pos.up());
+        }
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void startExecuting() {
+            super.startExecuting();
+        }
+
+        /**
+         * Reset the task's internal state. Called when this task is interrupted by another one
+         */
+        public void resetTask() {
+            super.resetTask();
+        }
     }
 
     class MoveToGoal extends Goal {

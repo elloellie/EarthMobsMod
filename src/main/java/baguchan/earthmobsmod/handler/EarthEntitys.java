@@ -1,13 +1,11 @@
 package baguchan.earthmobsmod.handler;
 
-import baguchan.earthmobsmod.EarthMobsMod;
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
-import net.minecraft.entity.Entity;
+import baguchan.earthmobsmod.entity.projectile.SmellyEggEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.common.BiomeDictionary;
@@ -15,32 +13,27 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Set;
 
+import static baguchan.earthmobsmod.EarthMobsMod.MODID;
 import static net.minecraftforge.common.BiomeDictionary.Type.NETHER;
+
 
 public class EarthEntitys {
 
-    public static final EntityType<MuddyPigEntity> MUDDYPIG = createEntity(MuddyPigEntity::new, EntityClassification.CREATURE, "muddypig", 0.8F, 0.8F);
-    public static final EntityType<CluckShroomEntity> CLUCKSHROOM = createEntity(CluckShroomEntity::new, EntityClassification.CREATURE, "cluckshroom", 0.4F, 0.7F);
-    public static final EntityType<MooBloomEntity> MOOBLOOM = createEntity(MooBloomEntity::new, EntityClassification.CREATURE, "moobloom", 0.9F, 1.4F);
-
-    private static <T extends Entity> EntityType<T> createEntity(EntityType.IFactory<T> factory, EntityClassification entityClassification, String name, float width, float height) {
-        ResourceLocation location = new ResourceLocation(EarthMobsMod.MODID + ":" + name);
-
-        EntityType<T> entity = EntityType.Builder.create(factory, entityClassification).size(width, height).build(location.toString());
-        entity.setRegistryName(location);
-
-        return entity;
-    }
+    public static final EntityType<MuddyPigEntity> MUDDYPIG = EntityType.Builder.create(MuddyPigEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.8F, 0.8F).build(prefix("muddypig"));
+    public static final EntityType<CluckShroomEntity> CLUCKSHROOM = EntityType.Builder.create(CluckShroomEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.4F, 0.7F).build(prefix("cluckshroom"));
+    public static final EntityType<MooBloomEntity> MOOBLOOM = EntityType.Builder.create(MooBloomEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("moobloom"));
+    public static final EntityType<SmellyEggEntity> SMELLYEGG = EntityType.Builder.<SmellyEggEntity>create(SmellyEggEntity::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(SmellyEggEntity::new).size(0.25F, 0.25F).build(prefix("smellyegg"));
 
     public static void registerEntity(IForgeRegistry<EntityType<?>> event) {
-        event.register(MUDDYPIG);
-        event.register(CLUCKSHROOM);
-        event.register(MOOBLOOM);
+        event.register(MUDDYPIG.setRegistryName("muddypig"));
+        event.register(CLUCKSHROOM.setRegistryName("cluckshroom"));
+        event.register(MOOBLOOM.setRegistryName("moobloom"));
+        event.register(SMELLYEGG.setRegistryName("smellyegg"));
     }
 
     private static String prefix(String path) {
 
-        return EarthMobsMod.MODID + "." + path;
+        return MODID + "." + path;
 
     }
 
