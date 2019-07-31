@@ -4,10 +4,8 @@ import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import net.minecraft.block.FlowerBlock;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,6 +19,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -73,7 +72,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(12.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double) 0.2F);
         this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(0.8D);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(1.35D);
     }
 
     protected void registerData() {
@@ -107,6 +106,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
             this.grassEatTimer = Math.max(0, this.grassEatTimer - 1);
         }
 
+        this.updateArmSwingProgress();
         super.livingTick();
     }
 
@@ -117,6 +117,16 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean processInteract(PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getHeldItem(hand);
+        Item item = itemstack.getItem();
+        if (item == Items.BOWL) {
+            return false;
+        }
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -224,8 +234,15 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) ((int) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue()));
+        float f1 = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).getValue();
         if (flag) {
             this.applyEnchantments(this, entityIn);
+            f1 += (float) EnchantmentHelper.getKnockbackModifier(this);
+        }
+
+        if (f1 > 0.0F && entityIn instanceof LivingEntity) {
+            ((LivingEntity) entityIn).knockBack(this, f1 * 0.5F, (double) MathHelper.sin(this.rotationYaw * ((float) Math.PI / 180F)), (double) (-MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F))));
+            this.setMotion(this.getMotion().mul(0.6D, 1.0D, 0.6D));
         }
 
         return flag;

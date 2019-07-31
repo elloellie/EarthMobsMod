@@ -2,10 +2,7 @@ package baguchan.earthmobsmod;
 
 import baguchan.earthmobsmod.client.EarthRender;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthEntitys;
-import baguchan.earthmobsmod.handler.EarthFluids;
-import baguchan.earthmobsmod.handler.EarthItems;
+import baguchan.earthmobsmod.handler.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -17,6 +14,13 @@ import net.minecraft.item.Items;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.placement.FrequencyConfig;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -27,7 +31,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
@@ -59,6 +62,7 @@ public class EarthMobsMod
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onItemRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::onEntityRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Fluid.class, this::onFluidRegistry);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Feature.class, this::onFeatureRegistry);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -66,6 +70,11 @@ public class EarthMobsMod
     private void setup(final FMLCommonSetupEvent event)
     {
         EarthEntitys.spawnEntity();
+        for (Biome biome : Biome.BIOMES) {
+            if (biome == Biomes.FLOWER_FOREST) {
+                biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.COUNT_HEIGHTMAP_DOUBLE, new FrequencyConfig(3)));
+            }
+        }
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -81,10 +90,6 @@ public class EarthMobsMod
         EarthRender.entityRender();
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    public void onServerStarting(FMLServerStartingEvent event) {
-
-    }
 
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -136,6 +141,12 @@ public class EarthMobsMod
         IForgeRegistry<EntityType<?>> registry = event.getRegistry();
 
         EarthEntitys.registerEntity(registry);
+    }
+
+    public void onFeatureRegistry(final RegistryEvent.Register<Feature<?>> event) {
+        IForgeRegistry<Feature<?>> registry = event.getRegistry();
+
+        EarthFeatures.register(registry);
     }
 
     public void onFluidRegistry(final RegistryEvent.Register<Fluid> event) {

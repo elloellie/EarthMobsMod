@@ -139,6 +139,18 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
         this.Head.rotationPointY = 4.0F + entityIn.getHeadRotationPointY(partialTick) * 9.0F;
         this.headRotationAngleX = entityIn.getHeadRotationAngleX(partialTick);
+
+        float l = this.swingProgress;
+
+        if (l > 0) {
+            float f = this.func_217167_a(l - partialTick, 10.0F);
+
+            float f1 = (1.0F + f) * 0.5F;
+            float f2 = f1 * f1 * f1 * 4.0F;
+            this.Head.rotationPointZ = -8.0F - f2;
+        } else {
+            this.Head.rotationPointZ = -8.0F;
+        }
     }
 
     @Override
@@ -151,6 +163,7 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         this.LeftBackLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
         this.Head.rotateAngleX = this.headRotationAngleX;
+
     }
 
     /**
@@ -160,5 +173,9 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
+    }
+
+    private float func_217167_a(float p_217167_1_, float p_217167_2_) {
+        return (Math.abs(p_217167_1_ % p_217167_2_ - p_217167_2_ * 0.5F) - p_217167_2_ * 0.25F) / (p_217167_2_ * 0.25F);
     }
 }
