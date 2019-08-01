@@ -55,13 +55,13 @@ public class ModelCluckShroom<T extends CluckShroomEntity> extends EntityModel<T
         this.Mushroom4.addBox(0.0F, -5.0F, -2.5F, 0, 5, 5, 0.0F);
         this.setRotateAngle(Mushroom4, -1.5707963267948966F, 0.0F, -1.5707963267948966F);
         this.RightWing = new RendererModel(this, 24, 14);
-        this.RightWing.setRotationPoint(-4.0F, 13.0F, 0.0F);
+        this.RightWing.setRotationPoint(-4.0F, 13.0F, 1.0F);
         this.RightWing.addBox(0.0F, 0.0F, -3.0F, 1, 4, 6, 0.0F);
         this.Head = new RendererModel(this, 0, 0);
         this.Head.setRotationPoint(0.0F, 15.0F, -4.0F);
         this.Head.addBox(-2.0F, -6.0F, -2.0F, 4, 6, 3, 0.0F);
         this.LeftWing = new RendererModel(this, 24, 14);
-        this.LeftWing.setRotationPoint(4.0F, 13.0F, 0.0F);
+        this.LeftWing.setRotationPoint(4.0F, 13.0F, 1.0F);
         this.LeftWing.addBox(-1.0F, 0.0F, -3.0F, 1, 4, 6, 0.0F);
         this.Mushroom2 = new RendererModel(this, 0, 24);
         this.Mushroom2.setRotationPoint(1.0F, -6.0F, 0.0F);
