@@ -1,13 +1,11 @@
 package baguchan.earthmobsmod.entity.projectile;
 
-import baguchan.earthmobsmod.entity.CluckShroomEntity;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.network.IPacket;
@@ -66,28 +64,9 @@ public class SmellyEggEntity extends ProjectileItemEntity {
     protected void onImpact(RayTraceResult result) {
         if (result.getType() == RayTraceResult.Type.ENTITY) {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
-            if (entity instanceof ChickenEntity && !(entity instanceof CluckShroomEntity)) {
-                if (!this.world.isRemote) {
-                    CluckShroomEntity cluckshroom = EarthEntitys.CLUCKSHROOM.create(this.world);
-                    cluckshroom.setLocationAndAngles(((ChickenEntity) entity).posX, ((ChickenEntity) entity).posY, ((ChickenEntity) entity).posZ, ((ChickenEntity) entity).rotationYaw, ((ChickenEntity) entity).rotationPitch);
-                    cluckshroom.setNoAI(((ChickenEntity) entity).isAIDisabled());
-                    if (this.hasCustomName()) {
-                        cluckshroom.setCustomName(((ChickenEntity) entity).getCustomName());
-                        cluckshroom.setCustomNameVisible(((ChickenEntity) entity).isCustomNameVisible());
-                    }
+            double i = 0.5;
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 0);
 
-                    if (((ChickenEntity) entity).isChild()) {
-                        cluckshroom.setGrowingAge(((ChickenEntity) entity).getGrowingAge());
-                    }
-
-                    this.world.addEntity(cluckshroom);
-
-                    entity.remove();
-                }
-            } else {
-                double i = 0.5;
-                entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 0);
-            }
             if (entity instanceof LivingEntity) {
                 if (!this.world.isRemote) {
                     ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.NAUSEA, 120));

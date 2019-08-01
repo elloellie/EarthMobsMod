@@ -47,7 +47,7 @@ public class GoldenFlowerCircleFeature extends Feature<NoFeatureConfig> {
                 }
             }
             MooBloomEntity cowEntity = EarthEntitys.MOOBLOOM.create(worldIn.getWorld());
-            cowEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
+            cowEntity.setLocationAndAngles(pos.getX(), pos.getY() + 1, pos.getZ(), 0.0F, 0.0F);
             cowEntity.setFlowerHome(pos);
 
             worldIn.addEntity(cowEntity);
