@@ -7,6 +7,7 @@ import net.minecraft.block.FlowerBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -18,10 +19,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -56,14 +54,36 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.goalSelector.addGoal(3, new PanicGoal(this, 2.0D));
         this.goalSelector.addGoal(4, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.25D, BREEDING_ITEMS, false));
-        this.goalSelector.addGoal(6, new MoveToGoal(this, 4.5D, 1.25D));
-        this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.25D));
-        this.goalSelector.addGoal(8, this.eatGrassGoal);
+        this.goalSelector.addGoal(6, this.eatGrassGoal);
+        this.goalSelector.addGoal(7, new MoveToGoal(this, 2.2D, 1.25D));
+        this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.25D));
         this.goalSelector.addGoal(9, new MoveToBloom(this, 1.4D));
         this.goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal(this, PlayerEntity.class, true) {
+            @Override
+            public boolean shouldExecute() {
+                return getFlowerHome() != null && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 2.5F;
+            }
+
+            @Override
+            public boolean shouldContinueExecuting() {
+                return super.shouldContinueExecuting() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 4.0F;
+            }
+        }));
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal(this, AbstractVillagerEntity.class, true) {
+            @Override
+            public boolean shouldExecute() {
+                return getFlowerHome() != null && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 2.5F;
+            }
+
+            @Override
+            public boolean shouldContinueExecuting() {
+                return super.shouldContinueExecuting() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 4.0F;
+            }
+        }));
     }
 
     @Override
@@ -254,16 +274,27 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     }
 
     @Override
+    protected ResourceLocation getLootTable() {
+        return EntityType.COW.getLootTable();
+    }
+
+    @Override
     public MooBloomEntity createChild(AgeableEntity ageable) {
         return EarthEntitys.MOOBLOOM.create(this.world);
     }
 
     class MoveToBloom extends MoveToBlockGoal {
         private final MooBloomEntity cow;
+        private final int searchLength;
+        private final int field_203113_j;
+        protected int field_203112_e;
 
-        public MoveToBloom(MooBloomEntity p_i48911_1_, double p_i48911_2_) {
-            super(p_i48911_1_, p_i48911_2_, 6, 1);
+        public MoveToBloom(MooBloomEntity p_i48911_1_, double speed) {
+            super(p_i48911_1_, speed, 6, 1);
             this.cow = p_i48911_1_;
+            this.searchLength = 6;
+            this.field_203112_e = 0;
+            this.field_203113_j = 1;
         }
 
         /**
@@ -285,6 +316,31 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
          */
         protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
             return worldIn.getBlockState(pos) == EarthBlocks.GOLDENBLOOM.getDefaultState() && worldIn.isAirBlock(pos.up());
+        }
+
+        protected boolean searchForDestination() {
+            int i = this.searchLength;
+            int j = this.field_203113_j;
+            BlockPos blockpos = new BlockPos(this.creature);
+            BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+
+            for (int k = this.field_203112_e; k <= j; k = k > 0 ? -k : 1 - k) {
+                for (int l = 0; l < i; ++l) {
+                    for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
+                        for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
+                            blockpos$mutableblockpos.setPos(blockpos).move(i1, k - 1, j1);
+                            if (this.creature.isWithinHomeDistanceFromPosition(blockpos$mutableblockpos) && this.shouldMoveTo(this.creature.world, blockpos$mutableblockpos)) {
+                                if (this.cow.getFlowerHome() == null || blockpos$mutableblockpos.withinDistance(this.cow.getFlowerHome(), 1.5F)) {
+                                    this.destinationBlock = blockpos$mutableblockpos;
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         /**

@@ -19,7 +19,7 @@ import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.placement.FrequencyConfig;
+import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -70,11 +70,8 @@ public class EarthMobsMod
     private void setup(final FMLCommonSetupEvent event)
     {
         EarthEntitys.spawnEntity();
-        for (Biome biome : Biome.BIOMES) {
-            if (biome == Biomes.FLOWER_FOREST) {
-                biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.COUNT_HEIGHTMAP_DOUBLE, new FrequencyConfig(3)));
-            }
-        }
+        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(5)));
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

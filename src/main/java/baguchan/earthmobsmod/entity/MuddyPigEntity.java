@@ -112,6 +112,11 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     }
 
     @Override
+    protected ResourceLocation getLootTable() {
+        return EntityType.PIG.getLootTable();
+    }
+
+    @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putBoolean("Dry", this.isDry());

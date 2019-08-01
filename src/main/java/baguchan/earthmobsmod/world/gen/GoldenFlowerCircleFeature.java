@@ -25,26 +25,24 @@ public class GoldenFlowerCircleFeature extends Feature<NoFeatureConfig> {
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         BlockState flower = EarthBlocks.GOLDENBLOOM.getDefaultState();
         if (flower.isValidPosition(worldIn, pos)) {
-            for (int i = -4; i <= 4; i++) {
-                for (int j = -4; j <= 4; j++) {
+            for (int i = -8; i <= 8; i++) {
+                for (int j = -8; j <= 8; j++) {
 
                     float dist = (i * i) + (j * j);
 
-                    if (dist < 9 || dist > 21) {
+                    if (dist < 14 || dist > 26) {
                         continue;
                     }
+                    for (int k = 5; k > -4; k--) {
+                        BlockPos fpos = pos.add(i, k, j);
 
-                    BlockPos fpos = pos.add(i, 0, j);
 
-                    BlockPos posUp = fpos.up();
-
-                    if (flower.isValidPosition(worldIn, fpos)) {
-                        if (worldIn.getBlockState(fpos).isAir() || worldIn.getBlockState(fpos).getBlock().isIn(BlockTags.SMALL_FLOWERS)) {
-                            worldIn.setBlockState(fpos, flower, 2);
-                        } else if (worldIn.getBlockState(posUp).isAir() || worldIn.getBlockState(posUp).getBlock().isIn(BlockTags.SMALL_FLOWERS)) {
-                            worldIn.setBlockState(posUp, flower, 2);
+                        if (flower.isValidPosition(worldIn, fpos)) {
+                            if (worldIn.getBlockState(fpos).isAir() || worldIn.getBlockState(fpos).getBlock().isIn(BlockTags.SMALL_FLOWERS)) {
+                                worldIn.setBlockState(fpos, flower, 2);
+                                break;
+                            }
                         }
-                        break;
                     }
                 }
             }

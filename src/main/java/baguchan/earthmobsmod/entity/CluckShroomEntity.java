@@ -9,6 +9,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -35,5 +36,10 @@ public class CluckShroomEntity extends ChickenEntity {
 
     public CluckShroomEntity createChild(AgeableEntity ageable) {
         return EarthEntitys.CLUCKSHROOM.create(this.world);
+    }
+
+    @Override
+    protected ResourceLocation getLootTable() {
+        return EntityType.CHICKEN.getLootTable();
     }
 }
