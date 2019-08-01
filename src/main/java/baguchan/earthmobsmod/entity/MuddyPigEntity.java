@@ -173,8 +173,6 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
                     return true;
                 }
-            } else if (item instanceof SaddleItem) {
-                return false;
             }
         }
         return super.processInteract(player, hand);
@@ -228,6 +226,10 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                         if (this.hasCustomName()) {
                             pigEntity.setCustomName(this.getCustomName());
                             pigEntity.setCustomNameVisible(this.isCustomNameVisible());
+                        }
+
+                        if (this.getSaddled()) {
+                            pigEntity.setSaddled(true);
                         }
 
                         if (this.isChild()) {

@@ -18,7 +18,7 @@ public class EyelidsLayer extends LayerRenderer<MooBloomEntity, ModelMoobloom<Mo
     public void render(MooBloomEntity entityIn, float p_212842_2_, float p_212842_3_, float p_212842_4_, float p_212842_5_, float p_212842_6_, float p_212842_7_, float p_212842_8_) {
         if (entityIn.isSleep()) {
             this.bindTexture(EYELIDS_TEXTURE);
-
+            this.getEntityModel().setModelAttributes(this.getEntityModel());
             ((ModelMoobloom) this.getEntityModel()).render(entityIn, p_212842_2_, p_212842_3_, p_212842_5_, p_212842_6_, p_212842_7_, p_212842_8_);
         }
     }
