@@ -60,7 +60,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D) {
             @Override
             public boolean shouldExecute() {
-                return super.shouldExecute() && this.creature.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F;
+                return super.shouldExecute() && (getFlowerHome() == null || getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F);
             }
         });
         this.goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 6.0F));

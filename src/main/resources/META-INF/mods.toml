@@ -24,12 +24,14 @@ displayName="Earth Mobs Mod" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+#credits="" #optional
 # A text field displayed in the mod UI
 authors="bagu_chan,MCVinnyq,Farcr" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
+
 Adds Content from the spinoff game Minecraft Earth!
+
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.earthmobsmod]] #optional
