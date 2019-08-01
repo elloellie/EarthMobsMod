@@ -70,7 +70,7 @@ public class EarthMobsMod
     private void setup(final FMLCommonSetupEvent event)
     {
         EarthEntitys.spawnEntity();
-        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(4)));
+        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(5)));
 
     }
 
