@@ -414,6 +414,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean shouldContinueExecuting() {
+            //only one attack
             if (this.goalOwner instanceof MooBloomEntity) {
                 MooBloomEntity moobloom = (MooBloomEntity) this.goalOwner;
                 if (moobloom.didAttack) {

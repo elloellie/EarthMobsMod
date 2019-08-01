@@ -33,6 +33,7 @@ public class EatGrassOrBloomGoal extends Goal {
      */
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.grassEaterEntity);
+        //when moobloom has flowercircle,moobloom will not eat far away flowers
         if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
             if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
                 return true;
