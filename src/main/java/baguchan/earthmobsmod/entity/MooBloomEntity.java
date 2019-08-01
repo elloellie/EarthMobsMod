@@ -7,7 +7,6 @@ import net.minecraft.block.FlowerBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -34,7 +33,7 @@ import java.util.EnumSet;
 public class MooBloomEntity extends CowEntity implements net.minecraftforge.common.IShearable {
     private static final Ingredient BREEDING_ITEMS = Ingredient.fromItems(Items.GOLDEN_APPLE);
     private static final DataParameter<Boolean> SLEEP = EntityDataManager.createKey(MooBloomEntity.class, DataSerializers.BOOLEAN);
-
+    private boolean didAttack;
 
     private int grassEatTimer;
     private EatGrassOrBloomGoal eatGrassGoal;
@@ -55,33 +54,27 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.goalSelector.addGoal(4, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new TemptGoal(this, 1.25D, BREEDING_ITEMS, false));
         this.goalSelector.addGoal(6, this.eatGrassGoal);
-        this.goalSelector.addGoal(7, new MoveToGoal(this, 2.2D, 1.25D));
+        this.goalSelector.addGoal(7, new MoveToGoal(this, 3.0F, 1.25D));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.25D));
         this.goalSelector.addGoal(9, new MoveToBloom(this, 1.4D));
-        this.goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomWalkingGoal(this, 1.0D) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && this.creature.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F;
+            }
+        });
         this.goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
         this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal(this, PlayerEntity.class, true) {
             @Override
             public boolean shouldExecute() {
-                return getFlowerHome() != null && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 2.5F;
+                return getFlowerHome() != null && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F;
             }
 
             @Override
             public boolean shouldContinueExecuting() {
-                return super.shouldContinueExecuting() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 4.0F;
-            }
-        }));
-        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal(this, AbstractVillagerEntity.class, true) {
-            @Override
-            public boolean shouldExecute() {
-                return getFlowerHome() != null && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 2.5F;
-            }
-
-            @Override
-            public boolean shouldContinueExecuting() {
-                return super.shouldContinueExecuting() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 4.0F;
+                return super.shouldContinueExecuting() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F;
             }
         }));
     }
@@ -258,6 +251,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         if (flag) {
             this.applyEnchantments(this, entityIn);
             f1 += (float) EnchantmentHelper.getKnockbackModifier(this);
+            this.didAttack = true;
         }
 
         if (f1 > 0.0F && entityIn instanceof LivingEntity) {
@@ -266,6 +260,10 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         }
 
         return flag;
+    }
+
+    private void setDidAttack(boolean didSpitIn) {
+        this.didAttack = didSpitIn;
     }
 
     @Override
@@ -330,7 +328,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
                         for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                             blockpos$mutableblockpos.setPos(blockpos).move(i1, k - 1, j1);
                             if (this.creature.isWithinHomeDistanceFromPosition(blockpos$mutableblockpos) && this.shouldMoveTo(this.creature.world, blockpos$mutableblockpos)) {
-                                if (this.cow.getFlowerHome() == null || blockpos$mutableblockpos.withinDistance(this.cow.getFlowerHome(), 1.5F)) {
+                                if (this.cow.getFlowerHome() == null || blockpos$mutableblockpos.withinDistance(this.cow.getFlowerHome(), 2.25F)) {
                                     this.destinationBlock = blockpos$mutableblockpos;
                                     return true;
                                 }
@@ -361,12 +359,12 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     class MoveToGoal extends Goal {
         final MooBloomEntity moobloom;
         final double distance;
-        final double field_220849_c;
+        final double speed;
 
-        MoveToGoal(MooBloomEntity mooBloomEntity, double distance, double p_i50459_5_) {
+        MoveToGoal(MooBloomEntity mooBloomEntity, double distance, double speed) {
             this.moobloom = mooBloomEntity;
             this.distance = distance;
-            this.field_220849_c = p_i50459_5_;
+            this.speed = speed;
             this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
@@ -391,12 +389,12 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         public void tick() {
             BlockPos blockpos = this.moobloom.getFlowerHome();
             if (blockpos != null && MooBloomEntity.this.navigator.noPath()) {
-                if (this.func_220846_a(blockpos, 10.0D)) {
+                if (this.func_220846_a(blockpos, 6.0D)) {
                     Vec3d vec3d = (new Vec3d((double) blockpos.getX() - this.moobloom.posX, (double) blockpos.getY() - this.moobloom.posY, (double) blockpos.getZ() - this.moobloom.posZ)).normalize();
                     Vec3d vec3d1 = vec3d.scale(10.0D).add(this.moobloom.posX, this.moobloom.posY, this.moobloom.posZ);
-                    MooBloomEntity.this.navigator.tryMoveToXYZ(vec3d1.x, vec3d1.y, vec3d1.z, this.field_220849_c);
+                    MooBloomEntity.this.navigator.tryMoveToXYZ(vec3d1.x, vec3d1.y, vec3d1.z, this.speed);
                 } else {
-                    MooBloomEntity.this.navigator.tryMoveToXYZ((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), this.field_220849_c);
+                    MooBloomEntity.this.navigator.tryMoveToXYZ((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), this.speed);
                 }
             }
 
@@ -404,6 +402,27 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
 
         private boolean func_220846_a(BlockPos p_220846_1_, double p_220846_2_) {
             return !p_220846_1_.withinDistance(this.moobloom.getPositionVec(), p_220846_2_);
+        }
+    }
+
+    static class HurtByTargetGoal extends net.minecraft.entity.ai.goal.HurtByTargetGoal {
+        public HurtByTargetGoal(MooBloomEntity moobloom) {
+            super(moobloom);
+        }
+
+        /**
+         * Returns whether an in-progress EntityAIBase should continue executing
+         */
+        public boolean shouldContinueExecuting() {
+            if (this.goalOwner instanceof MooBloomEntity) {
+                MooBloomEntity moobloom = (MooBloomEntity) this.goalOwner;
+                if (moobloom.didAttack) {
+                    moobloom.setDidAttack(false);
+                    return false;
+                }
+            }
+
+            return super.shouldContinueExecuting();
         }
     }
 

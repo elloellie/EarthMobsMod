@@ -33,7 +33,7 @@ public class EatGrassOrBloomGoal extends Goal {
      */
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.grassEaterEntity);
-        if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 1.5F)) {
+        if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
             if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
                 return true;
             } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 80 : 1000) != 0) {
