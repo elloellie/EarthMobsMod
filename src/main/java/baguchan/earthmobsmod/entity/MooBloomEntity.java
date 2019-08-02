@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -149,9 +150,10 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
 
     @Override
     public java.util.List<ItemStack> onSheared(ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
+        this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double) (this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!this.world.isRemote) {
-            ret.add(new ItemStack(Item.getItemFromBlock(EarthBlocks.GOLDENBLOOM)));
+            ret.add(new ItemStack(Item.getItemFromBlock(EarthBlocks.GOLDENBLOOM), 3));
 
             CowEntity cowEntity = EntityType.COW.create(this.world);
             cowEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);

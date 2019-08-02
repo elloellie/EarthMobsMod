@@ -6,6 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.MooshroomEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.network.IPacket;
@@ -14,6 +16,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -65,13 +68,34 @@ public class SmellyEggEntity extends ProjectileItemEntity {
         if (result.getType() == RayTraceResult.Type.ENTITY) {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
             double i = 0.5;
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 0);
-
             if (entity instanceof LivingEntity) {
                 if (!this.world.isRemote) {
                     ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.NAUSEA, 120));
                 }
+
+                if (entity instanceof CowEntity && !(entity instanceof MooshroomEntity)) {
+                    if (!this.world.isRemote) {
+                        MooshroomEntity mooshroomEntity = EntityType.MOOSHROOM.create(this.world);
+                        mooshroomEntity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+                        mooshroomEntity.setNoAI(((CowEntity) entity).isAIDisabled());
+                        if (this.hasCustomName()) {
+                            mooshroomEntity.setCustomName(this.getCustomName());
+                            mooshroomEntity.setCustomNameVisible(this.isCustomNameVisible());
+                        }
+
+                        if (((CowEntity) entity).isChild()) {
+                            mooshroomEntity.setGrowingAge(((CowEntity) entity).getGrowingAge());
+                        }
+
+                        this.world.addEntity(mooshroomEntity);
+
+                        entity.remove();
+                    }
+                    this.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, 1.4F, 1.0F);
+                }
             }
+
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 0);
         }
 
         if (!this.world.isRemote) {
