@@ -3,7 +3,10 @@ package baguchan.earthmobsmod.entity;
 import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowerBlock;
+import net.minecraft.block.GrassBlock;
+import net.minecraft.block.IGrowable;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -98,11 +101,36 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.grassEatTimer = this.eatGrassGoal.getEatingGrassTimer();
         super.updateAITasks();
 
-        if (this.onGround && this.ticksExisted % 200 == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
+        if (this.onGround && this.ticksExisted % 200 == 0 && this.world.rand.nextInt(1) == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
             FlowerBlock flowerBlock = EarthBlocks.GOLDENBLOOM;
             BlockPos blockpos = this.getPosition().down();
             if (flowerBlock.isValidPosition(flowerBlock.getDefaultState(), world, blockpos) && this.world.isAirBlock(this.getPosition())) {
                 this.world.setBlockState(this.getPosition(), flowerBlock.getDefaultState());
+            }
+        }
+
+        if (this.onGround && this.world.rand.nextInt(160) == 0 && this.isSleep()) {
+            BlockPos blockPos = this.getPosition();
+
+            for (int i = 0; i < 2 + this.rand.nextInt(6); i++) {
+                BlockPos pos = new BlockPos(blockPos.getX() + this.rand.nextInt(12) - 6, blockPos.getY() + this.rand.nextInt(6) - 3, blockPos.getZ() + this.rand.nextInt(12) - 6);
+
+                BlockState blockstate = this.world.getBlockState(pos);
+                if (blockstate.getBlock() instanceof IGrowable && !(blockstate.getBlock() instanceof GrassBlock)) {
+                    IGrowable igrowable = (IGrowable) blockstate.getBlock();
+
+                    if (!this.world.isRemote) {
+                        this.world.playEvent(2005, pos, 0);
+                    }
+                    if (igrowable.canGrow(this.world, pos, blockstate, this.world.isRemote)) {
+                        if (!world.isRemote) {
+                            if (igrowable.canUseBonemeal(this.world, this.world.rand, pos, blockstate)) {
+                                igrowable.grow(this.world, this.world.rand, pos, blockstate);
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
