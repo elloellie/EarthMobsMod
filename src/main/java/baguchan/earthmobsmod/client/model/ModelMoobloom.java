@@ -163,7 +163,12 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         this.LeftBackLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
         this.Head.rotateAngleX = this.headRotationAngleX;
-
+        if (entityIn.isSleep()) {
+            this.Head.rotationPointY = 4.0F + MathHelper.cos(ageInTicks * 0.04F) * 0.08F;
+            this.Head.rotateAngleX = 0.4F;
+        } else {
+            this.Head.rotationPointY = 4.0F;
+        }
     }
 
     /**

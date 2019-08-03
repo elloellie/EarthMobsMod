@@ -73,7 +73,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal(this, PlayerEntity.class, true) {
             @Override
             public boolean shouldExecute() {
-                return getFlowerHome() != null && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F;
+                return getFlowerHome() != null && !isSleep() && super.shouldExecute() && this.nearestTarget.getDistanceSq(getFlowerHome().getX(), getFlowerHome().getY(), getFlowerHome().getZ()) < 11.0F;
             }
 
             @Override
