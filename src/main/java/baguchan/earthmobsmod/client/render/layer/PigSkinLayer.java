@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class PigSkinLayer extends LayerRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> {
-    private static final ResourceLocation MUDDYSKIN_TEXTURES = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/muddy_skin.png");
+    private static final ResourceLocation MUDDYSKIN_TEXTURES = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/pig_muddy.png");
     private static final ResourceLocation DRY_MUDSKIN = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/pig_dry_mud.png");
 
     public PigSkinLayer(IEntityRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> render) {

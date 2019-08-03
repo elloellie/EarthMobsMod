@@ -33,23 +33,27 @@ public class EatGrassOrBloomGoal extends Goal {
      */
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.grassEaterEntity);
-        //when moobloom has flowercircle,moobloom will not eat far away flowers
-        if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
-            if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
-                return true;
-            } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 80 : 1000) != 0) {
-                return false;
-            } else {
-
+        if (this.grassEaterEntity.getEatDelayTimer() <= 0) {
+            //when moobloom has flowercircle,moobloom will not eat far away flowers
+            if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
                 if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
                     return true;
-                } else if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos))) {
-                    return true;
+                } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 100 : 1000) != 0) {
+                    return false;
                 } else {
-                    return this.entityWorld.getBlockState(blockpos.down()).getBlock() == Blocks.GRASS_BLOCK;
+
+                    if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
+                        return true;
+                    } else if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos))) {
+                        return true;
+                    } else {
+                        return this.entityWorld.getBlockState(blockpos.down()).getBlock() == Blocks.GRASS_BLOCK;
+                    }
+
+
                 }
-
-
+            } else {
+                return false;
             }
         } else {
             return false;
@@ -100,6 +104,8 @@ public class EatGrassOrBloomGoal extends Goal {
                 this.grassEaterEntity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 160, 0));
 
                 this.grassEaterEntity.eatGrassBonus();
+
+                this.grassEaterEntity.setEatDelayTimer(160);
             } else if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos))) {
                 if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)) {
                     this.entityWorld.destroyBlock(blockpos, false);

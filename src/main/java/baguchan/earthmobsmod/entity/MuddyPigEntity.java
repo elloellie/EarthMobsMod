@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -69,7 +70,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D, PigEntity.class));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, Ingredient.fromItems(Items.CARROT_ON_A_STICK), false));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, false, TEMPTATION_ITEMS));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
@@ -345,5 +346,16 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     @Override
     public boolean isBreedingItem(ItemStack stack) {
         return TEMPTATION_ITEMS.test(stack);
+    }
+
+    @Override
+    public boolean canMateWith(AnimalEntity otherAnimal) {
+        if (otherAnimal == this) {
+            return false;
+        } else if (otherAnimal instanceof PigEntity) {
+            return this.isInLove() && otherAnimal.isInLove();
+        } else {
+            return false;
+        }
     }
 }

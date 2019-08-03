@@ -40,6 +40,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     private boolean didAttack;
 
     private int grassEatTimer;
+    private int eatDelayTimer;
     private EatGrassOrBloomGoal eatGrassGoal;
     @Nullable
     private BlockPos flowerHomeTarget;
@@ -109,6 +110,10 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
             }
         }
 
+        if (this.eatDelayTimer > 0) {
+            --this.eatDelayTimer;
+        }
+
         if (this.onGround && this.world.rand.nextInt(160) == 0 && this.isSleep()) {
             BlockPos blockPos = this.getPosition();
 
@@ -150,6 +155,14 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
 
         this.updateArmSwingProgress();
         super.livingTick();
+    }
+
+    public int getEatDelayTimer() {
+        return eatDelayTimer;
+    }
+
+    public void setEatDelayTimer(int eatDelayTimer) {
+        this.eatDelayTimer = eatDelayTimer;
     }
 
     protected SoundEvent getAmbientSound() {
@@ -215,6 +228,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putBoolean("Sleep", this.isSleep());
+        compound.putInt("EatDelay", this.getEatDelayTimer());
         if (this.flowerHomeTarget != null) {
             compound.put("HomeTarget", NBTUtil.writeBlockPos(this.flowerHomeTarget));
         }
@@ -227,6 +241,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.setSleep(compound.getBoolean("Sleep"));
+        this.setEatDelayTimer(compound.getInt("EatDelay"));
         if (compound.contains("HomeTarget")) {
             this.flowerHomeTarget = NBTUtil.readBlockPos(compound.getCompound("HomeTarget"));
         }
