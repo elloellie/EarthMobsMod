@@ -152,17 +152,6 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
                                 igrowable.grow(this.world, this.world.rand, pos, blockstate);
                             }
                         }
-                        for (int i2 = 0; i2 < 12; ++i2) {
-                            int j = rand.nextInt(2) * 2 - 1;
-                            int k = rand.nextInt(2) * 2 - 1;
-                            double d0 = (double) pos.getX() + 0.5D + 0.25D * (double) j;
-                            double d1 = (double) ((float) pos.getY() + rand.nextFloat());
-                            double d2 = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
-                            double d3 = (double) (rand.nextFloat() * (float) j);
-                            double d4 = ((double) rand.nextFloat() - 0.5D) * 0.125D;
-                            double d5 = (double) (rand.nextFloat() * (float) k);
-                            EarthParticles.FLOWER_POLLEN.spawn(world, d0, d1, d2, d3, d4, d5);
-                        }
                     }
                 }
 
@@ -182,6 +171,9 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         if (this.world.isRemote) {
             this.grassEatTimer = Math.max(0, this.grassEatTimer - 1);
         }
+
+        EarthParticles.FLOWER_POLLEN.spawn(world, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(), this.posY + this.rand.nextDouble() * (double) this.getHeight() - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(), (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
+
 
         this.updateArmSwingProgress();
         super.livingTick();
