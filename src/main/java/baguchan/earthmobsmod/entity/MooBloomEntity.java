@@ -1,5 +1,6 @@
 package baguchan.earthmobsmod.entity;
 
+import baguchan.earthmobsmod.client.particle.EarthParticles;
 import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
@@ -142,7 +143,6 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
                 BlockState blockstate = this.world.getBlockState(pos);
                 if (blockstate.getBlock() instanceof IGrowable && !(blockstate.getBlock() instanceof GrassBlock)) {
                     IGrowable igrowable = (IGrowable) blockstate.getBlock();
-
                     if (!this.world.isRemote) {
                         this.world.playEvent(2005, pos, 0);
                     }
@@ -151,6 +151,17 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
                             if (igrowable.canUseBonemeal(this.world, this.world.rand, pos, blockstate)) {
                                 igrowable.grow(this.world, this.world.rand, pos, blockstate);
                             }
+                        }
+                        for (int i2 = 0; i2 < 12; ++i2) {
+                            int j = rand.nextInt(2) * 2 - 1;
+                            int k = rand.nextInt(2) * 2 - 1;
+                            double d0 = (double) pos.getX() + 0.5D + 0.25D * (double) j;
+                            double d1 = (double) ((float) pos.getY() + rand.nextFloat());
+                            double d2 = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
+                            double d3 = (double) (rand.nextFloat() * (float) j);
+                            double d4 = ((double) rand.nextFloat() - 0.5D) * 0.125D;
+                            double d5 = (double) (rand.nextFloat() * (float) k);
+                            EarthParticles.FLOWER_POLLEN.spawn(world, d0, d1, d2, d3, d4, d5);
                         }
                     }
                 }
