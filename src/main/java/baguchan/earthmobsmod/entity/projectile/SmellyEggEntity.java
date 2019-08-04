@@ -1,11 +1,13 @@
 package baguchan.earthmobsmod.entity.projectile;
 
+import baguchan.earthmobsmod.entity.CluckShroomEntity;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.MooshroomEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
@@ -72,26 +74,48 @@ public class SmellyEggEntity extends ProjectileItemEntity {
                 if (!this.world.isRemote) {
                     ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.NAUSEA, 120));
                 }
+                if (rand.nextInt(32) == 0) {
+                    if (entity instanceof ChickenEntity && !(entity instanceof CluckShroomEntity)) {
+                        if (!this.world.isRemote) {
+                            CluckShroomEntity cluckshroomEntity = EarthEntitys.CLUCKSHROOM.create(this.world);
+                            cluckshroomEntity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+                            cluckshroomEntity.setNoAI(((ChickenEntity) entity).isAIDisabled());
+                            if (this.hasCustomName()) {
+                                cluckshroomEntity.setCustomName(this.getCustomName());
+                                cluckshroomEntity.setCustomNameVisible(this.isCustomNameVisible());
+                            }
 
-                if (entity instanceof CowEntity && !(entity instanceof MooshroomEntity)) {
-                    if (!this.world.isRemote) {
-                        MooshroomEntity mooshroomEntity = EntityType.MOOSHROOM.create(this.world);
-                        mooshroomEntity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-                        mooshroomEntity.setNoAI(((CowEntity) entity).isAIDisabled());
-                        if (this.hasCustomName()) {
-                            mooshroomEntity.setCustomName(this.getCustomName());
-                            mooshroomEntity.setCustomNameVisible(this.isCustomNameVisible());
+                            if (((ChickenEntity) entity).isChild()) {
+                                cluckshroomEntity.setGrowingAge(((ChickenEntity) entity).getGrowingAge());
+                            }
+
+                            this.world.addEntity(cluckshroomEntity);
+
+                            entity.remove();
                         }
-
-                        if (((CowEntity) entity).isChild()) {
-                            mooshroomEntity.setGrowingAge(((CowEntity) entity).getGrowingAge());
-                        }
-
-                        this.world.addEntity(mooshroomEntity);
-
-                        entity.remove();
+                        this.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, 1.4F, 1.0F);
                     }
-                    this.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, 1.4F, 1.0F);
+
+                    if (entity instanceof CowEntity && !(entity instanceof MooshroomEntity)) {
+                        if (!this.world.isRemote) {
+                            MooshroomEntity mooshroomEntity = EntityType.MOOSHROOM.create(this.world);
+                            mooshroomEntity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+                            mooshroomEntity.setNoAI(((CowEntity) entity).isAIDisabled());
+                            if (this.hasCustomName()) {
+                                mooshroomEntity.setCustomName(this.getCustomName());
+                                mooshroomEntity.setCustomNameVisible(this.isCustomNameVisible());
+                            }
+
+                            if (((CowEntity) entity).isChild()) {
+                                mooshroomEntity.setGrowingAge(((CowEntity) entity).getGrowingAge());
+                            }
+
+                            this.world.addEntity(mooshroomEntity);
+
+                            entity.remove();
+                        }
+                        this.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, 1.4F, 1.0F);
+                    }
                 }
             }
 

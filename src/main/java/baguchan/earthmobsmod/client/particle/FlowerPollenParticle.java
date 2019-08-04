@@ -39,7 +39,7 @@ public class FlowerPollenParticle extends EarthParticle {
 		this.particleScale *= 0.6F;
 		int i2 = (int) (8.0D / (Math.random() * 0.8D + 0.3D));
 
-		this.maxAge = (int) (8d / (Math.random() * 0.8d + 0.2d)) + 4;
+		this.maxAge = (int) (Math.random() * 10.0D) + 40;
 		this.particleGravity = 0f;
 	}
 
