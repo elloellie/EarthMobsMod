@@ -39,11 +39,11 @@ public class GoldenBloomBlock extends FlowerBlock {
 	}
 
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (!worldIn.isRemote && worldIn.rand.nextInt(220) == 0) {
+		if (!worldIn.isRemote) {
 			if (entityIn instanceof LivingEntity) {
 				LivingEntity livingentity = (LivingEntity) entityIn;
 
-				livingentity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 60));
+				livingentity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 40));
 
 			}
 

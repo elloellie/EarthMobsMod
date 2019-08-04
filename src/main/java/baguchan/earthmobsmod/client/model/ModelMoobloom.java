@@ -164,10 +164,25 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
 
         this.Head.rotateAngleX = this.headRotationAngleX;
         if (entityIn.isSleep()) {
-            this.Head.rotationPointY = 4.0F + MathHelper.cos(ageInTicks * 0.04F) * 0.08F;
+            this.Head.rotationPointY = 14.0F + MathHelper.cos(ageInTicks * 0.04F) * 0.08F;
             this.Head.rotateAngleX = 0.4F;
+            this.RightFrontLeg.rotateAngleX = (float) -(Math.PI / 2F);
+            this.LeftFrontLeg.rotateAngleX = (float) -(Math.PI / 2F);
+            this.RightBackLeg.rotateAngleX = (float) (Math.PI / 2F);
+            this.LeftBackLeg.rotateAngleX = (float) (Math.PI / 2F);
+
+            this.Body.rotationPointY = 5.0F + 10.0F;
+            this.RightFrontLeg.rotationPointY = 12.0F + 10.0F;
+            this.LeftFrontLeg.rotationPointY = 12.0F + 10.0F;
+            this.RightBackLeg.rotationPointY = 12.0F + 10.0F;
+            this.LeftBackLeg.rotationPointY = 12.0F + 10.0F;
         } else {
             this.Head.rotationPointY = 4.0F;
+            this.Body.rotationPointY = 5.0F;
+            this.RightFrontLeg.rotationPointY = 12.0F;
+            this.LeftFrontLeg.rotationPointY = 12.0F;
+            this.RightBackLeg.rotationPointY = 12.0F;
+            this.LeftBackLeg.rotationPointY = 12.0F;
         }
     }
 
