@@ -2,7 +2,6 @@ package baguchan.earthmobsmod.entity.ai;
 
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.handler.EarthBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockStateMatcher;
@@ -44,13 +43,9 @@ public class EatGrassOrBloomGoal extends Goal {
 
                     if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
                         return true;
-                    } else if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos))) {
-                        return true;
                     } else {
-                        return this.entityWorld.getBlockState(blockpos.down()).getBlock() == Blocks.GRASS_BLOCK;
+                        return false;
                     }
-
-
                 }
             } else {
                 return false;
@@ -106,24 +101,7 @@ public class EatGrassOrBloomGoal extends Goal {
                 this.grassEaterEntity.eatGrassBonus();
 
                 this.grassEaterEntity.setEatDelayTimer(160);
-            } else if (IS_GRASS.test(this.entityWorld.getBlockState(blockpos))) {
-                if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)) {
-                    this.entityWorld.destroyBlock(blockpos, false);
-                }
-
-                this.grassEaterEntity.eatGrassBonus();
-            } else {
-                BlockPos blockpos1 = blockpos.down();
-                if (this.entityWorld.getBlockState(blockpos1).getBlock() == Blocks.GRASS_BLOCK) {
-                    if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)) {
-                        this.entityWorld.playEvent(2001, blockpos1, Block.getStateId(Blocks.GRASS_BLOCK.getDefaultState()));
-                        this.entityWorld.setBlockState(blockpos1, Blocks.DIRT.getDefaultState(), 2);
-                    }
-
-                    this.grassEaterEntity.eatGrassBonus();
-                }
             }
-
         }
     }
 }

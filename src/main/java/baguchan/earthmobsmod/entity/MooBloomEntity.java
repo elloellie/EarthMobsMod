@@ -1,6 +1,5 @@
 package baguchan.earthmobsmod.entity;
 
-import baguchan.earthmobsmod.client.particle.EarthParticles;
 import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
@@ -122,7 +121,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         this.grassEatTimer = this.eatGrassGoal.getEatingGrassTimer();
         super.updateAITasks();
 
-        if (this.onGround && this.ticksExisted % 200 == 0 && this.world.rand.nextInt(1) == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
+	    if (this.onGround && this.ticksExisted % 140 == 0 && this.world.rand.nextInt(1) == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
             FlowerBlock flowerBlock = EarthBlocks.GOLDENBLOOM;
             BlockPos blockpos = this.getPosition().down();
 
@@ -173,9 +172,6 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         if (this.world.isRemote) {
             this.grassEatTimer = Math.max(0, this.grassEatTimer - 1);
         }
-
-        EarthParticles.FLOWER_POLLEN.spawn(world, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(), this.posY + this.rand.nextDouble() * (double) this.getHeight() - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(), (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
-
 
         this.updateArmSwingProgress();
         super.livingTick();
