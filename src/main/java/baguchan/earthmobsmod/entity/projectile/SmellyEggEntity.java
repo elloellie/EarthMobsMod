@@ -3,7 +3,6 @@ package baguchan.earthmobsmod.entity.projectile;
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthItems;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
@@ -121,18 +120,6 @@ public class SmellyEggEntity extends ProjectileItemEntity {
             }
 
             entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 0);
-        } else if (result.getType() == RayTraceResult.Type.BLOCK) {
-            if (rand.nextInt(32) == 0) {
-                if (this.world.getBlockState(this.getPosition()).getBlock() == Blocks.GRASS_BLOCK) {
-                    if (!this.world.isRemote) {
-                        this.world.setBlockState(this.getPosition(), Blocks.MYCELIUM.getDefaultState());
-                    }
-                } else if (this.world.getBlockState(this.getPosition().down()).getBlock() == Blocks.GRASS_BLOCK) {
-                    if (!this.world.isRemote) {
-                        this.world.setBlockState(this.getPosition().down(), Blocks.MYCELIUM.getDefaultState());
-                    }
-                }
-            }
         }
 
         if (!this.world.isRemote) {
