@@ -11,7 +11,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FlowerPollenParticle extends EarthParticle {
-	private int currentFlame = 1;
+	private int currentFrame = 0;
+	private int lastTick = 0;
 	private final double portalPosX;
 	private final double portalPosY;
 	private final double portalPosZ;
@@ -46,12 +47,14 @@ public class FlowerPollenParticle extends EarthParticle {
 	@Override
 	public void onPreRender(BufferBuilder buffer, ActiveRenderInfo activeInfo, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		Entity entity = activeInfo.getRenderViewEntity();
-		int ageFlame = (this.age / this.maxAge) * 3;
+		if (entity.ticksExisted >= this.lastTick + 12) {
 
-		if (ageFlame > 1) {
-			this.currentFlame = (this.age / this.maxAge) * 3;
-		} else {
-			this.currentFlame = 1;
+			if (this.currentFrame >= 3) {
+				this.currentFrame = 3;
+			} else {
+				this.currentFrame = this.currentFrame + 1;
+			}
+			this.lastTick = entity.ticksExisted;
 		}
 	}
 
@@ -101,7 +104,7 @@ public class FlowerPollenParticle extends EarthParticle {
 
 	@Override
 	ResourceLocation getTexture() {
-		return new ResourceLocation(EarthMobsMod.MODID, "textures/particles/flowerpollen/pollen" + "_" + currentFlame + ".png");
+		return new ResourceLocation(EarthMobsMod.MODID, "textures/particles/flowerpollen/pollen" + "_" + currentFrame + ".png");
 	}
 
 	@OnlyIn(Dist.CLIENT)

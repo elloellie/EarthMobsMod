@@ -125,6 +125,8 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
         if (this.onGround && this.ticksExisted % 200 == 0 && this.world.rand.nextInt(1) == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
             FlowerBlock flowerBlock = EarthBlocks.GOLDENBLOOM;
             BlockPos blockpos = this.getPosition().down();
+
+            this.setEatDelayTimer(120);
             if (flowerBlock.isValidPosition(flowerBlock.getDefaultState(), world, blockpos) && this.world.isAirBlock(this.getPosition())) {
                 this.world.setBlockState(this.getPosition(), flowerBlock.getDefaultState());
             }

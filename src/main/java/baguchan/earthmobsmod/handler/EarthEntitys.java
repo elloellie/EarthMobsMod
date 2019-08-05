@@ -5,10 +5,13 @@ import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import baguchan.earthmobsmod.entity.projectile.SmellyEggEntity;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Set;
@@ -29,6 +32,7 @@ public class EarthEntitys {
         event.register(CLUCKSHROOM.setRegistryName("cluckshroom"));
         event.register(MOOBLOOM.setRegistryName("moobloom"));
         event.register(SMELLYEGG.setRegistryName("smellyegg"));
+        EntitySpawnPlacementRegistry.register(CLUCKSHROOM, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, CluckShroomEntity::spawnHandler);
     }
 
     private static String prefix(String path) {
@@ -39,17 +43,13 @@ public class EarthEntitys {
 
     public static void spawnEntity() {
 
-        for (Biome biome : Biome.BIOMES) {
+        Biomes.MUSHROOM_FIELDS.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
+        Biomes.MUSHROOM_FIELD_SHORE.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
+
+        for (Biome biome : ForgeRegistries.BIOMES) {
 
             Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(biome);
 
-            if (biome == Biomes.FLOWER_FOREST) {
-                biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MOOBLOOM, 8, 3, 4));
-            }
-
-            if (biome == Biomes.MUSHROOM_FIELDS || biome == Biomes.MUSHROOM_FIELD_SHORE) {
-                biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 3, 2, 3));
-            }
 
             if (types.contains(BiomeDictionary.Type.SWAMP) && !types.contains(NETHER) && !biome.getSpawns(EntityClassification.CREATURE).isEmpty()) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MUDDYPIG, 10, 3, 4));

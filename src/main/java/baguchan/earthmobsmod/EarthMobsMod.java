@@ -2,7 +2,11 @@ package baguchan.earthmobsmod;
 
 import baguchan.earthmobsmod.client.EarthRender;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
-import baguchan.earthmobsmod.handler.*;
+import baguchan.earthmobsmod.handler.EarthBlocks;
+import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.handler.EarthFeatures;
+import baguchan.earthmobsmod.handler.EarthFluids;
+import baguchan.earthmobsmod.handler.EarthItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -70,7 +74,7 @@ public class EarthMobsMod
     private void setup(final FMLCommonSetupEvent event)
     {
         EarthEntitys.spawnEntity();
-        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(5)));
+        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(13)));
 
     }
 
