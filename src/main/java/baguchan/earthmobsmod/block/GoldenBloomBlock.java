@@ -44,9 +44,10 @@ public class GoldenBloomBlock extends FlowerBlock {
 		if (!worldIn.isRemote) {
 			if (entityIn instanceof LivingEntity) {
 				LivingEntity livingentity = (LivingEntity) entityIn;
-				livingentity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 40));
+				if (worldIn.rand.nextInt(18) == 0 || !livingentity.isPotionActive(Effects.REGENERATION)) {
+					livingentity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 53));
+				}
 			}
-
 		}
 	}
 }

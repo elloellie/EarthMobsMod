@@ -43,8 +43,8 @@ public class EarthEntitys {
 
     public static void spawnEntity() {
 
-        Biomes.MUSHROOM_FIELDS.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
-        Biomes.MUSHROOM_FIELD_SHORE.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
+        Biomes.MUSHROOM_FIELDS.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
+        Biomes.MUSHROOM_FIELD_SHORE.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
 
         for (Biome biome : ForgeRegistries.BIOMES) {
 
