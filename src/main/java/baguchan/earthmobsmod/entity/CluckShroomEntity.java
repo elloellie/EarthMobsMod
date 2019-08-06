@@ -2,6 +2,7 @@ package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthItems;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
@@ -50,7 +51,6 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         return true;
     }
 
-
     @Override
     public java.util.List<ItemStack> onSheared(ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
         this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double) (this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
@@ -58,25 +58,61 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         if (!this.world.isRemote) {
             ret.add(new ItemStack(Item.getItemFromBlock(Blocks.RED_MUSHROOM), 2));
 
-            ChickenEntity chickenEntity = EntityType.CHICKEN.create(this.world);
-            chickenEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            chickenEntity.setNoAI(this.isAIDisabled());
+            ChickenEntity cluckShroomEntity = EntityType.CHICKEN.create(this.world);
+            cluckShroomEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+            cluckShroomEntity.setNoAI(this.isAIDisabled());
             if (this.hasCustomName()) {
-                chickenEntity.setCustomName(this.getCustomName());
-                chickenEntity.setCustomNameVisible(this.isCustomNameVisible());
+                cluckShroomEntity.setCustomName(this.getCustomName());
+                cluckShroomEntity.setCustomNameVisible(this.isCustomNameVisible());
             }
 
             if (this.isChild()) {
-                chickenEntity.setGrowingAge(this.getGrowingAge());
+                cluckShroomEntity.setGrowingAge(this.getGrowingAge());
             }
 
-            this.world.addEntity(chickenEntity);
+            this.world.addEntity(cluckShroomEntity);
 
             this.remove();
         }
 
         this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
         return ret;
+    }
+
+    @Override
+    public boolean canBreed() {
+        return false;
+    }
+
+    protected void updateAITasks() {
+        super.updateAITasks();
+
+        if (this.world.rand.nextInt(300) == 0 && this.world.getLightSubtracted(this.getPosition(), 0) < 12 && !this.isChild()) {
+            BlockPos blockPos = this.getPosition();
+
+            for (int i = 0; i < 2 + this.rand.nextInt(6); i++) {
+                BlockPos pos = new BlockPos(blockPos.getX() + this.rand.nextInt(12) - 6, blockPos.getY() + this.rand.nextInt(4) - 2, blockPos.getZ() + this.rand.nextInt(12) - 6);
+
+                BlockState blockstate = this.world.getBlockState(pos);
+                if ((blockstate.getBlock() == Blocks.RED_MUSHROOM)) {
+
+                    if (!this.world.isRemote) {
+                        this.world.playEvent(2005, pos, 0);
+                        CluckShroomEntity cluckShroomEntity = EarthEntitys.CLUCKSHROOM.create(this.world);
+                        cluckShroomEntity.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, 0.0F, 0.0F);
+                        cluckShroomEntity.setNoAI(this.isAIDisabled());
+
+                        cluckShroomEntity.setGrowingAge(-24000);
+
+                        this.world.addEntity(cluckShroomEntity);
+
+                        this.world.destroyBlock(pos, false);
+                    }
+
+                }
+
+            }
+        }
     }
 
     public CluckShroomEntity createChild(AgeableEntity ageable) {
@@ -94,15 +130,14 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
 
 
     public static boolean spawnHandler(EntityType<? extends CluckShroomEntity> entity, IWorld world, SpawnReason p_223325_2_, BlockPos p_223325_3_, Random p_223325_4_) {
-        return lightCheck(world, p_223325_3_, p_223325_4_) && func_223315_a(entity, world, p_223325_2_, p_223325_3_, p_223325_4_);
+        return world.getBlockState(p_223325_3_.down()).getBlock() == Blocks.MYCELIUM && lightCheck(world, p_223325_3_, p_223325_4_);
     }
 
     public static boolean lightCheck(IWorld world, BlockPos pos, Random rand) {
-        if (world.getLightFor(LightType.SKY, pos) > rand.nextInt(32)) {
-            return false;
+        if (world.canBlockSeeSky(pos) && !world.getWorld().isDaytime()) {
+            return true;
         } else {
-            int i = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(pos, 10) : world.getLight(pos);
-            return i <= rand.nextInt(12);
+            return !world.getWorld().isDaytime() && world.getLightFor(LightType.SKY, pos) < rand.nextInt(20);
         }
     }
 }
