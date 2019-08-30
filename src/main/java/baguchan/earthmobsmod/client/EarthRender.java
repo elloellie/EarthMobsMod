@@ -25,4 +25,8 @@ public class EarthRender {
         RenderingRegistry.registerEntityRenderingHandler(MooBloomEntity.class, MooBloomRender::new);
         RenderingRegistry.registerEntityRenderingHandler(SmellyEggEntity.class, manager -> new SpriteRenderer(MC.getRenderManager(), MC.getItemRenderer()));
     }
+
+    public static void fluidRender() {
+
+    }
 }

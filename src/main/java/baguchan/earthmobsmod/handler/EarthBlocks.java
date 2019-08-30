@@ -3,7 +3,6 @@ package baguchan.earthmobsmod.handler;
 import baguchan.earthmobsmod.block.EarthFluidBlock;
 import baguchan.earthmobsmod.block.GoldenBloomBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.SoundType;
@@ -16,7 +15,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class EarthBlocks {
 
-    public static final Block MUDWATER = new EarthFluidBlock(EarthFluids.MUD_WATER, Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).lootFrom(Blocks.AIR));
+    public static final Block MUDWATER = new EarthFluidBlock(EarthFluids.MUD_WATER, Block.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops());
     public static final FlowerBlock GOLDENBLOOM = new GoldenBloomBlock(Effects.REGENERATION, 160, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT));
     public static final FlowerPotBlock POTTED_GOLDENBLOOM = new FlowerPotBlock(GOLDENBLOOM, Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0.0F).sound(SoundType.PLANT));
 

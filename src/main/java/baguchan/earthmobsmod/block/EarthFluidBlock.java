@@ -8,4 +8,5 @@ public class EarthFluidBlock extends FlowingFluidBlock {
     public EarthFluidBlock(FlowingFluid fluid, Block.Properties properties) {
         super(fluid, properties);
     }
+
 }

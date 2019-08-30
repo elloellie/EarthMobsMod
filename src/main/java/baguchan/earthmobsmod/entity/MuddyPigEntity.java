@@ -1,10 +1,12 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.handler.EarthTags;
 import com.google.common.collect.Maps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +17,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -56,6 +57,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
     private boolean isWet;
     private boolean isShaking;
+    protected boolean inMud;
     private float timeIsShaking;
     private float prevTimeIsShaking;
 
@@ -63,7 +65,6 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
     public MuddyPigEntity(EntityType<MuddyPigEntity> type, World p_i48574_2_) {
         super(type, p_i48574_2_);
-        this.setPathPriority(PathNodeType.WATER, -2.0F);
     }
 
     @Override
@@ -218,7 +219,20 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     public void tick() {
         super.tick();
         if (this.isAlive()) {
+
+            if (this.isJumping) {
+                if (!(this.submergedHeight > 0.0D) || this.onGround && !(this.submergedHeight > 0.4D)) {
+                    this.handleFluidJump(EarthTags.Fluids.MUD_WATER);
+                }
+            }
+
             if(this.isDry()){
+                if (this.isInMud() && !isShaking) {
+                    this.isShaking = true;
+                    this.timeIsShaking = 0.0F;
+                    this.prevTimeIsShaking = 0.0F;
+                }
+
                 if(++dryTime >= 2400D){
                     if (!this.world.isRemote) {
                         PigEntity pigEntity = EntityType.PIG.create(world);
@@ -243,7 +257,17 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     }
                 }
             }else {
-                dryTime = 0;
+                if (this.isInMud()) {
+                    dryTime = 0;
+                } else {
+                    if (++dryTime >= 2400D) {
+                        if (!this.world.isRemote) {
+                            dryTime = 0;
+                            this.setHasFlower(false);
+                            this.setDry(true);
+                        }
+                    }
+                }
             }
 
             if (this.isInWaterRainOrBubbleColumn() && !this.isWet && !isShaking && !this.isDry()) {
@@ -262,6 +286,9 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     if (this.isWet) {
                         this.setDry(true);
                         this.setHasFlower(false);
+                    } else {
+                        this.setDry(false);
+                        this.setHasFlower(true);
                     }
                     this.isWet = false;
                     this.isShaking = false;
@@ -283,6 +310,33 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
             }
 
         }
+    }
+
+    public boolean handleWaterMovement() {
+        if (this.getRidingEntity() instanceof BoatEntity) {
+            this.inWater = false;
+        } else if (this.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
+            if (!this.inWater && !this.firstUpdate) {
+                this.doWaterSplashEffect();
+            }
+
+            this.fallDistance = 0.0F;
+            this.inMud = true;
+            this.inWater = true;
+            this.extinguish();
+        } else {
+            this.inMud = false;
+            super.handleWaterMovement();
+        }
+        return this.isInWater();
+    }
+
+    public boolean isInWaterRainOrBubbleColumn() {
+        return !this.isInMud() && super.isInWaterRainOrBubbleColumn();
+    }
+
+    public boolean isInMud() {
+        return inMud;
     }
 
     @OnlyIn(Dist.CLIENT)

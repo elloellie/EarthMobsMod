@@ -2,15 +2,13 @@ package baguchan.earthmobsmod;
 
 import baguchan.earthmobsmod.client.EarthRender;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthEntitys;
-import baguchan.earthmobsmod.handler.EarthFeatures;
-import baguchan.earthmobsmod.handler.EarthFluids;
-import baguchan.earthmobsmod.handler.EarthItems;
+import baguchan.earthmobsmod.entity.MuddyPigEntity;
+import baguchan.earthmobsmod.handler.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +25,7 @@ import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -91,16 +90,43 @@ public class EarthMobsMod
         EarthRender.entityRender();
     }
 
+    @SubscribeEvent
+    public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
+        World world = event.getEntityLiving().world;
 
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (event.getEntityLiving().getType() == EntityType.PIG && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
+            MuddyPigEntity pigEntity = EarthEntitys.MUDDYPIG.create(world);
+            pigEntity.setLocationAndAngles(livingEntity.posX, livingEntity.posY, livingEntity.posZ, livingEntity.rotationYaw, livingEntity.rotationPitch);
+            pigEntity.setNoAI(((PigEntity) livingEntity).isAIDisabled());
+            if (livingEntity.hasCustomName()) {
+                pigEntity.setCustomName(livingEntity.getCustomName());
+                pigEntity.setCustomNameVisible(livingEntity.isCustomNameVisible());
+            }
+
+            if (((PigEntity) livingEntity).getSaddled()) {
+                pigEntity.setSaddled(true);
+            }
+
+            if (livingEntity.isChild()) {
+                pigEntity.setGrowingAge(((PigEntity) livingEntity).getGrowingAge());
+            }
+
+            pigEntity.setHasFlower(false);
+            pigEntity.setDry(true);
+
+            livingEntity.world.addEntity(pigEntity);
+
+            livingEntity.remove();
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEntityRightClick(PlayerInteractEvent.EntityInteract event) {
         ItemStack stack = event.getItemStack();
         World world = event.getWorld();
-        if (event.getTarget() instanceof CowEntity && !(event.getTarget() instanceof MooBloomEntity)) {
+        if (event.getTarget().getType() == EntityType.COW && !(event.getTarget() instanceof MooBloomEntity)) {
             if (stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE) {
-
-
                 MooBloomEntity cowBloomEntity = EarthEntitys.MOOBLOOM.create(world);
                 cowBloomEntity.setLocationAndAngles(event.getTarget().posX, event.getTarget().posY, event.getTarget().posZ, event.getTarget().rotationYaw, event.getTarget().rotationPitch);
                 cowBloomEntity.setNoAI(((AnimalEntity) event.getTarget()).isAIDisabled());
