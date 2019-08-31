@@ -232,7 +232,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     this.prevTimeIsShaking = 0.0F;
                 }
 
-                if(++dryTime >= 2400D){
+                if (++dryTime >= 2400D || this.isInWaterRainOrBubbleColumn()) {
                     if (!this.world.isRemote) {
                         PigEntity pigEntity = EntityType.PIG.create(world);
                         pigEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
@@ -260,11 +260,10 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     dryTime = 0;
                 } else {
                     if (++dryTime >= 2400D) {
-                        if (!this.world.isRemote) {
-                            dryTime = 0;
-                            this.setHasFlower(false);
-                            this.setDry(true);
-                        }
+                        dryTime = 0;
+                        this.isShaking = true;
+                        this.timeIsShaking = 0.0F;
+                        this.prevTimeIsShaking = 0.0F;
                     }
                 }
             }
@@ -282,12 +281,15 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 this.prevTimeIsShaking = this.timeIsShaking;
                 this.timeIsShaking += 0.05F;
                 if (this.prevTimeIsShaking >= 2.0F) {
-                    if (this.isWet) {
+                    if (this.isWet && !this.isDry()) {
                         this.setDry(true);
                         this.setHasFlower(false);
-                    } else {
+                    } else if (!this.isWet && this.isDry()) {
                         this.setDry(false);
                         this.setHasFlower(true);
+                    } else {
+                        this.setDry(true);
+                        this.setHasFlower(false);
                     }
                     this.isWet = false;
                     this.isShaking = false;
@@ -303,7 +305,9 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     for (int j = 0; j < i; ++j) {
                         float f1 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.6F;
                         float f2 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.6F;
-                        this.world.addParticle(ParticleTypes.SPLASH, this.posX + (double) f1, (double) (f + 0.85F), this.posZ + (double) f2, vec3d.x, vec3d.y, vec3d.z);
+                        if (isWet) {
+                            this.world.addParticle(ParticleTypes.SPLASH, this.posX + (double) f1, (double) (f + 0.85F), this.posZ + (double) f2, vec3d.x, vec3d.y, vec3d.z);
+                        }
                     }
                 }
             }
