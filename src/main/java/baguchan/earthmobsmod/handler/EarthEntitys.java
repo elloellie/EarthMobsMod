@@ -17,7 +17,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.Set;
 
 import static baguchan.earthmobsmod.EarthMobsMod.MODID;
-import static net.minecraftforge.common.BiomeDictionary.Type.NETHER;
 
 
 public class EarthEntitys {
@@ -51,7 +50,7 @@ public class EarthEntitys {
             Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(biome);
 
 
-            if (types.contains(BiomeDictionary.Type.SWAMP) && !types.contains(NETHER) && !biome.getSpawns(EntityClassification.CREATURE).isEmpty()) {
+            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MUDDYPIG, 10, 3, 4));
             }
         }

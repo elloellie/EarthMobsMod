@@ -37,6 +37,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,9 +78,12 @@ public class EarthMobsMod
         EarthEntitys.spawnEntity();
         Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(13)));
 
-        Biomes.SWAMP.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(Feature.LAKE, new LakesConfig(EarthBlocks.MUDWATER.getDefaultState()), Placement.WATER_LAKE, new LakeChanceConfig(3)));
-        Biomes.SWAMP_HILLS.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(Feature.LAKE, new LakesConfig(EarthBlocks.MUDWATER.getDefaultState()), Placement.WATER_LAKE, new LakeChanceConfig(4)));
+        for (Biome biome : ForgeRegistries.BIOMES) {
 
+            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
+                biome.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(Feature.LAKE, new LakesConfig(EarthBlocks.MUDWATER.getDefaultState()), Placement.WATER_LAKE, new LakeChanceConfig(4)));
+            }
+        }
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
