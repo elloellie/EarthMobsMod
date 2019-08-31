@@ -111,7 +111,6 @@ public abstract class FluidMudWater extends WaterFluid {
         return net.minecraftforge.fluids.FluidAttributes.builder("mud",
                 new net.minecraft.util.ResourceLocation(EarthMobsMod.MODID, "blocks/mud"),
                 new net.minecraft.util.ResourceLocation(EarthMobsMod.MODID, "blocks/mud"))
-                .block(() -> EarthBlocks.MUDWATER)
                 .density(1100).viscosity(2000).build();
     }
 
