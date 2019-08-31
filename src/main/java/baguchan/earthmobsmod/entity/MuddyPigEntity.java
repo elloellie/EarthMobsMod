@@ -219,7 +219,6 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     public void tick() {
         super.tick();
         if (this.isAlive()) {
-
             if (this.isJumping) {
                 if (!(this.submergedHeight > 0.0D) || this.onGround && !(this.submergedHeight > 0.4D)) {
                     this.handleFluidJump(EarthTags.Fluids.MUD_WATER);

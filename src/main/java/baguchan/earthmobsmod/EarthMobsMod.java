@@ -20,8 +20,10 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.LakesConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.placement.ChanceConfig;
+import net.minecraft.world.gen.placement.LakeChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -75,6 +77,9 @@ public class EarthMobsMod
         EarthEntitys.spawnEntity();
         Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(13)));
 
+        Biomes.SWAMP.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(Feature.LAKE, new LakesConfig(EarthBlocks.MUDWATER.getDefaultState()), Placement.WATER_LAKE, new LakeChanceConfig(3)));
+        Biomes.SWAMP_HILLS.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(Feature.LAKE, new LakesConfig(EarthBlocks.MUDWATER.getDefaultState()), Placement.WATER_LAKE, new LakeChanceConfig(4)));
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -95,6 +100,7 @@ public class EarthMobsMod
         World world = event.getEntityLiving().world;
 
         LivingEntity livingEntity = event.getEntityLiving();
+
         if (event.getEntityLiving().getType() == EntityType.PIG && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
             MuddyPigEntity pigEntity = EarthEntitys.MUDDYPIG.create(world);
             pigEntity.setLocationAndAngles(livingEntity.posX, livingEntity.posY, livingEntity.posZ, livingEntity.rotationYaw, livingEntity.rotationPitch);
