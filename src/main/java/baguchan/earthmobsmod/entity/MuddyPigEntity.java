@@ -227,6 +227,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
             if(this.isDry()){
                 if (this.isInMud() && !isShaking) {
+                    dryTime = 0;
                     this.isShaking = true;
                     this.timeIsShaking = 0.0F;
                     this.prevTimeIsShaking = 0.0F;
@@ -259,7 +260,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 if (this.isInMud()) {
                     dryTime = 0;
                 } else {
-                    if (++dryTime >= 2400D) {
+                    if (++dryTime >= 2400D && !isShaking) {
                         dryTime = 0;
                         this.isShaking = true;
                         this.timeIsShaking = 0.0F;
@@ -281,15 +282,17 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 this.prevTimeIsShaking = this.timeIsShaking;
                 this.timeIsShaking += 0.05F;
                 if (this.prevTimeIsShaking >= 2.0F) {
-                    if (this.isWet && !this.isDry()) {
-                        this.setDry(true);
-                        this.setHasFlower(false);
-                    } else if (!this.isWet && this.isDry()) {
-                        this.setDry(false);
-                        this.setHasFlower(true);
-                    } else {
-                        this.setDry(true);
-                        this.setHasFlower(false);
+                    if (!this.world.isRemote) {
+                        if (this.isWet && !this.isDry()) {
+                            this.setDry(true);
+                            this.setHasFlower(false);
+                        } else if (!this.isWet && this.isDry()) {
+                            this.setDry(false);
+                            this.setHasFlower(true);
+                        } else if (!this.isWet && !this.isDry()) {
+                            this.setDry(true);
+                            this.setHasFlower(false);
+                        }
                     }
                     this.isWet = false;
                     this.isShaking = false;
