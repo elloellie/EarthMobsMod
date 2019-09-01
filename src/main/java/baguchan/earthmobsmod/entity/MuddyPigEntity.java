@@ -1,5 +1,6 @@
 package baguchan.earthmobsmod.entity;
 
+import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthTags;
 import com.google.common.collect.Maps;
@@ -71,9 +72,15 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D, PigEntity.class));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, Ingredient.fromItems(Items.CARROT_ON_A_STICK), false));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, false, TEMPTATION_ITEMS));
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D, PigEntity.class));
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1.2D, Ingredient.fromItems(Items.CARROT_ON_A_STICK), false));
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1.2D, false, TEMPTATION_ITEMS));
+        this.goalSelector.addGoal(4, new GoToMudGoal(this, 1.0D) {
+            @Override
+            public boolean shouldExecute() {
+                return isDry() && super.shouldExecute();
+            }
+        });
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
@@ -225,7 +232,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 }
             }
 
-            if(this.isDry()){
+            if (this.isDry()) {
                 if (this.isInMud() && !isShaking) {
                     dryTime = 0;
                     this.isShaking = true;
@@ -256,7 +263,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                         this.remove();
                     }
                 }
-            }else {
+            } else {
                 if (this.isInMud()) {
                     dryTime = 0;
                 } else {
@@ -317,6 +324,68 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
         }
     }
+
+    public void travel(Vec3d vec) {
+        if (this.isAlive()) {
+            Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+            if (this.isBeingRidden() && this.canBeSteered()) {
+                this.rotationYaw = entity.rotationYaw;
+                this.prevRotationYaw = this.rotationYaw;
+                this.rotationPitch = entity.rotationPitch * 0.5F;
+                this.setRotation(this.rotationYaw, this.rotationPitch);
+                this.renderYawOffset = this.rotationYaw;
+                this.rotationYawHead = this.rotationYaw;
+                this.stepHeight = 1.0F;
+                this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
+
+                if (this.canPassengerSteer()) {
+                    Vec3d vec3d6 = this.getMotion();
+
+                    float d0 = 0.00F;
+                    float d1 = 0.00F;
+
+                    if (isInWater()) {
+                        if (d0 < 0.22F) {
+                            d0 += 0.01F;
+                        } else {
+                            d0 -= 0.01F;
+                        }
+                    }
+
+                    if (isInMud()) {
+                        if (d1 < 0.2F) {
+                            d1 += 0.01F;
+                        } else {
+                            d1 -= 0.01F;
+                        }
+                    }
+                    float f2 = MathHelper.lerp(0.22F, this.getAIMoveSpeed(), d1);
+
+                    this.setAIMoveSpeed(f2);
+                    this.setMotion(vec3d6.x, d0 + vec3d6.y, vec3d6.z);
+                    super.travel(vec);
+                } else {
+                    this.setMotion(Vec3d.ZERO);
+                }
+
+                this.prevLimbSwingAmount = this.limbSwingAmount;
+                double d1 = this.posX - this.prevPosX;
+                double d0 = this.posZ - this.prevPosZ;
+                float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
+                if (f1 > 1.0F) {
+                    f1 = 1.0F;
+                }
+
+                this.limbSwingAmount += (f1 - this.limbSwingAmount) * 0.4F;
+                this.limbSwing += this.limbSwingAmount;
+            } else {
+                this.stepHeight = 0.5F;
+                this.jumpMovementFactor = 0.02F;
+                super.travel(vec);
+            }
+        }
+    }
+
 
     public boolean handleWaterMovement() {
         if (this.getRidingEntity() instanceof BoatEntity) {

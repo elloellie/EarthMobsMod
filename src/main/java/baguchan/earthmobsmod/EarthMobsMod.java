@@ -3,6 +3,7 @@ package baguchan.earthmobsmod;
 import baguchan.earthmobsmod.client.EarthRender;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
+import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
 import baguchan.earthmobsmod.handler.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -27,6 +28,7 @@ import net.minecraft.world.gen.placement.LakeChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -158,6 +160,16 @@ public class EarthMobsMod
                 event.getWorld().playSound(null, cowBloomEntity.getPosition(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.NEUTRAL, 1.5F, 1.0F);
                 event.getTarget().remove();
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityJoin(EntityJoinWorldEvent event) {
+        World world = event.getWorld();
+
+        if (event.getEntity().getType() == EntityType.PIG) {
+            PigEntity pig = (PigEntity) event.getEntity();
+            pig.goalSelector.addGoal(1, new GoToMudGoal(pig, 1.0D));
         }
     }
 
