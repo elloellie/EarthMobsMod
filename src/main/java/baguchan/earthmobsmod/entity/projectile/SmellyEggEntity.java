@@ -71,8 +71,12 @@ public class SmellyEggEntity extends ProjectileItemEntity {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
             double i = 0.5;
             if (entity instanceof LivingEntity) {
+                if (this.getThrower() == entity && this.ticksExisted < 4) {
+                    return;
+                }
+
                 if (!this.world.isRemote) {
-                    ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.NAUSEA, 120));
+                    ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 120));
                 }
                 if (rand.nextInt(32) == 0) {
                     if (entity instanceof ChickenEntity && !(entity instanceof CluckShroomEntity)) {
