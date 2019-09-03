@@ -342,27 +342,21 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     Vec3d vec3d6 = this.getMotion();
 
                     float d0 = 0.00F;
-                    float d1 = 0.00F;
 
-                    if (isInWater()) {
-                        if (d0 < 0.22F) {
+                    if (isInWater() || isInMud()) {
+                        if (d0 < 0.35F) {
                             d0 += 0.01F;
                         } else {
+                            d0 = 0.3F;
+                        }
+                    } else {
+                        if (d0 > 0.0F) {
                             d0 -= 0.01F;
                         }
                     }
 
-                    if (isInMud()) {
-                        if (d1 < 0.2F) {
-                            d1 += 0.01F;
-                        } else {
-                            d1 -= 0.01F;
-                        }
-                    }
-                    float f2 = MathHelper.lerp(0.22F, this.getAIMoveSpeed(), d1);
-
-                    this.setAIMoveSpeed(f2);
                     this.setMotion(vec3d6.x, d0 + vec3d6.y, vec3d6.z);
+
                     super.travel(vec);
                 } else {
                     this.setMotion(Vec3d.ZERO);
@@ -386,6 +380,10 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         }
     }
 
+    @Override
+    protected float getWaterSlowDown() {
+        return isInMud() ? 0.9F : super.getWaterSlowDown();
+    }
 
     public boolean handleWaterMovement() {
         if (this.getRidingEntity() instanceof BoatEntity) {
