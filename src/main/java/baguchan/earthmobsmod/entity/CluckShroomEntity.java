@@ -103,7 +103,7 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
     protected void updateAITasks() {
         super.updateAITasks();
 
-        if (this.world.rand.nextInt(300) == 0 && this.world.getLightSubtracted(this.getPosition(), 0) < 12 && !this.isChild()) {
+        if (this.world.rand.nextInt(300) == 0 && !this.isChild()) {
             BlockPos blockPos = this.getPosition();
 
             for (int i = 0; i < 2 + this.rand.nextInt(6); i++) {
