@@ -1,16 +1,22 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
+import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.handler.EarthFluids;
 import baguchan.earthmobsmod.handler.EarthTags;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,6 +24,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,6 +37,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Set;
 
 public class MuddyPigEntity extends PigEntity implements net.minecraftforge.common.IShearable {
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(Items.CARROT, Items.POTATO, Items.BEETROOT);
@@ -98,6 +106,11 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         this.dataManager.register(DRY, false);
         this.dataManager.register(HAS_FLOWER, true);
         this.dataManager.register(FLOWER_COLOR, DyeColor.RED.getId());
+    }
+
+    @Override
+    protected PathNavigator createNavigator(World worldIn) {
+        return new Navigator(this, worldIn);
     }
 
     @Override
@@ -483,6 +496,103 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
             return this.isInLove() && otherAnimal.isInLove();
         } else {
             return false;
+        }
+    }
+
+    static class Navigator extends GroundPathNavigator {
+        public Navigator(MobEntity p_i50754_1_, World p_i50754_2_) {
+            super(p_i50754_1_, p_i50754_2_);
+        }
+
+        protected PathFinder getPathFinder(int p_179679_1_) {
+            this.nodeProcessor = new MuddyPigEntity.Processor();
+            return new PathFinder(this.nodeProcessor, p_179679_1_);
+        }
+
+        protected Vec3d getEntityPosition() {
+            return new Vec3d(this.entity.posX, (double) this.getPathablePosY(), this.entity.posZ);
+        }
+
+        private int getPathablePosY() {
+            if (this.entity.isInWater() && this.getCanSwim()) {
+                int i = MathHelper.floor(this.entity.getBoundingBox().minY);
+                Block block = this.world.getBlockState(new BlockPos(this.entity.posX, (double) i, this.entity.posZ)).getBlock();
+                int j = 0;
+
+                while (block == Blocks.WATER || block == EarthBlocks.MUDWATER) {
+                    ++i;
+                    block = this.world.getBlockState(new BlockPos(this.entity.posX, (double) i, this.entity.posZ)).getBlock();
+                    ++j;
+                    if (j > 16) {
+                        return MathHelper.floor(this.entity.getBoundingBox().minY);
+                    }
+                }
+
+                return i;
+            } else {
+                return MathHelper.floor(this.entity.getBoundingBox().minY + 0.5D);
+            }
+        }
+    }
+
+    static class Processor extends WalkNodeProcessor {
+        private Processor() {
+        }
+
+        public PathPoint getStart() {
+            int i;
+            if (this.getCanSwim() && this.entity.isInWater()) {
+                i = MathHelper.floor(this.entity.getBoundingBox().minY);
+                BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(this.entity.posX, (double) i, this.entity.posZ);
+
+                for (BlockState blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos); blockstate.getBlock() == Blocks.WATER || blockstate.getFluidState() == Fluids.WATER.getStillFluidState(false); blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos)) {
+                    ++i;
+                    blockpos$mutableblockpos.setPos(this.entity.posX, (double) i, this.entity.posZ);
+                }
+
+                for (BlockState blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos); blockstate.getBlock() == EarthBlocks.MUDWATER || blockstate.getFluidState() == EarthFluids.MUD_WATER.getStillFluidState(false); blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos)) {
+                    ++i;
+                    blockpos$mutableblockpos.setPos(this.entity.posX, (double) i, this.entity.posZ);
+                }
+
+                --i;
+            } else if (this.entity.onGround) {
+                i = MathHelper.floor(this.entity.getBoundingBox().minY + 0.5D);
+            } else {
+                BlockPos blockpos;
+                for (blockpos = new BlockPos(this.entity); (this.blockaccess.getBlockState(blockpos).isAir() || this.blockaccess.getBlockState(blockpos).allowsMovement(this.blockaccess, blockpos, PathType.LAND)) && blockpos.getY() > 0; blockpos = blockpos.down()) {
+                    ;
+                }
+
+                i = blockpos.up().getY();
+            }
+
+            BlockPos blockpos2 = new BlockPos(this.entity);
+            PathNodeType pathnodetype1 = this.getPathNodeType(this.entity, blockpos2.getX(), i, blockpos2.getZ());
+            if (this.entity.getPathPriority(pathnodetype1) < 0.0F) {
+                Set<BlockPos> set = Sets.newHashSet();
+                set.add(new BlockPos(this.entity.getBoundingBox().minX, (double) i, this.entity.getBoundingBox().minZ));
+                set.add(new BlockPos(this.entity.getBoundingBox().minX, (double) i, this.entity.getBoundingBox().maxZ));
+                set.add(new BlockPos(this.entity.getBoundingBox().maxX, (double) i, this.entity.getBoundingBox().minZ));
+                set.add(new BlockPos(this.entity.getBoundingBox().maxX, (double) i, this.entity.getBoundingBox().maxZ));
+
+                for (BlockPos blockpos1 : set) {
+                    PathNodeType pathnodetype = this.getPathNodeType(this.entity, blockpos1);
+                    if (this.entity.getPathPriority(pathnodetype) >= 0.0F) {
+                        return this.openPoint(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
+                    }
+                }
+            }
+
+            return this.openPoint(blockpos2.getX(), i, blockpos2.getZ());
+        }
+
+        private PathNodeType getPathNodeType(MobEntity entitylivingIn, BlockPos pos) {
+            return this.getPathNodeType(entitylivingIn, pos.getX(), pos.getY(), pos.getZ());
+        }
+
+        private PathNodeType getPathNodeType(MobEntity entitylivingIn, int x, int y, int z) {
+            return this.getPathNodeType(this.blockaccess, x, y, z, entitylivingIn, this.entitySizeX, this.entitySizeY, this.entitySizeZ, this.getCanOpenDoors(), this.getCanEnterDoors());
         }
     }
 }
