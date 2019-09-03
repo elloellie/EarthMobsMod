@@ -7,13 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.FleeSunGoal;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -116,7 +110,7 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
                 BlockPos pos = new BlockPos(blockPos.getX() + this.rand.nextInt(12) - 6, blockPos.getY() + this.rand.nextInt(4) - 2, blockPos.getZ() + this.rand.nextInt(12) - 6);
 
                 BlockState blockstate = this.world.getBlockState(pos);
-                if ((blockstate.getBlock() == Blocks.RED_MUSHROOM)) {
+                if (blockstate.getBlock() == Blocks.RED_MUSHROOM || blockstate.getBlock() == Blocks.BROWN_MUSHROOM) {
 
                     if (!this.world.isRemote) {
                         this.world.playEvent(2005, pos, 0);
