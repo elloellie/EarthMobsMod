@@ -107,11 +107,11 @@ public abstract class FluidMudWater extends WaterFluid {
         return false;
     }
 
-    protected net.minecraftforge.fluids.FluidAttributes createAttributes(Fluid fluid) {
-        return net.minecraftforge.fluids.FluidAttributes.builder("mud",
+    protected net.minecraftforge.fluids.FluidAttributes createAttributes() {
+        return net.minecraftforge.fluids.FluidAttributes.builder(
                 new net.minecraft.util.ResourceLocation(EarthMobsMod.MODID, "blocks/mud"),
                 new net.minecraft.util.ResourceLocation(EarthMobsMod.MODID, "blocks/mud"))
-                .density(1100).viscosity(2000).build();
+                .density(1100).viscosity(2000).build(this);
     }
 
     public static class Flowing extends FluidMudWater {
