@@ -10,11 +10,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.Set;
 
 import static baguchan.earthmobsmod.EarthMobsMod.MODID;
 
@@ -46,11 +43,7 @@ public class EarthEntitys {
         Biomes.MUSHROOM_FIELD_SHORE.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
 
         for (Biome biome : ForgeRegistries.BIOMES) {
-
-            Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(biome);
-
-
-            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS) {
+            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MUDDYPIG, 10, 3, 4));
             }
         }
