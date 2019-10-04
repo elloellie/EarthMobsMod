@@ -8,12 +8,16 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -26,8 +30,13 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.UUID;
 
 public class CluckShroomEntity extends ChickenEntity implements net.minecraftforge.common.IShearable {
+    private static final DataParameter<String> CLUCKSHROOM_TYPE = EntityDataManager.createKey(CluckShroomEntity.class, DataSerializers.STRING);
+
+    private UUID lightningUUID;
+
     public CluckShroomEntity(EntityType<? extends CluckShroomEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -47,10 +56,15 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
             }
         });
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
 
+    }
+
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(CLUCKSHROOM_TYPE, CluckShroomEntity.Type.RED.name);
     }
 
     @Nullable
@@ -72,7 +86,8 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double) (this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!this.world.isRemote) {
-            ret.add(new ItemStack(Item.getItemFromBlock(Blocks.RED_MUSHROOM), 2));
+
+            ret.add(new ItemStack(Item.getItemFromBlock(this.getCluckShroomType().getState().getBlock()), 2));
 
             ChickenEntity cluckShroomEntity = EntityType.CHICKEN.create(this.world);
             cluckShroomEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
@@ -131,8 +146,31 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         }
     }
 
+    private void setCluckShroomType(CluckShroomEntity.Type typeIn) {
+        this.dataManager.set(CLUCKSHROOM_TYPE, typeIn.name);
+    }
+
+    public CluckShroomEntity.Type getCluckShroomType() {
+        return CluckShroomEntity.Type.getTypeByName(this.dataManager.get(CLUCKSHROOM_TYPE));
+    }
+
     public CluckShroomEntity createChild(AgeableEntity ageable) {
-        return EarthEntitys.CLUCKSHROOM.create(this.world);
+        CluckShroomEntity cluckshroomentity = EarthEntitys.CLUCKSHROOM.create(this.world);
+        cluckshroomentity.setCluckShroomType(this.func_213445_a((CluckShroomEntity) ageable));
+        return cluckshroomentity;
+    }
+
+    private CluckShroomEntity.Type func_213445_a(CluckShroomEntity p_213445_1_) {
+        CluckShroomEntity.Type cluckshroomentity$type = this.getCluckShroomType();
+        CluckShroomEntity.Type cluckshroomentity$type1 = p_213445_1_.getCluckShroomType();
+        CluckShroomEntity.Type cluckshroomentity$type2;
+        if (cluckshroomentity$type == cluckshroomentity$type1 && this.rand.nextInt(1024) == 0) {
+            cluckshroomentity$type2 = cluckshroomentity$type == CluckShroomEntity.Type.BROWN ? CluckShroomEntity.Type.RED : CluckShroomEntity.Type.BROWN;
+        } else {
+            cluckshroomentity$type2 = this.rand.nextBoolean() ? cluckshroomentity$type : cluckshroomentity$type1;
+        }
+
+        return cluckshroomentity$type2;
     }
 
     @Override
@@ -154,6 +192,46 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
             return true;
         } else {
             return !world.getWorld().isDaytime() && world.getLightFor(LightType.SKY, pos) < rand.nextInt(20);
+        }
+    }
+
+    public void onStruckByLightning(LightningBoltEntity lightningBolt) {
+        UUID uuid = lightningBolt.getUniqueID();
+        if (!uuid.equals(this.lightningUUID)) {
+            this.setCluckShroomType(this.getCluckShroomType() == CluckShroomEntity.Type.RED ? CluckShroomEntity.Type.BROWN : CluckShroomEntity.Type.RED);
+            this.lightningUUID = uuid;
+            this.playSound(SoundEvents.ENTITY_MOOSHROOM_CONVERT, 2.0F, 1.0F);
+        }
+
+    }
+
+    public static enum Type {
+        RED("red", Blocks.RED_MUSHROOM.getDefaultState()),
+        BROWN("brown", Blocks.BROWN_MUSHROOM.getDefaultState());
+
+        private final String name;
+        private final BlockState renderState;
+
+        private Type(String nameIn, BlockState renderStateIn) {
+            this.name = nameIn;
+            this.renderState = renderStateIn;
+        }
+
+        /**
+         * A block state that is rendered on the back of the cluckshroom.
+         */
+        public BlockState getState() {
+            return this.renderState;
+        }
+
+        private static CluckShroomEntity.Type getTypeByName(String nameIn) {
+            for (CluckShroomEntity.Type cluckshroomentity$type : values()) {
+                if (cluckshroomentity$type.name.equals(nameIn)) {
+                    return cluckshroomentity$type;
+                }
+            }
+
+            return RED;
         }
     }
 }
