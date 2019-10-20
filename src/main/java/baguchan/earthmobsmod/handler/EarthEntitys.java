@@ -29,6 +29,7 @@ public class EarthEntitys {
         event.register(MOOBLOOM.setRegistryName("moobloom"));
         event.register(SMELLYEGG.setRegistryName("smellyegg"));
         EntitySpawnPlacementRegistry.register(CLUCKSHROOM, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, CluckShroomEntity::spawnHandler);
+        EntitySpawnPlacementRegistry.register(MUDDYPIG, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MuddyPigEntity::spawnHandler);
     }
 
     private static String prefix(String path) {
@@ -43,7 +44,7 @@ public class EarthEntitys {
         Biomes.MUSHROOM_FIELD_SHORE.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
 
         for (Biome biome : ForgeRegistries.BIOMES) {
-            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
+            if (biome.getCategory() == Biome.Category.SWAMP) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MUDDYPIG, 10, 3, 4));
             }
         }

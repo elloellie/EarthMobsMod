@@ -32,11 +32,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 public class MuddyPigEntity extends PigEntity implements net.minecraftforge.common.IShearable {
@@ -233,6 +235,10 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         this.setFlowerColor(DyeColor.byId(worldIn.getRandom().nextInt(DyeColor.values().length)));
 
         return spawnDataIn;
+    }
+
+    public static boolean spawnHandler(EntityType<? extends AnimalEntity> p_223316_0_, IWorld p_223316_1_, SpawnReason p_223316_2_, BlockPos p_223316_3_, Random p_223316_4_) {
+        return p_223316_1_.getWorld().getDimension().getType() == DimensionType.OVERWORLD && p_223316_1_.getBlockState(p_223316_3_.down()).getBlock() == Blocks.GRASS_BLOCK && p_223316_1_.getLightSubtracted(p_223316_3_, 0) > 8;
     }
 
     @Override
