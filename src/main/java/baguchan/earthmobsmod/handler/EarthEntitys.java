@@ -43,7 +43,7 @@ public class EarthEntitys {
         Biomes.MUSHROOM_FIELD_SHORE.getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
 
         for (Biome biome : ForgeRegistries.BIOMES) {
-            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
+            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(EarthEntitys.MUDDYPIG, 10, 3, 4));
             }
         }

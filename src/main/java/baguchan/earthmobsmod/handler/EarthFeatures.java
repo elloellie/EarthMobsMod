@@ -23,7 +23,7 @@ public class EarthFeatures {
     public static void addFeature() {
 
         for (Biome biome : ForgeRegistries.BIOMES) {
-            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
+            if (biome == Biomes.SWAMP || biome == Biomes.SWAMP_HILLS || biome.getRegistryName().equals("biomesoplenty:bog") || biome.getRegistryName().equals("biomesoplenty:biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:lush_swamp") || biome.getRegistryName().equals("biomesoplenty:marsh")) {
                 biome.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(Feature.LAKE, new LakesConfig(EarthBlocks.MUDWATER.getDefaultState()), Placement.WATER_LAKE, new LakeChanceConfig(4)));
             }
         }
