@@ -11,6 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -115,6 +116,7 @@ public class EarthMobsMod
                 pigEntity.setGrowingAge(((PigEntity) livingEntity).getGrowingAge());
             }
 
+            pigEntity.setFlowerColor(DyeColor.byId(world.getRandom().nextInt(DyeColor.values().length)));
             pigEntity.setHasFlower(false);
             pigEntity.setDry(true);
 
