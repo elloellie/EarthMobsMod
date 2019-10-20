@@ -1,5 +1,6 @@
 package baguchan.earthmobsmod.entity;
 
+import baguchan.earthmobsmod.entity.ai.MoveToMushroom;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthItems;
 import net.minecraft.block.BlockState;
@@ -56,6 +57,7 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
             }
         });
         this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(4, new MoveToMushroom(this, 1.1D));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
