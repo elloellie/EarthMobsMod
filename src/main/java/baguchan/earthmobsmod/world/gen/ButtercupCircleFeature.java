@@ -16,14 +16,14 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import java.util.Random;
 import java.util.function.Function;
 
-public class GoldenFlowerCircleFeature extends Feature<NoFeatureConfig> {
-    public GoldenFlowerCircleFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> p_i49863_1_) {
+public class ButtercupCircleFeature extends Feature<NoFeatureConfig> {
+    public ButtercupCircleFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> p_i49863_1_) {
         super(p_i49863_1_);
     }
 
     @Override
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-        BlockState flower = EarthBlocks.GOLDENBLOOM.getDefaultState();
+        BlockState flower = EarthBlocks.BUTTERCUP.getDefaultState();
         if (flower.isValidPosition(worldIn, pos)) {
             for (int i = -8; i <= 8; i++) {
                 for (int j = -8; j <= 8; j++) {

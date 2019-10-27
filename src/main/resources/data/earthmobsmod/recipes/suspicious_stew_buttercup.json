@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:red_mushroom"
+    },
+    {
+      "item": "minecraft:brown_mushroom"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    {	
+      "item": "earthmobsmod:buttercup"
+    }
+  ],
+  "result": {
+    "nbt": "{Effects:[{EffectId:22s,EffectDuration:7s}]}",
+    "item": "minecraft:suspicious_stew",
+    "type": "minecraft:item_nbt",
+    "count": 1
+  }
+}

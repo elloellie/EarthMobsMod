@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.handler;
 
-import baguchan.earthmobsmod.world.gen.GoldenFlowerCircleFeature;
+import baguchan.earthmobsmod.world.gen.ButtercupCircleFeature;
 import baguchan.earthmobsmod.world.gen.ModdedLakeFeature;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -13,12 +13,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class EarthFeatures {
-    public static final Feature<NoFeatureConfig> GOLDENFLOWER_CIRCLE = new GoldenFlowerCircleFeature(NoFeatureConfig::deserialize);
+    public static final Feature<NoFeatureConfig> BUTTERCUP_CIRCLE = new ButtercupCircleFeature(NoFeatureConfig::deserialize);
     public static final Feature<LakesConfig> LAKE = new ModdedLakeFeature(LakesConfig::deserialize);
 
 
     public static void register(IForgeRegistry<Feature<?>> registry) {
-        registry.register(GOLDENFLOWER_CIRCLE.setRegistryName("goldenflower_circle"));
+        registry.register(BUTTERCUP_CIRCLE.setRegistryName("buttercup_circle"));
         registry.register(LAKE.setRegistryName("lake"));
     }
 

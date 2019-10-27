@@ -103,7 +103,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     super.updateAITasks();
 
     if (this.onGround && this.ticksExisted % 140 == 0 && this.world.rand.nextInt(1) == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
-      FlowerBlock flowerBlock = EarthBlocks.GOLDENBLOOM;
+      FlowerBlock flowerBlock = EarthBlocks.BUTTERCUP;
       BlockPos blockpos = this.getPosition().down();
 
       this.setEatDelayTimer(120);
@@ -193,7 +193,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
     this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double) (this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
     java.util.List<ItemStack> ret = new java.util.ArrayList<>();
     if (!this.world.isRemote) {
-      ret.add(new ItemStack(Item.getItemFromBlock(EarthBlocks.GOLDENBLOOM), 3));
+      ret.add(new ItemStack(Item.getItemFromBlock(EarthBlocks.BUTTERCUP), 3));
 
       CowEntity cowEntity = EntityType.COW.create(this.world);
       cowEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
@@ -363,7 +363,7 @@ public class MooBloomEntity extends CowEntity implements net.minecraftforge.comm
      * Return true to set given position as destination
      */
     protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
-      return worldIn.getBlockState(pos) == EarthBlocks.GOLDENBLOOM.getDefaultState() && worldIn.isAirBlock(pos.up());
+      return worldIn.getBlockState(pos) == EarthBlocks.BUTTERCUP.getDefaultState() && worldIn.isAirBlock(pos.up());
     }
 
     protected boolean searchForDestination() {

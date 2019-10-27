@@ -16,8 +16,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
-public class GoldenBloomBlock extends FlowerBlock {
-	public GoldenBloomBlock(Effect effectIn, int duration, Block.Properties propertiesIn) {
+public class ButtercupBlock extends FlowerBlock {
+	public ButtercupBlock(Effect effectIn, int duration, Block.Properties propertiesIn) {
 		super(effectIn, duration, propertiesIn);
 	}
 
