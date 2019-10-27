@@ -1,0 +1,13 @@
+{
+  "block.earthmobsmod.buttercup": "Hibisco amarelo",
+  "block.earthmobsmod.potted_buttercup": "Hibisco amarelo envasado",
+  "item.earthmobsmod.mud_bucket": "Balde de lama",
+  "item.earthmobsmod.smelly_egg": "Ovo fedorento",
+  "item.earthmobsmod.cluckshroom_spawnegg": "Ovo invocador de cogalinha",
+  "item.earthmobsmod.moobloom_spawnegg": "Ovo invocador de florvaca",
+  "entity.earthmobsmod.muddy_pig": "Porco lamacento",
+  "entity.earthmobsmod.cluckshroom": "Cogalinha",
+  "entity.earthmobsmod.moobloom": "Florvaca"
+
+  "fluid.earthmobsmod.mud": "Mud"
+}
