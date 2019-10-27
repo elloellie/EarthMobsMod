@@ -1,12 +1,14 @@
 {
-  "block.earthmobsmod.golden_gloom": "ゴールデンブローム",
-  "block.earthmobsmod.potted_golden_bloom": "花瓶入りゴールデンブローム",
+  "block.earthmobsmod.buttercup": "ゴールデンブローム",
+  "block.earthmobsmod.potted_buttercup": "花瓶入りゴールデンブローム",
   "item.earthmobsmod.mud_bucket": "泥バケツ",
   "item.earthmobsmod.smelly_egg": "キノコの生えた卵",
   "item.earthmobsmod.cluckshroom_spawnegg": "きのコッコのスポーンエッグ",
   "item.earthmobsmod.moobloom_spawnegg": "ムーブロームのスポーンエッグ",
 
-  "entity.earthmobsmod.muddy_pig": "泥まみれのブタ",
+  "entity.earthmobsmod.muddypig": "泥まみれのブタ",
   "entity.earthmobsmod.cluckshroom": "きのコッコ",
-  "entity.earthmobsmod.moobloom": "ムーブローム"
+  "entity.earthmobsmod.moobloom": "ムーブローム",
+  
+  "fluid.earthmobsmod.mud": "Mud"
 }

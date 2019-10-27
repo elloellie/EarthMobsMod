@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 
 public class EatGrassOrBloomGoal extends Goal {
     private static final Predicate<BlockState> IS_GRASS = BlockStateMatcher.forBlock(Blocks.GRASS);
-    private static final Predicate<BlockState> IS_BLOOM = BlockStateMatcher.forBlock(EarthBlocks.GOLDENBLOOM);
+    private static final Predicate<BlockState> IS_BUTTERCUP = BlockStateMatcher.forBlock(EarthBlocks.BUTTERCUP);
     private final MooBloomEntity grassEaterEntity;
     private final World entityWorld;
     private int eatingGrassTimer;
@@ -35,13 +35,13 @@ public class EatGrassOrBloomGoal extends Goal {
         if (this.grassEaterEntity.getEatDelayTimer() <= 0) {
             //when moobloom has flowercircle,moobloom will not eat far away flowers
             if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
-                if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
+                if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
                     return true;
                 } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 100 : 1000) != 0) {
                     return false;
                 } else {
 
-                    if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
+                    if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
                         return true;
                     } else {
                         return false;
@@ -92,7 +92,7 @@ public class EatGrassOrBloomGoal extends Goal {
         this.eatingGrassTimer = Math.max(0, this.eatingGrassTimer - 1);
         if (this.eatingGrassTimer == 4) {
             BlockPos blockpos = new BlockPos(this.grassEaterEntity);
-            if (IS_BLOOM.test(this.entityWorld.getBlockState(blockpos))) {
+            if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
                 if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)) {
                     this.entityWorld.destroyBlock(blockpos, false);
                 }

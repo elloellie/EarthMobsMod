@@ -77,7 +77,7 @@ public class EarthMobsMod
     {
         EarthEntitys.spawnEntity();
         EarthFeatures.addFeature();
-        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.GOLDENFLOWER_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(13)));
+        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.BUTTERCUP_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(13)));
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
