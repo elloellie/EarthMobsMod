@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
@@ -41,6 +42,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static net.minecraft.entity.LivingEntity.SWIM_SPEED;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("earthmobsmod")
@@ -98,6 +101,20 @@ public class EarthMobsMod
         World world = event.getEntityLiving().world;
 
         LivingEntity livingEntity = event.getEntityLiving();
+
+        if (livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER) && !(livingEntity instanceof MuddyPigEntity)) {
+            if (livingEntity.getMotion().getY() < 0.0F) {
+                livingEntity.setMotion(livingEntity.getMotion().scale(0.5F));
+            } else {
+                livingEntity.setMotion(livingEntity.getMotion().scale(0.95F));
+            }
+            if (!(livingEntity instanceof PlayerEntity) && livingEntity.canSwim()) {
+                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.05F * livingEntity.getAttribute(SWIM_SPEED).getValue(), 0.0D));
+            }
+
+            livingEntity.fallDistance = 0.0F;
+            livingEntity.extinguish();
+        }
 
         if (event.getEntityLiving().getType() == EntityType.PIG && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
             MuddyPigEntity pigEntity = EarthEntitys.MUDDYPIG.create(world);
@@ -159,6 +176,11 @@ public class EarthMobsMod
     @SubscribeEvent
     public void onEntityJoin(EntityJoinWorldEvent event) {
         World world = event.getWorld();
+
+        /*if(event.getEntity() instanceof MobEntity){
+            MobEntity livingEntity = (MobEntity) event.getEntity();
+            livingEntity.goalSelector.addGoal(0);
+        }*/
 
         if (event.getEntity().getType() == EntityType.PIG) {
             PigEntity pig = (PigEntity) event.getEntity();
