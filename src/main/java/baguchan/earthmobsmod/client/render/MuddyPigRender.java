@@ -30,7 +30,7 @@ public class MuddyPigRender extends MobRenderer<MuddyPigEntity, ModelMuddyPig<Mu
     @Override
     protected void applyRotations(MuddyPigEntity entityLiving, float ageInTicks, float rotationYaw, float partialTicks) {
         if (entityLiving.isRunning() && Entity.func_213296_b(entityLiving.getMotion()) > 1.0E-7D) {
-            GlStateManager.translated(0.0F, MathHelper.cos(ageInTicks * 0.64F) * 0.12F, 0.0F);
+            GlStateManager.translated(0.0F, MathHelper.cos(ageInTicks * 0.64F) * 0.125F, 0.0F);
         }
 
         super.applyRotations(entityLiving, ageInTicks, rotationYaw, partialTicks);
