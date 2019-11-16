@@ -270,28 +270,16 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     this.prevTimeIsShaking = 0.0F;
                 }
 
-                if (++dryTime >= 2400D || this.isInWaterRainOrBubbleColumn()) {
-                    if (!this.world.isRemote) {
-                        PigEntity pigEntity = EntityType.PIG.create(world);
-                        pigEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-                        pigEntity.setNoAI(this.isAIDisabled());
-                        if (this.hasCustomName()) {
-                            pigEntity.setCustomName(this.getCustomName());
-                            pigEntity.setCustomNameVisible(this.isCustomNameVisible());
-                        }
+                if (this.isInWaterRainOrBubbleColumn()) {
+                    this.isWet = true;
+                    this.isShaking = true;
+                    this.timeIsShaking = 0.0F;
+                    this.prevTimeIsShaking = 0.0F;
+                }
 
-                        if (this.getSaddled()) {
-                            pigEntity.setSaddled(true);
-                        }
+                if (++dryTime >= 2400D) {
+                    this.makeMuddyPig();
 
-                        if (this.isChild()) {
-                            pigEntity.setGrowingAge(this.getGrowingAge());
-                        }
-
-                        this.world.addEntity(pigEntity);
-
-                        this.remove();
-                    }
                 }
             } else {
                 if (this.isInMud()) {
@@ -323,6 +311,8 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                         if (this.isWet && !this.isDry()) {
                             this.setDry(true);
                             this.setHasFlower(false);
+                        } else if (this.isWet && this.isDry()) {
+                            this.makeMuddyPig();
                         } else if (!this.isWet && this.isDry()) {
                             this.setDry(false);
                             this.setHasFlower(true);
@@ -352,6 +342,30 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 }
             }
 
+        }
+    }
+
+    private void makeMuddyPig() {
+        if (!this.world.isRemote) {
+            PigEntity pigEntity = EntityType.PIG.create(world);
+            pigEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+            pigEntity.setNoAI(this.isAIDisabled());
+            if (this.hasCustomName()) {
+                pigEntity.setCustomName(this.getCustomName());
+                pigEntity.setCustomNameVisible(this.isCustomNameVisible());
+            }
+
+            if (this.getSaddled()) {
+                pigEntity.setSaddled(true);
+            }
+
+            if (this.isChild()) {
+                pigEntity.setGrowingAge(this.getGrowingAge());
+            }
+
+            this.world.addEntity(pigEntity);
+
+            this.remove();
         }
     }
 
