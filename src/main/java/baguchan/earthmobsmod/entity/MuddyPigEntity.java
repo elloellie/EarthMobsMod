@@ -46,6 +46,8 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     private static final DataParameter<Integer> FLOWER_COLOR = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> HAS_FLOWER = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DRY = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> RUNNING = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.BOOLEAN);
+
 
     private static final Map<DyeColor, IItemProvider> DYE_BY_COLOR = Util.make(Maps.newEnumMap(DyeColor.class), (p_203402_0_) -> {
         p_203402_0_.put(DyeColor.WHITE, Items.WHITE_DYE);
@@ -107,6 +109,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         super.registerData();
         this.dataManager.register(DRY, false);
         this.dataManager.register(HAS_FLOWER, true);
+        this.dataManager.register(RUNNING, false);
         this.dataManager.register(FLOWER_COLOR, DyeColor.RED.getId());
     }
 
@@ -179,6 +182,14 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
     public void setDry(boolean hasFlower) {
         this.dataManager.set(DRY, hasFlower);
+    }
+
+    public boolean isRunning() {
+        return this.dataManager.get(RUNNING);
+    }
+
+    public void setRunning(boolean isRunnning) {
+        this.dataManager.set(RUNNING, isRunnning);
     }
 
 

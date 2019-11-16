@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
@@ -104,13 +103,15 @@ public class EarthMobsMod
 
         if (livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER) && !(livingEntity instanceof MuddyPigEntity)) {
             if (livingEntity.getMotion().getY() < 0.0F) {
-                livingEntity.setMotion(livingEntity.getMotion().scale(0.5F));
+                livingEntity.setMotion(livingEntity.getMotion().mul(0.8F, 0.5F, 0.8F));
             } else {
                 livingEntity.setMotion(livingEntity.getMotion().scale(0.95F));
             }
-            if (!(livingEntity instanceof PlayerEntity) && livingEntity.canSwim()) {
-                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.05F * livingEntity.getAttribute(SWIM_SPEED).getValue(), 0.0D));
+
+            if (livingEntity.isJumping) {
+                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.038F * livingEntity.getAttribute(SWIM_SPEED).getValue(), 0.0D));
             }
+
 
             livingEntity.fallDistance = 0.0F;
             livingEntity.extinguish();

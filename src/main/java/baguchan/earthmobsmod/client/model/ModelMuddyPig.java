@@ -4,6 +4,7 @@ import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -99,6 +100,13 @@ public class ModelMuddyPig <T extends MuddyPigEntity> extends EntityModel<T> {
         this.LeftFrontLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
         this.RightBackLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
         this.LeftBackLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+
+        if (entityIn.isRunning() && Entity.func_213296_b(entityIn.getMotion()) > 1.0E-7D) {
+            this.RightFrontLeg.rotateAngleX = MathHelper.cos(ageInTicks * 0.32F) * 1.2F;
+            this.LeftFrontLeg.rotateAngleX = -MathHelper.cos(ageInTicks * 0.32F) * 1.2F;
+            this.RightBackLeg.rotateAngleX = -MathHelper.cos(ageInTicks * 0.32F) * 1.2F;
+            this.LeftBackLeg.rotateAngleX = MathHelper.cos(ageInTicks * 0.32F) * 1.2F;
+        }
 
         this.Flower.showModel = entityIn.getHasFlower();
     }

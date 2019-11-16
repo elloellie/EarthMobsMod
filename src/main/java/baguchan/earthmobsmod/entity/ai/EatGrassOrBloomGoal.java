@@ -100,7 +100,7 @@ public class EatGrassOrBloomGoal extends Goal {
 
                 this.grassEaterEntity.eatGrassBonus();
 
-                this.grassEaterEntity.setEatDelayTimer(160);
+                this.grassEaterEntity.setEatDelayTimer(200);
             }
         }
     }

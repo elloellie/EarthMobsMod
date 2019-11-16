@@ -1,5 +1,6 @@
 package baguchan.earthmobsmod.entity.ai;
 
+import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthTags;
 import net.minecraft.block.Block;
@@ -33,6 +34,22 @@ public class GoToMudGoal extends MoveToBlockGoal {
             return super.shouldExecute();
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void startExecuting() {
+        super.startExecuting();
+        if (this.pig instanceof MuddyPigEntity) {
+            ((MuddyPigEntity) this.pig).setRunning(true);
+        }
+    }
+
+    @Override
+    public void resetTask() {
+        super.resetTask();
+        if (this.pig instanceof MuddyPigEntity) {
+            ((MuddyPigEntity) this.pig).setRunning(false);
         }
     }
 
