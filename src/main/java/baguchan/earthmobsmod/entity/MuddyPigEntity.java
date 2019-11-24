@@ -12,7 +12,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -270,13 +269,6 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                     this.prevTimeIsShaking = 0.0F;
                 }
 
-                if (this.isInWaterRainOrBubbleColumn()) {
-                    this.isWet = true;
-                    this.isShaking = true;
-                    this.timeIsShaking = 0.0F;
-                    this.prevTimeIsShaking = 0.0F;
-                }
-
                 if (++dryTime >= 2400D) {
                     this.makeMuddyPig();
 
@@ -294,7 +286,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 }
             }
 
-            if (this.isInWaterRainOrBubbleColumn() && !this.isWet && !isShaking && !this.isDry()) {
+            if (this.isInWaterRainOrBubbleColumn() && !this.isWet && !isShaking) {
                 this.isWet = true;
                 this.isShaking = true;
                 this.timeIsShaking = 0.0F;
@@ -430,22 +422,18 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     }
 
     public boolean handleWaterMovement() {
-        if (this.getRidingEntity() instanceof BoatEntity) {
-            this.inWater = false;
-        } else if (this.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
-            if (!this.inWater && !this.firstUpdate) {
+        if (this.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
+            if (!this.inMud && !this.firstUpdate) {
                 this.doWaterSplashEffect();
             }
 
             this.fallDistance = 0.0F;
             this.inMud = true;
-            this.inWater = true;
             this.extinguish();
+            return false;
         } else {
-            this.inMud = false;
-            super.handleWaterMovement();
+            return super.handleWaterMovement();
         }
-        return this.isInWater();
     }
 
     public boolean isInWaterRainOrBubbleColumn() {
