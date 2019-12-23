@@ -117,30 +117,34 @@ public class EarthMobsMod
             livingEntity.extinguish();
         }
 
-        if (event.getEntityLiving().getType() == EntityType.PIG && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
-            MuddyPigEntity pigEntity = EarthEntitys.MUDDYPIG.create(world);
-            pigEntity.setLocationAndAngles(livingEntity.posX, livingEntity.posY, livingEntity.posZ, livingEntity.rotationYaw, livingEntity.rotationPitch);
-            pigEntity.setNoAI(((PigEntity) livingEntity).isAIDisabled());
-            if (livingEntity.hasCustomName()) {
-                pigEntity.setCustomName(livingEntity.getCustomName());
-                pigEntity.setCustomNameVisible(livingEntity.isCustomNameVisible());
+        if (event.getEntityLiving().getType() == EntityType.PIG && event.getEntityLiving().ticksExisted % 5 == 0 && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
+            if (!world.isRemote()) {
+                MuddyPigEntity pigEntity = EarthEntitys.MUDDYPIG.create(world);
+                pigEntity.copyDataFromOld(event.getEntityLiving());
+
+                pigEntity.setNoAI(((PigEntity) livingEntity).isAIDisabled());
+                if (livingEntity.hasCustomName()) {
+                    pigEntity.setCustomName(livingEntity.getCustomName());
+                    pigEntity.setCustomNameVisible(livingEntity.isCustomNameVisible());
+                }
+
+                if (((PigEntity) livingEntity).getSaddled()) {
+                    pigEntity.setSaddled(true);
+                }
+
+                if (livingEntity.isChild()) {
+                    pigEntity.setGrowingAge(((PigEntity) livingEntity).getGrowingAge());
+                }
+
+                pigEntity.setFlowerColor(DyeColor.byId(world.getRandom().nextInt(DyeColor.values().length)));
+                pigEntity.setHasFlower(false);
+                pigEntity.setDry(true);
+
+                livingEntity.world.getServer().getWorld(livingEntity.dimension).removeEntityComplete(livingEntity, false);
+                livingEntity.world.getServer().getWorld(livingEntity.dimension).func_217460_e(pigEntity);
+
+                event.setCanceled(true);
             }
-
-            if (((PigEntity) livingEntity).getSaddled()) {
-                pigEntity.setSaddled(true);
-            }
-
-            if (livingEntity.isChild()) {
-                pigEntity.setGrowingAge(((PigEntity) livingEntity).getGrowingAge());
-            }
-
-            pigEntity.setFlowerColor(DyeColor.byId(world.getRandom().nextInt(DyeColor.values().length)));
-            pigEntity.setHasFlower(false);
-            pigEntity.setDry(true);
-
-            livingEntity.world.addEntity(pigEntity);
-
-            livingEntity.remove();
         }
     }
 

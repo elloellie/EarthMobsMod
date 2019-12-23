@@ -13,6 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
+import vazkii.quark.client.module.VariantAnimalTexturesModule;
 
 import javax.annotation.Nullable;
 
@@ -40,6 +42,10 @@ public class MuddyPigRender extends MobRenderer<MuddyPigEntity, ModelMuddyPig<Mu
     @Override
     protected ResourceLocation getEntityTexture(MuddyPigEntity entity)
     {
-        return PIG_TEXTURES;
+        if (ModList.get().isLoaded("quark")) {
+            return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantAnimalTexturesModule.VariantTextureType.PIG, VariantAnimalTexturesModule.enablePig);
+        } else {
+            return PIG_TEXTURES;
+        }
     }
 }

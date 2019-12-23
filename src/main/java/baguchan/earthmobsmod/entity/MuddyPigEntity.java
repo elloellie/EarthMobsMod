@@ -286,12 +286,14 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 }
             }
 
-            if (this.isInWaterRainOrBubbleColumn() && !this.isWet && !isShaking) {
+            if (!this.isDry() && this.isInWaterRainOrBubbleColumn() && !isShaking) {
                 this.isWet = true;
                 this.isShaking = true;
                 this.timeIsShaking = 0.0F;
                 this.prevTimeIsShaking = 0.0F;
-            } else if ((this.isWet || this.isShaking) && this.isShaking) {
+            }
+
+            if ((this.isWet || this.isShaking)) {
                 if (this.timeIsShaking == 0.0F) {
                     this.playSound(SoundEvents.ENTITY_WOLF_SHAKE, this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
                 }
@@ -340,8 +342,8 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     private void makeMuddyPig() {
         if (!this.world.isRemote) {
             PigEntity pigEntity = EntityType.PIG.create(world);
-            pigEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
             pigEntity.setNoAI(this.isAIDisabled());
+            pigEntity.copyDataFromOld(this);
             if (this.hasCustomName()) {
                 pigEntity.setCustomName(this.getCustomName());
                 pigEntity.setCustomNameVisible(this.isCustomNameVisible());
@@ -355,9 +357,8 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 pigEntity.setGrowingAge(this.getGrowingAge());
             }
 
-            this.world.addEntity(pigEntity);
-
-            this.remove();
+            this.world.getServer().getWorld(this.dimension).removeEntityComplete(this, false);
+            this.world.getServer().getWorld(this.dimension).func_217460_e(pigEntity);
         }
     }
 
@@ -432,6 +433,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
             this.extinguish();
             return false;
         } else {
+            this.inMud = false;
             return super.handleWaterMovement();
         }
     }
