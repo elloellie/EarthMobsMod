@@ -7,15 +7,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FlowerPollenParticle extends SpriteTexturedParticle {
-	private int currentFrame = 0;
-	private int lastTick = 0;
 	private final double portalPosX;
 	private final double portalPosY;
 	private final double portalPosZ;
+	private final IAnimatedSprite spriteWithAge;
 
-	public FlowerPollenParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+
+	public FlowerPollenParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, IAnimatedSprite spriteWithAge) {
 		super(world, x, y, z, xSpeed, ySpeed, zSpeed);
 
+		this.spriteWithAge = spriteWithAge;
 		this.motionX = xSpeed;
 		this.motionY = ySpeed;
 		this.motionZ = zSpeed;
@@ -34,16 +35,10 @@ public class FlowerPollenParticle extends SpriteTexturedParticle {
 		this.particleAlpha = 1f;
 
 		this.particleScale *= 0.6F;
-		int i2 = (int) (8.0D / (Math.random() * 0.8D + 0.3D));
 
 		this.maxAge = (int) (Math.random() * 10.0D) + 40;
 		this.particleGravity = 0f;
-	}
-
-
-	public void move(double x, double y, double z) {
-		this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
-		this.resetPositionToBB();
+		this.selectSpriteWithAge(spriteWithAge);
 	}
 
 	public float getScale(float p_217561_1_) {
@@ -70,12 +65,11 @@ public class FlowerPollenParticle extends SpriteTexturedParticle {
 	}
 
 	public void tick() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		if (this.age++ >= this.maxAge) {
-			this.setExpired();
-		} else {
+		super.tick();
+		if (!this.isExpired) {
+			this.selectSpriteWithAge(this.spriteWithAge);
+		}
+		if (this.age++ < this.maxAge) {
 			float f = (float) this.age / (float) this.maxAge;
 			float f1 = -f + f * f * 2.0F;
 			float f2 = 1.0F - f1;
@@ -99,8 +93,7 @@ public class FlowerPollenParticle extends SpriteTexturedParticle {
 		}
 
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			FlowerPollenParticle portalparticle = new FlowerPollenParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
-			portalparticle.selectSpriteRandomly(this.spriteSet);
+			FlowerPollenParticle portalparticle = new FlowerPollenParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, spriteSet);
 			return portalparticle;
 		}
 	}

@@ -29,7 +29,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IForgeShearable;
@@ -52,21 +51,11 @@ public class CluckShroomEntity extends ChickenEntity implements IShearable, IFor
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new FleeSunGoal(this, 1.45D));
-        this.goalSelector.addGoal(2, new PanicGoal(this, 1.45D) {
-            @Override
-            public boolean shouldExecute() {
-                if (world.getLightFor(LightType.SKY, getPosition()) > 14 && world.isDaytime()) {
-                    return findRandomPosition();
-                } else {
-                    return super.shouldExecute();
-                }
-            }
-        });
-        this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(4, new MoveToMushroom(this, 1.1D));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(2, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(3, new MoveToMushroom(this, 1.1D));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
 
     }
 
@@ -156,21 +145,12 @@ public class CluckShroomEntity extends ChickenEntity implements IShearable, IFor
         return EntityType.CHICKEN.getLootTable();
     }
 
-    public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
-        return 1.0F - worldIn.getBrightness(pos);
-    }
-
-
     public static boolean spawnHandler(EntityType<? extends CluckShroomEntity> entity, IWorld world, SpawnReason p_223325_2_, BlockPos p_223325_3_, Random p_223325_4_) {
-        return world.getBlockState(p_223325_3_.down()).getBlock() == Blocks.MYCELIUM && lightCheck(world, p_223325_3_, p_223325_4_);
+        return world.getBlockState(p_223325_3_.down()).getBlock() == Blocks.MYCELIUM && world.getLightSubtracted(p_223325_3_, 0) > 8;
     }
 
-    public static boolean lightCheck(IWorld world, BlockPos pos, Random rand) {
-        if (world.canBlockSeeSky(pos) && world.getLightFor(LightType.SKY, pos) < rand.nextInt(8)) {
-            return true;
-        } else {
-            return world.getLightFor(LightType.SKY, pos) < rand.nextInt(20);
-        }
+    public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
+        return worldIn.getBlockState(pos.down()).isIn(Blocks.MYCELIUM) ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
     }
 
     public void onStruckByLightning(LightningBoltEntity lightningBolt) {

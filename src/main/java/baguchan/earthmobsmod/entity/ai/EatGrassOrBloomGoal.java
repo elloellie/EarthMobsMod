@@ -33,26 +33,21 @@ public class EatGrassOrBloomGoal extends Goal {
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.grassEaterEntity.getPosition());
         if (this.grassEaterEntity.getEatDelayTimer() <= 0) {
-            //when moobloom has flowercircle,moobloom will not eat far away flowers
-            if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
-                if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
-                    return true;
-                } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 100 : 1000) != 0) {
-                    return false;
-                } else {
+         if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
+             return true;
+         } else if (this.grassEaterEntity.getRNG().nextInt(this.grassEaterEntity.isChild() ? 100 : 1000) != 0) {
+             return false;
+         } else {
 
-                    if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+             if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
+                 return true;
+             } else {
+                 return false;
+             }
                 }
             } else {
                 return false;
             }
-        } else {
-            return false;
-        }
     }
 
     /**

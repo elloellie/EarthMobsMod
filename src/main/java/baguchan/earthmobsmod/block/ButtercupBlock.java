@@ -4,11 +4,7 @@ import baguchan.earthmobsmod.handler.EarthParticles;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowerBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,18 +32,6 @@ public class ButtercupBlock extends FlowerBlock {
 			if (rand.nextBoolean()) {
                 worldIn.addParticle(EarthParticles.FLOWER_POLLEN, d0, d1, d2, d3, d4, d5);
             }
-		}
-	}
-
-	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (!worldIn.isRemote) {
-			if (entityIn instanceof LivingEntity) {
-				LivingEntity livingentity = (LivingEntity) entityIn;
-				if (worldIn.rand.nextInt(18) == 0 || !livingentity.isPotionActive(Effects.REGENERATION)) {
-					livingentity.addPotionEffect(new EffectInstance(Effects.REGENERATION, 53));
-				}
-			}
 		}
 	}
 }
