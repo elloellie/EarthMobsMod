@@ -23,7 +23,7 @@ public class MooBloomRender extends MobRenderer<MooBloomEntity, ModelMoobloom<Mo
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(MooBloomEntity entity) {
+    public ResourceLocation getEntityTexture(MooBloomEntity entity) {
         return TEXTURES;
     }
 }

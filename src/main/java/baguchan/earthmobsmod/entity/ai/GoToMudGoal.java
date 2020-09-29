@@ -23,14 +23,14 @@ public class GoToMudGoal extends MoveToBlockGoal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean shouldContinueExecuting() {
-        return !this.pig.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER) && this.timeoutCounter <= 1200 && this.shouldMoveTo(this.pig.world, this.destinationBlock);
+        return !this.pig.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D) && this.timeoutCounter <= 1200 && this.shouldMoveTo(this.pig.world, this.destinationBlock);
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     public boolean shouldExecute() {
-        if (!this.pig.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
+        if (!this.pig.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D)) {
             return super.shouldExecute();
         } else {
             return false;

@@ -7,7 +7,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IShearable;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -22,18 +24,22 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.IForgeShearable;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class CluckShroomEntity extends ChickenEntity implements net.minecraftforge.common.IShearable {
+public class CluckShroomEntity extends ChickenEntity implements IShearable, IForgeShearable {
     private static final DataParameter<String> CLUCKSHROOM_TYPE = EntityDataManager.createKey(CluckShroomEntity.class, DataSerializers.STRING);
 
     private UUID lightningUUID;
@@ -49,7 +55,7 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         this.goalSelector.addGoal(2, new PanicGoal(this, 1.45D) {
             @Override
             public boolean shouldExecute() {
-                if (world.isSkyLightMax(new BlockPos(this.creature.posX, this.creature.getBoundingBox().minY, this.creature.posZ)) && world.isDaytime()) {
+                if (world.getLightFor(LightType.SKY, getPosition()) > 14 && world.isDaytime()) {
                     return findRandomPosition();
                 } else {
                     return super.shouldExecute();
@@ -69,6 +75,10 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         this.dataManager.register(CLUCKSHROOM_TYPE, CluckShroomEntity.Type.RED.name);
     }
 
+    public static AttributeModifierMap.MutableAttribute createMutableAttribute() {
+        return ChickenEntity.func_234187_eI_();
+    }
+
     @Nullable
     public ItemEntity entityDropItem(IItemProvider itemProvider) {
 
@@ -76,40 +86,6 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
             itemProvider = EarthItems.SMELLY_EGG;
         }
         return this.entityDropItem(itemProvider, 0);
-    }
-
-    @Override
-    public boolean isShearable(ItemStack item, net.minecraft.world.IWorldReader world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public java.util.List<ItemStack> onSheared(ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
-        this.world.addParticle(ParticleTypes.EXPLOSION, this.posX, this.posY + (double) (this.getHeight() / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
-        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
-        if (!this.world.isRemote) {
-
-            ret.add(new ItemStack(Item.getItemFromBlock(this.getCluckShroomType().getState().getBlock()), 2));
-
-            ChickenEntity cluckShroomEntity = EntityType.CHICKEN.create(this.world);
-            cluckShroomEntity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            cluckShroomEntity.setNoAI(this.isAIDisabled());
-            if (this.hasCustomName()) {
-                cluckShroomEntity.setCustomName(this.getCustomName());
-                cluckShroomEntity.setCustomNameVisible(this.isCustomNameVisible());
-            }
-
-            if (this.isChild()) {
-                cluckShroomEntity.setGrowingAge(this.getGrowingAge());
-            }
-
-            this.world.addEntity(cluckShroomEntity);
-
-            this.remove();
-        }
-
-        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
-        return ret;
     }
 
     @Override
@@ -156,7 +132,7 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
         return CluckShroomEntity.Type.getTypeByName(this.dataManager.get(CLUCKSHROOM_TYPE));
     }
 
-    public CluckShroomEntity createChild(AgeableEntity ageable) {
+    public CluckShroomEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity ageable) {
         CluckShroomEntity cluckshroomentity = EarthEntitys.CLUCKSHROOM.create(this.world);
         cluckshroomentity.setCluckShroomType(this.func_213445_a((CluckShroomEntity) ageable));
         return cluckshroomentity;
@@ -190,10 +166,10 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
     }
 
     public static boolean lightCheck(IWorld world, BlockPos pos, Random rand) {
-        if (world.canBlockSeeSky(pos) && !world.getWorld().isDaytime()) {
+        if (world.canBlockSeeSky(pos) && world.getLightFor(LightType.SKY, pos) < rand.nextInt(8)) {
             return true;
         } else {
-            return !world.getWorld().isDaytime() && world.getLightFor(LightType.SKY, pos) < rand.nextInt(20);
+            return world.getLightFor(LightType.SKY, pos) < rand.nextInt(20);
         }
     }
 
@@ -205,6 +181,70 @@ public class CluckShroomEntity extends ChickenEntity implements net.minecraftfor
             this.playSound(SoundEvents.ENTITY_MOOSHROOM_CONVERT, 2.0F, 1.0F);
         }
 
+    }
+
+    @Override
+    public void shear(SoundCategory category) {
+        world.playMovingSound(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, category, 1.0F, 1.0F);
+        this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosY() + (double) (this.getHeight() / 2.0F), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        if (!this.world.isRemote) {
+
+            this.entityDropItem(new ItemStack(Item.getItemFromBlock(this.getCluckShroomType().getState().getBlock()), 2));
+
+            ChickenEntity cluckShroomEntity = EntityType.CHICKEN.create(this.world);
+            cluckShroomEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            cluckShroomEntity.setNoAI(this.isAIDisabled());
+            if (this.hasCustomName()) {
+                cluckShroomEntity.setCustomName(this.getCustomName());
+                cluckShroomEntity.setCustomNameVisible(this.isCustomNameVisible());
+            }
+
+            if (this.isChild()) {
+                cluckShroomEntity.setGrowingAge(this.getGrowingAge());
+            }
+
+            this.world.addEntity(cluckShroomEntity);
+
+            this.remove();
+        }
+    }
+
+    @Override
+    public boolean isShearable() {
+        return true;
+    }
+
+    @Override
+    public boolean isShearable(ItemStack item, World world, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public List<ItemStack> onSheared(PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {
+        world.playMovingSound(null, this, SoundEvents.ENTITY_SHEEP_SHEAR, player == null ? SoundCategory.BLOCKS : SoundCategory.PLAYERS, 1.0F, 1.0F);
+        this.world.addParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosY() + (double) (this.getHeight() / 2.0F), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
+        if (!this.world.isRemote) {
+
+            ret.add(new ItemStack(Item.getItemFromBlock(this.getCluckShroomType().getState().getBlock()), 2));
+
+            ChickenEntity cluckShroomEntity = EntityType.CHICKEN.create(this.world);
+            cluckShroomEntity.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            cluckShroomEntity.setNoAI(this.isAIDisabled());
+            if (this.hasCustomName()) {
+                cluckShroomEntity.setCustomName(this.getCustomName());
+                cluckShroomEntity.setCustomNameVisible(this.isCustomNameVisible());
+            }
+
+            if (this.isChild()) {
+                cluckShroomEntity.setGrowingAge(this.getGrowingAge());
+            }
+
+            this.world.addEntity(cluckShroomEntity);
+
+            this.remove();
+        }
+        return ret;
     }
 
     public static enum Type {

@@ -15,18 +15,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -56,12 +55,7 @@ public abstract class FluidMudWater extends FlowingFluid {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.SOLID;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void animateTick(World worldIn, BlockPos pos, IFluidState state, Random random) {
+    public void animateTick(World worldIn, BlockPos pos, FluidState state, Random random) {
       /*  if (!state.isSource() && !state.get(FALLING)) {
             if (random.nextInt(64) == 0) {
                 worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, random.nextFloat() * 0.25F + 0.75F, random.nextFloat() + 0.5F, false);
@@ -79,15 +73,15 @@ public abstract class FluidMudWater extends FlowingFluid {
     }*/
 
     protected void beforeReplacingBlock(IWorld worldIn, BlockPos pos, BlockState state) {
-        TileEntity tileentity = state.getBlock().hasTileEntity() ? worldIn.getTileEntity(pos) : null;
-        Block.spawnDrops(state, worldIn.getWorld(), pos, tileentity);
+        TileEntity tileentity = state.getBlock().hasTileEntity(state) ? worldIn.getTileEntity(pos) : null;
+        Block.spawnDrops(state, worldIn, pos, tileentity);
     }
 
     public int getSlopeFindDistance(IWorldReader worldIn) {
         return 4;
     }
 
-    public BlockState getBlockState(IFluidState state) {
+    public BlockState getBlockState(FluidState state) {
         return EarthBlocks.MUDWATER.getDefaultState().with(FlowingFluidBlock.LEVEL, Integer.valueOf(getLevelFromState(state)));
     }
 
@@ -112,9 +106,9 @@ public abstract class FluidMudWater extends FlowingFluid {
         return false;
     }
 
-    protected void flowInto(IWorld worldIn, BlockPos pos, BlockState blockStateIn, Direction direction, IFluidState fluidStateIn) {
+    protected void flowInto(IWorld worldIn, BlockPos pos, BlockState blockStateIn, Direction direction, FluidState fluidStateIn) {
         if (direction == Direction.DOWN) {
-            IFluidState ifluidstate = worldIn.getFluidState(pos);
+            FluidState ifluidstate = worldIn.getFluidState(pos);
             if (ifluidstate.isTagged(FluidTags.LAVA)) {
 
                 worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState(), Constants.BlockFlags.NOTIFY_NEIGHBORS | Constants.BlockFlags.BLOCK_UPDATE);
@@ -133,12 +127,12 @@ public abstract class FluidMudWater extends FlowingFluid {
     }
 
     @Override
-    protected boolean canDisplace(IFluidState p_215665_1_, IBlockReader p_215665_2_, BlockPos p_215665_3_, Fluid p_215665_4_, Direction p_215665_5_) {
+    protected boolean canDisplace(FluidState p_215665_1_, IBlockReader p_215665_2_, BlockPos p_215665_3_, Fluid p_215665_4_, Direction p_215665_5_) {
         return p_215665_5_ == Direction.DOWN && !p_215665_4_.isIn(EarthTags.Fluids.MUD_WATER);
     }
 
     @Override
-    public boolean isEntityInside(IFluidState state, IWorldReader world, BlockPos pos, Entity entity, double yToTest, Tag<Fluid> tag, boolean testingHead) {
+    public boolean isEntityInside(FluidState state, IWorldReader world, BlockPos pos, Entity entity, double yToTest, Tag<Fluid> tag, boolean testingHead) {
 
         if (testingHead) {
             if (entity instanceof LivingEntity) {
@@ -146,13 +140,13 @@ public abstract class FluidMudWater extends FlowingFluid {
                 livingEntity.setAir(decreaseAirSupply(livingEntity.getAir(), livingEntity));
                 if (livingEntity.getAir() == -20) {
                     livingEntity.setAir(0);
-                    Vec3d vec3d = livingEntity.getMotion();
+                    Vector3d vec3d = livingEntity.getMotion();
 
                     for (int i = 0; i < 8; ++i) {
                         float f = livingEntity.world.rand.nextFloat() - livingEntity.world.rand.nextFloat();
                         float f1 = livingEntity.world.rand.nextFloat() - livingEntity.world.rand.nextFloat();
                         float f2 = livingEntity.world.rand.nextFloat() - livingEntity.world.rand.nextFloat();
-                        livingEntity.world.addParticle(ParticleTypes.BUBBLE, livingEntity.posX + (double) f, livingEntity.posY + (double) f1, livingEntity.posZ + (double) f2, vec3d.x, vec3d.y, vec3d.z);
+                        livingEntity.world.addParticle(ParticleTypes.BUBBLE, livingEntity.getPosX() + (double) f, livingEntity.getPosY() + (double) f1, livingEntity.getPosZ() + (double) f2, vec3d.x, vec3d.y, vec3d.z);
                     }
 
                     livingEntity.attackEntityFrom(DamageSource.DROWN, 2.0F);
@@ -177,16 +171,16 @@ public abstract class FluidMudWater extends FlowingFluid {
     }
 
     public static class Flowing extends FluidMudWater {
-        protected void fillStateContainer(StateContainer.Builder<Fluid, IFluidState> builder) {
+        protected void fillStateContainer(StateContainer.Builder<Fluid, FluidState> builder) {
             super.fillStateContainer(builder);
             builder.add(LEVEL_1_8);
         }
 
-        public int getLevel(IFluidState p_207192_1_) {
+        public int getLevel(FluidState p_207192_1_) {
             return p_207192_1_.get(LEVEL_1_8);
         }
 
-        public boolean isSource(IFluidState state) {
+        public boolean isSource(FluidState state) {
             return false;
         }
 
@@ -194,11 +188,11 @@ public abstract class FluidMudWater extends FlowingFluid {
     }
 
     public static class Source extends FluidMudWater {
-        public int getLevel(IFluidState p_207192_1_) {
+        public int getLevel(FluidState p_207192_1_) {
             return 8;
         }
 
-        public boolean isSource(IFluidState state) {
+        public boolean isSource(FluidState state) {
             return true;
         }
     }

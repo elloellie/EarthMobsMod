@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod;
 
-import baguchan.earthmobsmod.client.EarthRender;
+import baguchan.earthmobsmod.client.ClientRegistrar;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
@@ -18,13 +18,9 @@ import net.minecraft.item.Items;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.placement.ChanceConfig;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -32,6 +28,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -41,8 +38,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static net.minecraft.entity.LivingEntity.SWIM_SPEED;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("earthmobsmod")
@@ -72,14 +67,14 @@ public class EarthMobsMod
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Fluid.class, this::onFluidRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Feature.class, this::onFeatureRegistry);
 
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientRegistrar::setup));
+
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        EarthEntitys.spawnEntity();
         EarthFeatures.addFeature();
-        Biomes.FLOWER_FOREST.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(Biome.createDecoratedFeature(EarthFeatures.BUTTERCUP_CIRCLE, new NoFeatureConfig(), Placement.CHANCE_HEIGHTMAP, new ChanceConfig(13)));
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -92,7 +87,7 @@ public class EarthMobsMod
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        EarthRender.entityRender();
+
     }
 
     @SubscribeEvent
@@ -101,7 +96,7 @@ public class EarthMobsMod
 
         LivingEntity livingEntity = event.getEntityLiving();
 
-        if (livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER) && !(livingEntity instanceof MuddyPigEntity)) {
+        if (livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D) && !(livingEntity instanceof MuddyPigEntity)) {
             if (livingEntity.getMotion().getY() < 0.0F) {
                 livingEntity.setMotion(livingEntity.getMotion().mul(0.8F, 0.5F, 0.8F));
             } else {
@@ -109,7 +104,7 @@ public class EarthMobsMod
             }
 
             if (livingEntity.isJumping) {
-                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.038F * livingEntity.getAttribute(SWIM_SPEED).getValue(), 0.0D));
+                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.038F * livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get()).getValue(), 0.0D));
             }
 
 
@@ -117,7 +112,7 @@ public class EarthMobsMod
             livingEntity.extinguish();
         }
 
-        if (event.getEntityLiving().getType() == EntityType.PIG && event.getEntityLiving().ticksExisted % 5 == 0 && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
+        if (event.getEntityLiving().getType() == EntityType.PIG && event.getEntityLiving().ticksExisted % 5 == 0 && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D)) {
             if (!world.isRemote()) {
                 MuddyPigEntity pigEntity = EarthEntitys.MUDDYPIG.create(world);
                 pigEntity.copyDataFromOld(event.getEntityLiving());
@@ -128,8 +123,8 @@ public class EarthMobsMod
                     pigEntity.setCustomNameVisible(livingEntity.isCustomNameVisible());
                 }
 
-                if (((PigEntity) livingEntity).getSaddled()) {
-                    pigEntity.setSaddled(true);
+                if (((PigEntity) livingEntity).isHorseSaddled()) {
+                    pigEntity.func_230264_L__();
                 }
 
                 if (livingEntity.isChild()) {
@@ -140,8 +135,8 @@ public class EarthMobsMod
                 pigEntity.setHasFlower(false);
                 pigEntity.setDry(true);
 
-                livingEntity.world.getServer().getWorld(livingEntity.dimension).removeEntityComplete(livingEntity, false);
-                livingEntity.world.getServer().getWorld(livingEntity.dimension).func_217460_e(pigEntity);
+                livingEntity.world.getServer().getWorld(livingEntity.getEntityWorld().getDimensionKey()).removeEntityComplete(livingEntity, false);
+                livingEntity.world.getServer().getWorld(livingEntity.getEntityWorld().getDimensionKey()).addEntity(pigEntity);
 
                 event.setCanceled(true);
             }
@@ -155,7 +150,7 @@ public class EarthMobsMod
         if (event.getTarget().getType() == EntityType.COW && !(event.getTarget() instanceof MooBloomEntity)) {
             if (stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE) {
                 MooBloomEntity cowBloomEntity = EarthEntitys.MOOBLOOM.create(world);
-                cowBloomEntity.setLocationAndAngles(event.getTarget().posX, event.getTarget().posY, event.getTarget().posZ, event.getTarget().rotationYaw, event.getTarget().rotationPitch);
+                cowBloomEntity.setLocationAndAngles(event.getTarget().getPosX(), event.getTarget().getPosY(), event.getTarget().getPosZ(), event.getTarget().rotationYaw, event.getTarget().rotationPitch);
                 cowBloomEntity.setNoAI(((AnimalEntity) event.getTarget()).isAIDisabled());
                 if (event.getTarget().hasCustomName()) {
                     cowBloomEntity.setCustomName(event.getTarget().getCustomName());
@@ -166,7 +161,7 @@ public class EarthMobsMod
                     cowBloomEntity.setGrowingAge(((AnimalEntity) event.getTarget()).getGrowingAge());
                 }
 
-                if (!event.getEntityPlayer().isCreative()) {
+                if (!event.getPlayer().isCreative()) {
                     stack.shrink(1);
                 }
 

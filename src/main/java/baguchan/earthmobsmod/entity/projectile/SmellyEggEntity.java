@@ -54,13 +54,9 @@ public class SmellyEggEntity extends ProjectileItemEntity {
             double d0 = 0.08D;
 
             for (int i = 0; i < 8; ++i) {
-                this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, this.getItem()), this.posX, this.posY, this.posZ, ((double) this.rand.nextFloat() - 0.5D) * 0.08D, ((double) this.rand.nextFloat() - 0.5D) * 0.08D, ((double) this.rand.nextFloat() - 0.5D) * 0.08D);
+                this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, this.getItem()), this.getPosX(), this.getPosY(), this.getPosZ(), ((double) this.rand.nextFloat() - 0.5D) * 0.08D, ((double) this.rand.nextFloat() - 0.5D) * 0.08D, ((double) this.rand.nextFloat() - 0.5D) * 0.08D);
             }
         }
-    }
-
-    protected Item func_213885_i() {
-        return EarthItems.SMELLY_EGG;
     }
 
     /**
@@ -71,7 +67,7 @@ public class SmellyEggEntity extends ProjectileItemEntity {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
             double i = 0.5;
             if (entity instanceof LivingEntity) {
-                if (this.getThrower() == entity && this.ticksExisted < 4) {
+                if (this.func_234616_v_() == entity && this.ticksExisted < 4) {
                     return;
                 }
 
@@ -82,7 +78,7 @@ public class SmellyEggEntity extends ProjectileItemEntity {
                     if (entity instanceof ChickenEntity && !(entity instanceof CluckShroomEntity)) {
                         if (!this.world.isRemote) {
                             CluckShroomEntity cluckshroomEntity = EarthEntitys.CLUCKSHROOM.create(this.world);
-                            cluckshroomEntity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+                            cluckshroomEntity.setLocationAndAngles(entity.getPosX(), entity.getPosY(), entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
                             cluckshroomEntity.setNoAI(((ChickenEntity) entity).isAIDisabled());
                             if (this.hasCustomName()) {
                                 cluckshroomEntity.setCustomName(this.getCustomName());
@@ -103,7 +99,7 @@ public class SmellyEggEntity extends ProjectileItemEntity {
                     if (entity instanceof CowEntity && !(entity instanceof MooshroomEntity)) {
                         if (!this.world.isRemote) {
                             MooshroomEntity mooshroomEntity = EntityType.MOOSHROOM.create(this.world);
-                            mooshroomEntity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+                            mooshroomEntity.setLocationAndAngles(entity.getPosX(), entity.getPosY(), entity.getPosZ(), entity.rotationYaw, entity.rotationPitch);
                             mooshroomEntity.setNoAI(((CowEntity) entity).isAIDisabled());
                             if (this.hasCustomName()) {
                                 mooshroomEntity.setCustomName(this.getCustomName());
@@ -123,7 +119,7 @@ public class SmellyEggEntity extends ProjectileItemEntity {
                 }
             }
 
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 0);
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), (float) 0);
         }
 
         if (!this.world.isRemote) {
@@ -143,5 +139,10 @@ public class SmellyEggEntity extends ProjectileItemEntity {
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return EarthItems.SMELLY_EGG;
     }
 }

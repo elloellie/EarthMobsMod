@@ -1,23 +1,19 @@
 package baguchan.earthmobsmod.client.particle;
 
-import baguchan.earthmobsmod.EarthMobsMod;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FlowerPollenParticle extends EarthParticle {
+public class FlowerPollenParticle extends SpriteTexturedParticle {
 	private int currentFrame = 0;
 	private int lastTick = 0;
 	private final double portalPosX;
 	private final double portalPosY;
 	private final double portalPosZ;
 
-	public FlowerPollenParticle(World world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int i) {
+	public FlowerPollenParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 		super(world, x, y, z, xSpeed, ySpeed, zSpeed);
 
 		this.motionX = xSpeed;
@@ -44,19 +40,6 @@ public class FlowerPollenParticle extends EarthParticle {
 		this.particleGravity = 0f;
 	}
 
-	@Override
-	public void onPreRender(BufferBuilder buffer, ActiveRenderInfo activeInfo, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		Entity entity = activeInfo.getRenderViewEntity();
-		if (entity.ticksExisted >= this.lastTick + 12) {
-
-			if (this.currentFrame >= 3) {
-				this.currentFrame = 3;
-			} else {
-				this.currentFrame = this.currentFrame + 1;
-			}
-			this.lastTick = entity.ticksExisted;
-		}
-	}
 
 	public void move(double x, double y, double z) {
 		this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
@@ -103,17 +86,22 @@ public class FlowerPollenParticle extends EarthParticle {
 	}
 
 	@Override
-	ResourceLocation getTexture() {
-		return new ResourceLocation(EarthMobsMod.MODID, "textures/particles/flowerpollen/pollen" + "_" + currentFrame + ".png");
+	public IParticleRenderType getRenderType() {
+		return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static class Factory implements IEarthParticle {
+	public static class Factory implements IParticleFactory<BasicParticleType> {
+		private final IAnimatedSprite spriteSet;
 
-		@Override
-		public Particle makeParticle(World world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int... params) {
-			return new FlowerPollenParticle(world, x, y, z, xSpeed, ySpeed, zSpeed, params.length > 0 ? params[0] : 0xffffff);
+		public Factory(IAnimatedSprite p_i50607_1_) {
+			this.spriteSet = p_i50607_1_;
 		}
 
+		public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+			FlowerPollenParticle portalparticle = new FlowerPollenParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
+			portalparticle.selectSpriteRandomly(this.spriteSet);
+			return portalparticle;
+		}
 	}
 }

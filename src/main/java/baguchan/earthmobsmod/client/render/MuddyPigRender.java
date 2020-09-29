@@ -5,7 +5,7 @@ import baguchan.earthmobsmod.client.render.layer.FlowerColorLayer;
 import baguchan.earthmobsmod.client.render.layer.MuddyPigSaddleLayer;
 import baguchan.earthmobsmod.client.render.layer.PigSkinLayer;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.entity.Entity;
@@ -13,8 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ModList;
-import vazkii.quark.client.module.VariantAnimalTexturesModule;
 
 import javax.annotation.Nullable;
 
@@ -30,22 +28,16 @@ public class MuddyPigRender extends MobRenderer<MuddyPigEntity, ModelMuddyPig<Mu
     }
 
     @Override
-    protected void applyRotations(MuddyPigEntity entityLiving, float ageInTicks, float rotationYaw, float partialTicks) {
-        if (entityLiving.isRunning() && Entity.func_213296_b(entityLiving.getMotion()) > 1.0E-7D) {
-            GlStateManager.translated(0.0F, MathHelper.cos(ageInTicks * 0.64F) * 0.125F, 0.0F);
+    protected void applyRotations(MuddyPigEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        if (entityLiving.isRunning() && Entity.horizontalMag(entityLiving.getMotion()) > 1.0E-7D) {
+            matrixStackIn.translate(0.0F, MathHelper.cos(ageInTicks * 0.64F) * 0.125F, 0.0F);
         }
-
-        super.applyRotations(entityLiving, ageInTicks, rotationYaw, partialTicks);
+        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
     }
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(MuddyPigEntity entity)
-    {
-        if (ModList.get().isLoaded("quark")) {
-            return VariantAnimalTexturesModule.getTextureOrShiny(entity, VariantAnimalTexturesModule.VariantTextureType.PIG, VariantAnimalTexturesModule.enablePig);
-        } else {
-            return PIG_TEXTURES;
-        }
+    public ResourceLocation getEntityTexture(MuddyPigEntity entity) {
+        return PIG_TEXTURES;
     }
 }

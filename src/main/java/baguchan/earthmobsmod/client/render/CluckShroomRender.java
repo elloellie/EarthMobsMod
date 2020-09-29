@@ -33,7 +33,7 @@ public class CluckShroomRender extends MobRenderer<CluckShroomEntity, ModelCluck
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(CluckShroomEntity entity) {
+    public ResourceLocation getEntityTexture(CluckShroomEntity entity) {
         return TEXTURES.get(entity.getCluckShroomType());
     }
 }

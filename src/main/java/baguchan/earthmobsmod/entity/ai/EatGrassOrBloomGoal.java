@@ -31,7 +31,7 @@ public class EatGrassOrBloomGoal extends Goal {
      * Returns whether the EntityAIBase should begin execution.
      */
     public boolean shouldExecute() {
-        BlockPos blockpos = new BlockPos(this.grassEaterEntity);
+        BlockPos blockpos = new BlockPos(this.grassEaterEntity.getPosition());
         if (this.grassEaterEntity.getEatDelayTimer() <= 0) {
             //when moobloom has flowercircle,moobloom will not eat far away flowers
             if (this.grassEaterEntity.getFlowerHome() == null || blockpos.withinDistance(this.grassEaterEntity.getFlowerHome(), 2.25F)) {
@@ -91,7 +91,7 @@ public class EatGrassOrBloomGoal extends Goal {
     public void tick() {
         this.eatingGrassTimer = Math.max(0, this.eatingGrassTimer - 1);
         if (this.eatingGrassTimer == 4) {
-            BlockPos blockpos = new BlockPos(this.grassEaterEntity);
+            BlockPos blockpos = new BlockPos(this.grassEaterEntity.getPosition());
             if (IS_BUTTERCUP.test(this.entityWorld.getBlockState(blockpos))) {
                 if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.grassEaterEntity)) {
                     this.entityWorld.destroyBlock(blockpos, false);

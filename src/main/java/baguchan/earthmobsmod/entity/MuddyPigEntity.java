@@ -11,6 +11,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
@@ -27,20 +29,22 @@ import net.minecraft.pathfinding.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IForgeShearable;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-public class MuddyPigEntity extends PigEntity implements net.minecraftforge.common.IShearable {
+public class MuddyPigEntity extends PigEntity implements IShearable, IForgeShearable {
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(Items.CARROT, Items.POTATO, Items.BEETROOT);
     private static final DataParameter<Integer> FLOWER_COLOR = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> HAS_FLOWER = EntityDataManager.createKey(MuddyPigEntity.class, DataSerializers.BOOLEAN);
@@ -98,10 +102,9 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(1.0D);
+
+    public static AttributeModifierMap.MutableAttribute createMutableAttribute() {
+        return PigEntity.func_234215_eI_().createMutableAttribute(Attributes.ARMOR, 1.0D);
     }
 
     protected void registerData() {
@@ -192,7 +195,8 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     }
 
 
-    public boolean processInteract(PlayerEntity player, Hand hand) {
+    @Override
+    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         Item item = itemstack.getItem();
 
@@ -205,20 +209,34 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                         itemstack.shrink(1);
                     }
 
-                    return true;
+                    return ActionResultType.CONSUME;
                 }
             }
         }
-        return super.processInteract(player, hand);
+        return super.applyPlayerInteraction(player, vec, hand);
     }
 
     @Override
-    public boolean isShearable(ItemStack item, net.minecraft.world.IWorldReader world, BlockPos pos) {
+    public boolean isShearable() {
         return this.getHasFlower() && !this.isDry();
     }
 
     @Override
-    public java.util.List<ItemStack> onSheared(ItemStack item, net.minecraft.world.IWorld world, BlockPos pos, int fortune) {
+    public boolean isShearable(ItemStack item, World world, BlockPos pos) {
+        return this.getHasFlower() && !this.isDry();
+    }
+
+    @Override
+    public void shear(SoundCategory category) {
+        if (!this.world.isRemote) {
+            this.setHasFlower(false);
+            this.entityDropItem(new ItemStack(DYE_BY_COLOR.get(this.getFlowerColor())));
+        }
+        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+    }
+
+    @Override
+    public List<ItemStack> onSheared(PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!this.world.isRemote) {
             this.setHasFlower(false);
@@ -248,7 +266,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     }
 
     public static boolean spawnHandler(EntityType<? extends AnimalEntity> p_223316_0_, IWorld p_223316_1_, SpawnReason p_223316_2_, BlockPos p_223316_3_, Random p_223316_4_) {
-        return p_223316_1_.getWorld().getDimension().getType() == DimensionType.OVERWORLD && p_223316_1_.getBlockState(p_223316_3_.down()).getBlock() == Blocks.GRASS_BLOCK && p_223316_1_.getLightSubtracted(p_223316_3_, 0) > 8;
+        return p_223316_1_.getBlockState(p_223316_3_.down()).getBlock() == Blocks.GRASS_BLOCK && p_223316_1_.getLightSubtracted(p_223316_3_, 0) > 8;
     }
 
     @Override
@@ -256,9 +274,21 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         super.tick();
         if (this.isAlive()) {
             if (this.isJumping) {
-                if (!(this.submergedHeight > 0.0D) || this.onGround && !(this.submergedHeight > 0.4D)) {
+                if (!(this.stepHeight > 0.0D) || this.onGround && !(this.stepHeight > 0.4D)) {
                     this.handleFluidJump(EarthTags.Fluids.MUD_WATER);
                 }
+            }
+
+            if (this.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D)) {
+                if (!this.inMud && !this.firstUpdate) {
+                    this.doWaterSplashEffect();
+                }
+
+                this.fallDistance = 0.0F;
+                this.inMud = true;
+                this.extinguish();
+            } else {
+                this.inMud = false;
             }
 
             if (this.isDry()) {
@@ -324,13 +354,13 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 if (this.timeIsShaking > 0.4F) {
                     float f = (float) this.getBoundingBox().minY;
                     int i = (int) (MathHelper.sin((this.timeIsShaking - 0.4F) * (float) Math.PI) * 7.0F);
-                    Vec3d vec3d = this.getMotion();
+                    Vector3d vec3d = this.getMotion();
 
                     for (int j = 0; j < i; ++j) {
                         float f1 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.6F;
                         float f2 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.getWidth() * 0.6F;
                         if (isWet) {
-                            this.world.addParticle(ParticleTypes.SPLASH, this.posX + (double) f1, (double) (f + 0.85F), this.posZ + (double) f2, vec3d.x, vec3d.y, vec3d.z);
+                            this.world.addParticle(ParticleTypes.SPLASH, this.getPosX() + (double) f1, (double) (f + 0.85F), this.getPosZ() + (double) f2, vec3d.x, vec3d.y, vec3d.z);
                         }
                     }
                 }
@@ -349,20 +379,20 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 pigEntity.setCustomNameVisible(this.isCustomNameVisible());
             }
 
-            if (this.getSaddled()) {
-                pigEntity.setSaddled(true);
+            if (this.isHorseSaddled()) {
+                pigEntity.func_230264_L__();
             }
 
             if (this.isChild()) {
                 pigEntity.setGrowingAge(this.getGrowingAge());
             }
 
-            this.world.getServer().getWorld(this.dimension).removeEntityComplete(this, false);
-            this.world.getServer().getWorld(this.dimension).func_217460_e(pigEntity);
+            this.world.getServer().getWorld(this.world.getDimensionKey()).removeEntityComplete(this, false);
+            this.world.getServer().getWorld(this.world.getDimensionKey()).addEntity(pigEntity);
         }
     }
 
-    public void travel(Vec3d vec) {
+    public void travel(Vector3d vec) {
         if (this.isAlive()) {
             Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
             if (this.isBeingRidden() && this.canBeSteered()) {
@@ -376,7 +406,7 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
                 this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 
                 if (this.canPassengerSteer()) {
-                    Vec3d vec3d6 = this.getMotion();
+                    Vector3d vec3d6 = this.getMotion();
 
                     float d0 = 0.00F;
 
@@ -396,12 +426,12 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
 
                     super.travel(vec);
                 } else {
-                    this.setMotion(Vec3d.ZERO);
+                    this.setMotion(Vector3d.ZERO);
                 }
 
                 this.prevLimbSwingAmount = this.limbSwingAmount;
-                double d1 = this.posX - this.prevPosX;
-                double d0 = this.posZ - this.prevPosZ;
+                double d1 = this.getPosX() - this.prevPosX;
+                double d0 = this.getPosZ() - this.prevPosZ;
                 float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
                 if (f1 > 1.0F) {
                     f1 = 1.0F;
@@ -420,22 +450,6 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
     @Override
     protected float getWaterSlowDown() {
         return isInMud() ? 0.9F : super.getWaterSlowDown();
-    }
-
-    public boolean handleWaterMovement() {
-        if (this.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER)) {
-            if (!this.inMud && !this.firstUpdate) {
-                this.doWaterSplashEffect();
-            }
-
-            this.fallDistance = 0.0F;
-            this.inMud = true;
-            this.extinguish();
-            return false;
-        } else {
-            this.inMud = false;
-            return super.handleWaterMovement();
-        }
     }
 
     public boolean isInWaterRainOrBubbleColumn() {
@@ -499,8 +513,9 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
         return CreatureAttribute.UNDEFINED;
     }
 
+
     @Override
-    public MuddyPigEntity createChild(AgeableEntity ageable) {
+    public MuddyPigEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity ageable) {
         return EarthEntitys.MUDDYPIG.create(this.world);
     }
 
@@ -530,19 +545,19 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
             return new PathFinder(this.nodeProcessor, p_179679_1_);
         }
 
-        protected Vec3d getEntityPosition() {
-            return new Vec3d(this.entity.posX, (double) this.getPathablePosY(), this.entity.posZ);
+        protected Vector3d getEntityPosition() {
+            return new Vector3d(this.entity.getPosX(), (double) this.getPathablePosY(), this.entity.getPosZ());
         }
 
         private int getPathablePosY() {
             if (this.entity.isInWater() && this.getCanSwim()) {
                 int i = MathHelper.floor(this.entity.getBoundingBox().minY);
-                Block block = this.world.getBlockState(new BlockPos(this.entity.posX, (double) i, this.entity.posZ)).getBlock();
+                Block block = this.world.getBlockState(new BlockPos(this.entity.getPosX(), (double) i, this.entity.getPosZ())).getBlock();
                 int j = 0;
 
                 while (block == Blocks.WATER || block == EarthBlocks.MUDWATER) {
                     ++i;
-                    block = this.world.getBlockState(new BlockPos(this.entity.posX, (double) i, this.entity.posZ)).getBlock();
+                    block = this.world.getBlockState(new BlockPos(this.entity.getPosX(), (double) i, this.entity.getPosZ())).getBlock();
                     ++j;
                     if (j > 16) {
                         return MathHelper.floor(this.entity.getBoundingBox().minY);
@@ -564,31 +579,31 @@ public class MuddyPigEntity extends PigEntity implements net.minecraftforge.comm
             int i;
             if (this.getCanSwim() && this.entity.isInWater()) {
                 i = MathHelper.floor(this.entity.getBoundingBox().minY);
-                BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(this.entity.posX, (double) i, this.entity.posZ);
+                BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable(this.entity.getPosX(), (double) i, this.entity.getPosZ());
 
                 for (BlockState blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos); blockstate.getBlock() == Blocks.WATER || blockstate.getFluidState() == Fluids.WATER.getStillFluidState(false); blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos)) {
                     ++i;
-                    blockpos$mutableblockpos.setPos(this.entity.posX, (double) i, this.entity.posZ);
+                    blockpos$mutableblockpos.setPos(this.entity.getPosX(), (double) i, this.entity.getPosZ());
                 }
 
                 for (BlockState blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos); blockstate.getBlock() == EarthBlocks.MUDWATER || blockstate.getFluidState() == EarthFluids.MUD_WATER.getStillFluidState(false); blockstate = this.blockaccess.getBlockState(blockpos$mutableblockpos)) {
                     ++i;
-                    blockpos$mutableblockpos.setPos(this.entity.posX, (double) i, this.entity.posZ);
+                    blockpos$mutableblockpos.setPos(this.entity.getPosX(), (double) i, this.entity.getPosZ());
                 }
 
                 --i;
-            } else if (this.entity.onGround) {
+            } else if (this.entity.isOnGround()) {
                 i = MathHelper.floor(this.entity.getBoundingBox().minY + 0.5D);
             } else {
                 BlockPos blockpos;
-                for (blockpos = new BlockPos(this.entity); (this.blockaccess.getBlockState(blockpos).isAir() || this.blockaccess.getBlockState(blockpos).allowsMovement(this.blockaccess, blockpos, PathType.LAND)) && blockpos.getY() > 0; blockpos = blockpos.down()) {
+                for (blockpos = new BlockPos(this.entity.getPosition()); (this.blockaccess.getBlockState(blockpos).isAir() || this.blockaccess.getBlockState(blockpos).allowsMovement(this.blockaccess, blockpos, PathType.LAND)) && blockpos.getY() > 0; blockpos = blockpos.down()) {
                     ;
                 }
 
                 i = blockpos.up().getY();
             }
 
-            BlockPos blockpos2 = new BlockPos(this.entity);
+            BlockPos blockpos2 = new BlockPos(this.entity.getPosition());
             PathNodeType pathnodetype1 = this.getPathNodeType(this.entity, blockpos2.getX(), i, blockpos2.getZ());
             if (this.entity.getPathPriority(pathnodetype1) < 0.0F) {
                 Set<BlockPos> set = Sets.newHashSet();

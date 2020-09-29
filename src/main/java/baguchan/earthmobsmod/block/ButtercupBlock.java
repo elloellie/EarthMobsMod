@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.block;
 
-import baguchan.earthmobsmod.client.particle.EarthParticles;
+import baguchan.earthmobsmod.handler.EarthParticles;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowerBlock;
@@ -34,8 +34,8 @@ public class ButtercupBlock extends FlowerBlock {
 			double d4 = ((double) rand.nextFloat() - 0.5D) * 0.125D;
 			double d5 = (double) (rand.nextFloat() * (float) k);
 			if (rand.nextBoolean()) {
-				EarthParticles.FLOWER_POLLEN.spawn(worldIn, d0, d1, d2, d3, d4, d5);
-			}
+                worldIn.addParticle(EarthParticles.FLOWER_POLLEN, d0, d1, d2, d3, d4, d5);
+            }
 		}
 	}
 

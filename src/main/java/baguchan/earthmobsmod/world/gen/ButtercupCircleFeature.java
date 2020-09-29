@@ -3,26 +3,24 @@ package baguchan.earthmobsmod.world.gen;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 
 import java.util.Random;
-import java.util.function.Function;
 
 public class ButtercupCircleFeature extends Feature<NoFeatureConfig> {
-    public ButtercupCircleFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> p_i49863_1_) {
-        super(p_i49863_1_);
+    public ButtercupCircleFeature(Codec<NoFeatureConfig> p_i231934_1_) {
+        super(p_i231934_1_);
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean func_241855_a(ISeedReader worldIn, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos pos, NoFeatureConfig p_241855_5_) {
         BlockState flower = EarthBlocks.BUTTERCUP.getDefaultState();
         if (flower.isValidPosition(worldIn, pos)) {
             for (int i = -8; i <= 8; i++) {
@@ -55,4 +53,5 @@ public class ButtercupCircleFeature extends Feature<NoFeatureConfig> {
         }
         return false;
     }
+
 }
