@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.client.render;
 
-import baguchan.earthmobsmod.client.model.ModelMuddyPig;
+import baguchan.earthmobsmod.client.model.MuddyPigModel;
 import baguchan.earthmobsmod.client.render.layer.FlowerColorLayer;
 import baguchan.earthmobsmod.client.render.layer.MuddyPigSaddleLayer;
 import baguchan.earthmobsmod.client.render.layer.PigSkinLayer;
@@ -17,11 +17,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class MuddyPigRender extends MobRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> {
+public class MuddyPigRender extends MobRenderer<MuddyPigEntity, MuddyPigModel<MuddyPigEntity>> {
     private static final ResourceLocation PIG_TEXTURES = new ResourceLocation("textures/entity/pig/pig.png");
 
     public MuddyPigRender(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new ModelMuddyPig<>(), 0.5F);
+        super(renderManagerIn, new MuddyPigModel<>(), 0.5F);
         this.addLayer(new MuddyPigSaddleLayer(this));
         this.addLayer(new PigSkinLayer(this));
         this.addLayer(new FlowerColorLayer(this));

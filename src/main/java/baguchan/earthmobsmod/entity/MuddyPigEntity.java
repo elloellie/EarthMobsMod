@@ -273,11 +273,6 @@ public class MuddyPigEntity extends PigEntity implements IShearable, IForgeShear
     public void tick() {
         super.tick();
         if (this.isAlive()) {
-            if (this.isJumping) {
-                if (!(this.stepHeight > 0.0D) || this.onGround && !(this.stepHeight > 0.4D)) {
-                    this.handleFluidJump(EarthTags.Fluids.MUD_WATER);
-                }
-            }
 
             if (this.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D)) {
                 if (!this.inMud && !this.firstUpdate) {

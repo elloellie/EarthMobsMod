@@ -14,7 +14,7 @@ public class GoToMudGoal extends MoveToBlockGoal {
     private float oldWaterCost;
 
     public GoToMudGoal(PigEntity pig, double p_i48819_2_) {
-        super(pig, p_i48819_2_, 24);
+        super(pig, p_i48819_2_, 12);
         this.pig = pig;
         this.field_203112_e = -1;
     }

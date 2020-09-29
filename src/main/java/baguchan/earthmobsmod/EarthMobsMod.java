@@ -6,8 +6,10 @@ import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
 import baguchan.earthmobsmod.handler.*;
 import net.minecraft.block.Block;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.fluid.Fluid;
@@ -96,20 +98,20 @@ public class EarthMobsMod
 
         LivingEntity livingEntity = event.getEntityLiving();
 
-        if (livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D) && !(livingEntity instanceof MuddyPigEntity)) {
+
+        if (livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D)) {
             if (livingEntity.getMotion().getY() < 0.0F) {
                 livingEntity.setMotion(livingEntity.getMotion().mul(0.8F, 0.5F, 0.8F));
             } else {
-                livingEntity.setMotion(livingEntity.getMotion().scale(0.95F));
+                livingEntity.setMotion(livingEntity.getMotion().scale(0.9F));
             }
 
             if (livingEntity.isJumping) {
-                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.038F * livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get()).getValue(), 0.0D));
+                livingEntity.setMotion(livingEntity.getMotion().add(0.0D, (double) 0.08F * livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get()).getValue(), 0.0D));
             }
 
+            livingEntity.fallDistance = 0;
 
-            livingEntity.fallDistance = 0.0F;
-            livingEntity.extinguish();
         }
 
         if (event.getEntityLiving().getType() == EntityType.PIG && event.getEntityLiving().ticksExisted % 5 == 0 && livingEntity.handleFluidAcceleration(EarthTags.Fluids.MUD_WATER, 0.014D)) {
@@ -177,14 +179,16 @@ public class EarthMobsMod
     public void onEntityJoin(EntityJoinWorldEvent event) {
         World world = event.getWorld();
 
-        /*if(event.getEntity() instanceof MobEntity){
+        if (event.getEntity() instanceof MobEntity) {
             MobEntity livingEntity = (MobEntity) event.getEntity();
-            livingEntity.goalSelector.addGoal(0);
-        }*/
+            if (livingEntity.getCreatureAttribute() != CreatureAttribute.UNDEAD) {
+                //livingEntity.goalSelector.addGoal(0, new SwimMudGoal(livingEntity));
+            }
+        }
 
         if (event.getEntity().getType() == EntityType.PIG) {
             PigEntity pig = (PigEntity) event.getEntity();
-            pig.goalSelector.addGoal(1, new GoToMudGoal(pig, 1.0D));
+            pig.goalSelector.addGoal(0, new GoToMudGoal(pig, 1.0D));
         }
     }
 

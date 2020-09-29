@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
  * ModelCluckshroom - Undefined
  * Created using Tabula 7.0.0
  */
-public class ModelCluckShroom<T extends CluckShroomEntity> extends EntityModel<T> {
+public class CluckShroomModel<T extends CluckShroomEntity> extends EntityModel<T> {
     public ModelRenderer Head;
     public ModelRenderer Body;
     public ModelRenderer RightWing;
@@ -25,7 +25,7 @@ public class ModelCluckShroom<T extends CluckShroomEntity> extends EntityModel<T
     public ModelRenderer Mushroom3;
     public ModelRenderer Mushroom4;
 
-    public ModelCluckShroom() {
+    public CluckShroomModel() {
         this.textureWidth = 64;
         this.textureHeight = 32;
         this.Waddle = new ModelRenderer(this, 14, 4);
@@ -80,12 +80,12 @@ public class ModelCluckShroom<T extends CluckShroomEntity> extends EntityModel<T
     public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (this.isChild) {
             matrixStackIn.push();
-            matrixStackIn.translate(0.0F, 5.0F, 2.0F);
+            matrixStackIn.translate(0.0F, 5.0F / 16.0F, 2.0F);
             this.Head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             matrixStackIn.pop();
             matrixStackIn.push();
             matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-            matrixStackIn.translate(0.0F, 24.0F, 0.0F);
+            matrixStackIn.translate(0.0F, 24.0F / 16.0F, 0.0F);
             this.RightLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.Body.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.LeftLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);

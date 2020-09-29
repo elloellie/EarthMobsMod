@@ -1,7 +1,7 @@
 package baguchan.earthmobsmod.client.render;
 
 import baguchan.earthmobsmod.EarthMobsMod;
-import baguchan.earthmobsmod.client.model.ModelCluckShroom;
+import baguchan.earthmobsmod.client.model.CluckShroomModel;
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
 import com.google.common.collect.Maps;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -16,13 +16,14 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
-public class CluckShroomRender extends MobRenderer<CluckShroomEntity, ModelCluckShroom<CluckShroomEntity>> {
+public class CluckShroomRender extends MobRenderer<CluckShroomEntity, CluckShroomModel<CluckShroomEntity>> {
     private static final Map<CluckShroomEntity.Type, ResourceLocation> TEXTURES = Util.make(Maps.newHashMap(), (p_217773_0_) -> {
         p_217773_0_.put(CluckShroomEntity.Type.BROWN, new ResourceLocation(EarthMobsMod.MODID, "textures/entity/cluckshroom/brown_cluckshroom.png"));
         p_217773_0_.put(CluckShroomEntity.Type.RED, new ResourceLocation(EarthMobsMod.MODID, "textures/entity/cluckshroom/cluckshroom.png"));
     });
+
     public CluckShroomRender(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new ModelCluckShroom<>(), 0.3F);
+        super(renderManagerIn, new CluckShroomModel<>(), 0.3F);
     }
 
     protected float handleRotationFloat(CluckShroomEntity livingBase, float partialTicks) {

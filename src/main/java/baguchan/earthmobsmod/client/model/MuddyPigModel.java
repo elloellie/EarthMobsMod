@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
  * ModelMuddyPig - Undefined
  * Created using Tabula 7.0.0
  */
-public class ModelMuddyPig<T extends MuddyPigEntity> extends EntityModel<T> {
+public class MuddyPigModel<T extends MuddyPigEntity> extends EntityModel<T> {
     public ModelRenderer RightFrontLeg;
     public ModelRenderer LeftFrontLeg;
     public ModelRenderer RightBackLeg;
@@ -26,7 +26,7 @@ public class ModelMuddyPig<T extends MuddyPigEntity> extends EntityModel<T> {
     protected float childYOffset = 6.0F;
     protected float childZOffset = 4.0F;
 
-    public ModelMuddyPig() {
+    public MuddyPigModel() {
         this.textureWidth = 64;
         this.textureHeight = 32;
         this.LeftFrontLeg = new ModelRenderer(this, 0, 16);
@@ -67,12 +67,12 @@ public class ModelMuddyPig<T extends MuddyPigEntity> extends EntityModel<T> {
         if (this.isChild) {
             float f = 2.0F;
             matrixStackIn.push();
-            matrixStackIn.translate(0.0F, this.childYOffset, this.childZOffset);
+            matrixStackIn.translate(0.0F, this.childYOffset / 16.0F, this.childZOffset / 16.0F);
             this.Head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             matrixStackIn.pop();
             matrixStackIn.push();
             matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-            matrixStackIn.translate(0.0F, 24.0F, 0.0F);
+            matrixStackIn.translate(0.0F, 24.0F / 16.0F, 0.0F);
             this.LeftFrontLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.RightFrontLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.Body.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);

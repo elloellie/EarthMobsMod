@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.client.render.layer;
 
-import baguchan.earthmobsmod.client.model.ModelMuddyPig;
+import baguchan.earthmobsmod.client.model.MuddyPigModel;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -10,13 +10,16 @@ import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MuddyPigSaddleLayer extends LayerRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> {
+@OnlyIn(Dist.CLIENT)
+public class MuddyPigSaddleLayer extends LayerRenderer<MuddyPigEntity, MuddyPigModel<MuddyPigEntity>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/pig/pig_saddle.png");
-    private final ModelMuddyPig<MuddyPigEntity> model = new ModelMuddyPig<>();
+    private final MuddyPigModel<MuddyPigEntity> model = new MuddyPigModel<>();
 
 
-    public MuddyPigSaddleLayer(IEntityRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> render) {
+    public MuddyPigSaddleLayer(IEntityRenderer<MuddyPigEntity, MuddyPigModel<MuddyPigEntity>> render) {
         super(render);
     }
 

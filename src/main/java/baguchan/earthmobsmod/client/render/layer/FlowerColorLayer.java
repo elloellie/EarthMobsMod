@@ -1,7 +1,7 @@
 package baguchan.earthmobsmod.client.render.layer;
 
 import baguchan.earthmobsmod.EarthMobsMod;
-import baguchan.earthmobsmod.client.model.ModelMuddyPig;
+import baguchan.earthmobsmod.client.model.MuddyPigModel;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -15,11 +15,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class FlowerColorLayer extends LayerRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> {
+public class FlowerColorLayer extends LayerRenderer<MuddyPigEntity, MuddyPigModel<MuddyPigEntity>> {
     private static final ResourceLocation FLOWER_TEXTURE = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/muddypig/pig_muddy_flower.png");
-    private final ModelMuddyPig<MuddyPigEntity> model = new ModelMuddyPig<>();
+    private final MuddyPigModel<MuddyPigEntity> model = new MuddyPigModel<>();
 
-    public FlowerColorLayer(IEntityRenderer<MuddyPigEntity, ModelMuddyPig<MuddyPigEntity>> p_i50914_1_) {
+    public FlowerColorLayer(IEntityRenderer<MuddyPigEntity, MuddyPigModel<MuddyPigEntity>> p_i50914_1_) {
         super(p_i50914_1_);
     }
 

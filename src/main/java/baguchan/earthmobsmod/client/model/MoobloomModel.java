@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
  * ModelMoobloom - Undefined
  * Created using Tabula 7.0.0
  */
-public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
+public class MoobloomModel<T extends MooBloomEntity> extends EntityModel<T> {
     private float headRotationAngleX;
     public ModelRenderer Head;
     public ModelRenderer Body;
@@ -33,7 +33,7 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
     protected float childYOffset = 8.0F;
     protected float childZOffset = 6.0F;
 
-    public ModelMoobloom() {
+    public MoobloomModel() {
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.Udder = new ModelRenderer(this, 52, 0);
@@ -112,12 +112,12 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         if (this.isChild) {
             float f = 2.0F;
             matrixStackIn.push();
-            matrixStackIn.translate(0.0F, this.childYOffset, this.childZOffset);
+            matrixStackIn.translate(0.0F, this.childYOffset / 16.0F, this.childZOffset / 16.0F);
             this.Head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             matrixStackIn.pop();
             matrixStackIn.push();
             matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-            matrixStackIn.translate(0.0F, 24.0F, 0.0F);
+            matrixStackIn.translate(0.0F, 24.0F / 16.0F, 0.0F);
             this.LeftFrontLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.RightFrontLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.LeftBackLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
@@ -142,7 +142,7 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         float l = this.swingProgress;
 
         if (l > 0) {
-            float f = this.func_217167_a(l - partialTick, 10.0F);
+            float f = this.swingRotation(l - partialTick, 10.0F);
 
             float f1 = (1.0F + f) * 0.5F;
             float f2 = f1 * f1 * f1 * 4.0F;
@@ -179,7 +179,7 @@ public class ModelMoobloom<T extends MooBloomEntity> extends EntityModel<T> {
         modelRenderer.rotateAngleZ = z;
     }
 
-    private float func_217167_a(float p_217167_1_, float p_217167_2_) {
+    private float swingRotation(float p_217167_1_, float p_217167_2_) {
         return (Math.abs(p_217167_1_ % p_217167_2_ - p_217167_2_ * 0.5F) - p_217167_2_ * 0.25F) / (p_217167_2_ * 0.25F);
     }
 }

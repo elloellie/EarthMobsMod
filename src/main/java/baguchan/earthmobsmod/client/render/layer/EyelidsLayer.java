@@ -1,7 +1,7 @@
 package baguchan.earthmobsmod.client.render.layer;
 
 import baguchan.earthmobsmod.EarthMobsMod;
-import baguchan.earthmobsmod.client.model.ModelMoobloom;
+import baguchan.earthmobsmod.client.model.MoobloomModel;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -11,12 +11,15 @@ import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EyelidsLayer extends LayerRenderer<MooBloomEntity, ModelMoobloom<MooBloomEntity>> {
+@OnlyIn(Dist.CLIENT)
+public class EyelidsLayer extends LayerRenderer<MooBloomEntity, MoobloomModel<MooBloomEntity>> {
     private static final ResourceLocation EYELIDS_TEXTURE = new ResourceLocation(EarthMobsMod.MODID, "textures/entity/moobloom/moobloom_blink.png");
-    private final ModelMoobloom<MooBloomEntity> model = new ModelMoobloom<>();
+    private final MoobloomModel<MooBloomEntity> model = new MoobloomModel<>();
 
-    public EyelidsLayer(IEntityRenderer<MooBloomEntity, ModelMoobloom<MooBloomEntity>> render) {
+    public EyelidsLayer(IEntityRenderer<MooBloomEntity, MoobloomModel<MooBloomEntity>> render) {
         super(render);
     }
 
