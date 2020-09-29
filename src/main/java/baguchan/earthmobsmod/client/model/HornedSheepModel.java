@@ -26,8 +26,8 @@ public class HornedSheepModel<T extends HornedSheepEntity> extends QuadrupedMode
         textureHeight = 32;
 
         body = new ModelRenderer(this);
-        body.setRotationPoint(0.0F, 5.0F, 1.0F);
-        setRotationAngle(body, 3.1416F, 0.0F, 0.0F);
+        body.setRotationPoint(0.0F, 12.0F, -1.0F);
+        setRotationAngle(body, 1.5708F, 0.0F, 0.0F);
         body.setTextureOffset(22, 10).addBox(-4.0F, -6.0F, 0.0F, 8.0F, 16.0F, 6.0F, 0.0F, true);
 
         head = new ModelRenderer(this);
@@ -64,11 +64,11 @@ public class HornedSheepModel<T extends HornedSheepEntity> extends QuadrupedMode
     public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.rotateAngleX = headPitch * ((float) Math.PI / 180F);
         this.head.rotateAngleY = netHeadYaw * ((float) Math.PI / 180F);
-        this.leg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
-        this.leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
-        this.leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.headModel.rotateAngleX = this.headRotationAngleX;
+        this.leg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        this.leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        this.head.rotateAngleX = this.headRotationAngleX;
     }
 
     public void setLivingAnimations(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
@@ -85,7 +85,7 @@ public class HornedSheepModel<T extends HornedSheepEntity> extends QuadrupedMode
             this.head.rotationPointZ = -8.0F;
         }
 
-        this.headModel.rotationPointY = 6.0F + entityIn.getHeadRotationPointY(partialTick) * 9.0F;
+        this.head.rotationPointY = 6.0F + entityIn.getHeadRotationPointY(partialTick) * 9.0F;
         this.headRotationAngleX = entityIn.getHeadRotationAngleX(partialTick);
     }
 
