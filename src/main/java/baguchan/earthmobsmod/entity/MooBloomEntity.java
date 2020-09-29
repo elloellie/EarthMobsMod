@@ -3,17 +3,12 @@ package baguchan.earthmobsmod.entity;
 import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
 import baguchan.earthmobsmod.handler.EarthBlocks;
 import baguchan.earthmobsmod.handler.EarthEntitys;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.GrassBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IShearable;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.block.*;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +25,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,6 +34,7 @@ import net.minecraftforge.common.IForgeShearable;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 
 public class MooBloomEntity extends CowEntity implements IShearable, IForgeShearable {
     private static final Ingredient BREEDING_ITEMS = Ingredient.fromItems(Items.GOLDEN_APPLE);
@@ -151,6 +148,9 @@ public class MooBloomEntity extends CowEntity implements IShearable, IForgeShear
         }
     }
 
+    public static boolean spawnHandler(EntityType<? extends AnimalEntity> p_223316_0_, IWorld p_223316_1_, SpawnReason p_223316_2_, BlockPos p_223316_3_, Random p_223316_4_) {
+        return p_223316_1_.getBlockState(p_223316_3_.down()).getBlock() == Blocks.GRASS_BLOCK && p_223316_1_.getLightSubtracted(p_223316_3_, 0) > 8;
+    }
 
     @Override
     public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
