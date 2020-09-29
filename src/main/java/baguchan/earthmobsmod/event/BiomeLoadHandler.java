@@ -46,6 +46,10 @@ public class BiomeLoadHandler {
             if (event.getCategory() == Biome.Category.SWAMP) {
                 event.getGeneration().withFeature(GenerationStage.Decoration.LAKES, LAKE_MUD);
             }
+
+            if (event.getCategory() == Biome.Category.EXTREME_HILLS) {
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.HORNED_SHEEP, 6, 2, 3));
+            }
         }
     }
 }
