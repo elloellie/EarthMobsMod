@@ -77,7 +77,7 @@ public class MooBloomEntity extends CowEntity implements IShearable, IForgeShear
         this.grassEatTimer = this.eatGrassGoal.getEatingGrassTimer();
         super.updateAITasks();
 
-        if (this.onGround && this.ticksExisted % 140 == 0 && this.world.rand.nextInt(1) == 0 && !this.isSleep() && (MooBloomEntity.this.moveStrafing > 0.0F || MooBloomEntity.this.moveVertical > 0.0F || MooBloomEntity.this.moveForward > 0.0F)) {
+        if (this.onGround && this.world.rand.nextInt(200) == 0 && !this.isSleep()) {
             FlowerBlock flowerBlock = EarthBlocks.BUTTERCUP;
             BlockPos blockpos = this.getPosition().down();
 

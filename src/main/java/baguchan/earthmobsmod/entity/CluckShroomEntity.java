@@ -3,6 +3,7 @@ package baguchan.earthmobsmod.entity;
 import baguchan.earthmobsmod.entity.ai.MoveToMushroom;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthItems;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
@@ -86,29 +87,13 @@ public class CluckShroomEntity extends ChickenEntity implements IShearable, IFor
         super.updateAITasks();
 
         if (this.world.rand.nextInt(300) == 0 && this.world.getLightSubtracted(this.getPosition(), 0) < 12 && !this.isChild()) {
-            BlockPos blockPos = this.getPosition();
+            if (this.onGround) {
+                Block mushroomBlock = this.getCluckShroomType().getState().getBlock();
+                BlockPos blockpos = this.getPosition().down();
 
-            for (int i = 0; i < 2 + this.rand.nextInt(6); i++) {
-                BlockPos pos = new BlockPos(blockPos.getX() + this.rand.nextInt(12) - 6, blockPos.getY() + this.rand.nextInt(4) - 2, blockPos.getZ() + this.rand.nextInt(12) - 6);
-
-                BlockState blockstate = this.world.getBlockState(pos);
-                if (blockstate.getBlock() == Blocks.RED_MUSHROOM || blockstate.getBlock() == Blocks.BROWN_MUSHROOM) {
-
-                    if (!this.world.isRemote) {
-                        this.world.playEvent(2005, pos, 0);
-                        CluckShroomEntity cluckShroomEntity = EarthEntitys.CLUCKSHROOM.create(this.world);
-                        cluckShroomEntity.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, 0.0F, 0.0F);
-                        cluckShroomEntity.setNoAI(this.isAIDisabled());
-
-                        cluckShroomEntity.setGrowingAge(-24000);
-
-                        this.world.addEntity(cluckShroomEntity);
-
-                        this.world.destroyBlock(pos, false);
-                    }
-
+                if (mushroomBlock.isValidPosition(mushroomBlock.getDefaultState(), world, blockpos) && this.world.isAirBlock(this.getPosition())) {
+                    this.world.setBlockState(this.getPosition(), mushroomBlock.getDefaultState());
                 }
-
             }
         }
     }
