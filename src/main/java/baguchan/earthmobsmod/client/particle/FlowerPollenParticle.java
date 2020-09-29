@@ -37,8 +37,12 @@ public class FlowerPollenParticle extends SpriteTexturedParticle {
 		this.particleScale *= 0.6F;
 
 		this.maxAge = (int) (Math.random() * 10.0D) + 40;
-		this.particleGravity = 0f;
 		this.selectSpriteWithAge(spriteWithAge);
+	}
+
+	public void move(double x, double y, double z) {
+		this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
+		this.resetPositionToBB();
 	}
 
 	public float getScale(float p_217561_1_) {
@@ -65,11 +69,12 @@ public class FlowerPollenParticle extends SpriteTexturedParticle {
 	}
 
 	public void tick() {
-		super.tick();
-		if (!this.isExpired) {
-			this.selectSpriteWithAge(this.spriteWithAge);
-		}
-		if (this.age++ < this.maxAge) {
+		this.prevPosX = this.posX;
+		this.prevPosY = this.posY;
+		this.prevPosZ = this.posZ;
+		if (this.age++ >= this.maxAge) {
+			this.setExpired();
+		} else {
 			float f = (float) this.age / (float) this.maxAge;
 			float f1 = -f + f * f * 2.0F;
 			float f2 = 1.0F - f1;

@@ -80,7 +80,7 @@ public class CluckShroomModel<T extends CluckShroomEntity> extends EntityModel<T
     public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (this.isChild) {
             matrixStackIn.push();
-            matrixStackIn.translate(0.0F, 5.0F / 16.0F, 2.0F);
+            matrixStackIn.translate(0.0F, 5.0F / 16.0F, 2.0F / 16.0F);
             this.Head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             matrixStackIn.pop();
             matrixStackIn.push();
