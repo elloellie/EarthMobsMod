@@ -3,12 +3,13 @@
   "block.earthmobsmod.potted_buttercup": "Potted Buttercup",
   "item.earthmobsmod.mud_bucket": "Mud Bucket",
   "item.earthmobsmod.smelly_egg": "Smelly Egg",
+  "item.earthmobsmod.horn": "horn",
   "item.earthmobsmod.cluckshroom_spawnegg": "Cluckshroom Spawn Egg",
   "item.earthmobsmod.moobloom_spawnegg": "Moobloom Spawn Egg",
-
+  "item.earthmobsmod.horned_sheep_spawnegg": "HornedSheep Spawn Egg",
   "entity.earthmobsmod.muddypig": "Muddy Pig",
   "entity.earthmobsmod.cluckshroom": "Cluckshroom",
   "entity.earthmobsmod.moobloom": "Moobloom",
-  
+  "entity.earthmobsmod.horned_sheep": "Horned Sheep",
   "fluid.earthmobsmod.mud": "Mud"
 }

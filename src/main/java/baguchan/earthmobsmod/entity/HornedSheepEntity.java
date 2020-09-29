@@ -1,19 +1,27 @@
 package baguchan.earthmobsmod.entity;
 
+import baguchan.earthmobsmod.handler.EarthEntitys;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.PanicGoal;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.DyeItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class HornedSheepEntity extends SheepEntity {
     public HornedSheepEntity(EntityType<? extends SheepEntity> type, World worldIn) {
@@ -59,5 +67,38 @@ public class HornedSheepEntity extends SheepEntity {
         }
 
         return flag;
+    }
+
+    @Override
+    public HornedSheepEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+        HornedSheepEntity sheepentity = (HornedSheepEntity) p_241840_2_;
+        HornedSheepEntity sheepentity1 = EarthEntitys.HORNED_SHEEP.create(p_241840_1_);
+        sheepentity1.setFleeceColor(this.getDyeColorMixFromParents(this, sheepentity));
+        return sheepentity1;
+    }
+
+    private DyeColor getDyeColorMixFromParents(AnimalEntity father, AnimalEntity mother) {
+        DyeColor dyecolor = ((HornedSheepEntity) father).getFleeceColor();
+        DyeColor dyecolor1 = ((HornedSheepEntity) mother).getFleeceColor();
+        CraftingInventory craftinginventory = createDyeColorCraftingInventory(dyecolor, dyecolor1);
+        return this.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftinginventory, this.world).map((p_213614_1_) -> {
+            return p_213614_1_.getCraftingResult(craftinginventory);
+        }).map(ItemStack::getItem).filter(DyeItem.class::isInstance).map(DyeItem.class::cast).map(DyeItem::getDyeColor).orElseGet(() -> {
+            return this.world.rand.nextBoolean() ? dyecolor : dyecolor1;
+        });
+    }
+
+    private static CraftingInventory createDyeColorCraftingInventory(DyeColor color, DyeColor color1) {
+        CraftingInventory craftinginventory = new CraftingInventory(new Container((ContainerType) null, -1) {
+            /**
+             * Determines whether supplied player can use this container
+             */
+            public boolean canInteractWith(PlayerEntity playerIn) {
+                return false;
+            }
+        }, 2, 1);
+        craftinginventory.setInventorySlotContents(0, new ItemStack(DyeItem.getItem(color)));
+        craftinginventory.setInventorySlotContents(1, new ItemStack(DyeItem.getItem(color1)));
+        return craftinginventory;
     }
 }
