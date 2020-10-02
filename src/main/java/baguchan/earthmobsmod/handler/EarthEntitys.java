@@ -21,7 +21,6 @@ public class EarthEntitys {
     public static final EntityType<HornedSheepEntity> HORNED_SHEEP = EntityType.Builder.create(HornedSheepEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("horned_sheep"));
     public static final EntityType<RainbowSheepEntity> RAINBOW_SHEEP = EntityType.Builder.create(RainbowSheepEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("rainbow_sheep"));
 
-
     public static final EntityType<SmellyEggEntity> SMELLYEGG = EntityType.Builder.<SmellyEggEntity>create(SmellyEggEntity::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(SmellyEggEntity::new).size(0.25F, 0.25F).build(prefix("smellyegg"));
 
     public static void registerEntity(IForgeRegistry<EntityType<?>> event) {
