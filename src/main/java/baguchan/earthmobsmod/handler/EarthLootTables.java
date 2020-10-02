@@ -20,4 +20,6 @@ public class EarthLootTables {
     public static final ResourceLocation ENTITIES_HORNED_SHEEP_GREEN = new ResourceLocation(EarthMobsMod.MODID, "entities/horned_sheep/green");
     public static final ResourceLocation ENTITIES_HORNED_SHEEP_RED = new ResourceLocation(EarthMobsMod.MODID, "entities/horned_sheep/red");
     public static final ResourceLocation ENTITIES_HORNED_SHEEP_BLACK = new ResourceLocation(EarthMobsMod.MODID, "entities/horned_sheep/black");
+
+    public static final ResourceLocation ENTITIES_RAINBOW_SHEEP_WOOL = new ResourceLocation(EarthMobsMod.MODID, "entities/rainbow_sheep_wool");
 }

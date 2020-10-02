@@ -28,7 +28,7 @@ public class EarthBlocks {
         registry.register(BUTTERCUP.setRegistryName("buttercup"));
         registry.register(POTTED_BUTTERCUP.setRegistryName("potted_buttercup"));
         registry.register(RAINBOW_WOOL.setRegistryName("rainbow_wool"));
-        registry.register(RAINBOW_WOOL.setRegistryName("rainbow_carpet"));
+        registry.register(RAINBOW_CARPET.setRegistryName("rainbow_carpet"));
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
