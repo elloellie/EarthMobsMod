@@ -27,8 +27,8 @@ public class RainbowSheepFurModel<T extends RainbowSheepEntity> extends Quadrupe
         textureHeight = 64;
 
         body = new ModelRenderer(this);
-        body.setRotationPoint(0.0F, 12.5F, -1.0F);
-        setRotationAngle(body, -1.5708F, 0.0F, 0.0F);
+        body.setRotationPoint(0.0F, 5.0F, 2.0F);
+        setRotationAngle(body, 1.5708F, 0.0F, 0.0F);
         body.setTextureOffset(28, 8).addBox(-4.0F, -10.0F, -7.0F, 8.0F, 16.0F, 6.0F, 2.0F, true);
 
         head = new ModelRenderer(this);

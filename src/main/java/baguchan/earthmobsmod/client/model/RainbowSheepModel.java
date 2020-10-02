@@ -25,9 +25,9 @@ public class RainbowSheepModel<T extends RainbowSheepEntity> extends QuadrupedMo
         textureHeight = 64;
 
         body = new ModelRenderer(this);
-        body.setRotationPoint(0.0F, 12.75F, 2.0F);
-        setRotationAngle(body, -1.5708F, 0.0F, 0.0F);
-        body.setTextureOffset(22, 10).addBox(-4.0F, -8.0F, -6.75F, 8.0F, 16.0F, 6.0F, 0.0F, true);
+        body.setRotationPoint(0.0F, 5.0F, 2.0F);
+        setRotationAngle(body, 1.5708F, 0.0F, 0.0F);
+        body.setTextureOffset(22, 10).addBox(-4.0F, -10.0F, -7.0F, 8.0F, 16.0F, 6.0F, 0.0F, true);
 
         head = new ModelRenderer(this);
         head.setRotationPoint(0.0F, 6.0F, -8.0F);
