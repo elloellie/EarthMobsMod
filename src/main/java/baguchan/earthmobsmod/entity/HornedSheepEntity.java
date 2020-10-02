@@ -1,6 +1,7 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.handler.EarthLootTables;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -19,6 +20,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -37,6 +39,47 @@ public class HornedSheepEntity extends SheepEntity {
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
     }
 
+    public ResourceLocation getLootTable() {
+        if (this.getSheared()) {
+            return this.getType().getLootTable();
+        } else {
+            switch (this.getFleeceColor()) {
+                case WHITE:
+                default:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_WHITE;
+                case ORANGE:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_ORANGE;
+                case MAGENTA:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_MAGENTA;
+                case LIGHT_BLUE:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_LIGHT_BLUE;
+                case YELLOW:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_YELLOW;
+                case LIME:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_LIME;
+                case PINK:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_PINK;
+                case GRAY:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_GRAY;
+                case LIGHT_GRAY:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_LIGHT_GRAY;
+                case CYAN:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_CYAN;
+                case PURPLE:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_PURPLE;
+                case BLUE:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_BLUE;
+                case BROWN:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_BROWN;
+                case GREEN:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_GREEN;
+                case RED:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_RED;
+                case BLACK:
+                    return EarthLootTables.ENTITIES_HORNED_SHEEP_BLACK;
+            }
+        }
+    }
 
     /**
      * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
