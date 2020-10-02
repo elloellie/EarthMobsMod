@@ -1,10 +1,7 @@
 package baguchan.earthmobsmod.client;
 
 
-import baguchan.earthmobsmod.client.render.CluckShroomRender;
-import baguchan.earthmobsmod.client.render.HornedSheepRender;
-import baguchan.earthmobsmod.client.render.MooBloomRender;
-import baguchan.earthmobsmod.client.render.MuddyPigRender;
+import baguchan.earthmobsmod.client.render.*;
 import baguchan.earthmobsmod.handler.EarthEntitys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
@@ -22,6 +19,7 @@ public class EarthRender {
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.CLUCKSHROOM, CluckShroomRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.MOOBLOOM, MooBloomRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.HORNED_SHEEP, HornedSheepRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.RAINBOW_SHEEP, RainbowSheepRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.SMELLYEGG, manager -> new SpriteRenderer(MC.getRenderManager(), MC.getItemRenderer()));
     }
 

@@ -1,15 +1,19 @@
 {
   "block.earthmobsmod.buttercup": "Buttercup",
   "block.earthmobsmod.potted_buttercup": "Potted Buttercup",
+  "block.earthmobsmod.rainbow_wool": "Rainbow Wool",
+  "block.earthmobsmod.rainbow_carpet": "Rainbow Carpet",
   "item.earthmobsmod.mud_bucket": "Mud Bucket",
   "item.earthmobsmod.smelly_egg": "Smelly Egg",
-  "item.earthmobsmod.horn": "horn",
+  "item.earthmobsmod.horn": "Horn",
   "item.earthmobsmod.cluckshroom_spawnegg": "Cluckshroom Spawn Egg",
   "item.earthmobsmod.moobloom_spawnegg": "Moobloom Spawn Egg",
   "item.earthmobsmod.horned_sheep_spawnegg": "HornedSheep Spawn Egg",
+  "item.earthmobsmod.rainbow_sheep_spawnegg": "RainbowSheep SpawnEgg",
   "entity.earthmobsmod.muddypig": "Muddy Pig",
   "entity.earthmobsmod.cluckshroom": "Cluckshroom",
   "entity.earthmobsmod.moobloom": "Moobloom",
   "entity.earthmobsmod.horned_sheep": "Horned Sheep",
+  "entity.earthmobsmod.rainbow_sheep": "Rainbow Sheep",
   "fluid.earthmobsmod.mud": "Mud"
 }
