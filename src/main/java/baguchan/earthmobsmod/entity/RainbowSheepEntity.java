@@ -1,7 +1,9 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.handler.EarthBlocks;
+import baguchan.earthmobsmod.handler.EarthEntitys;
 import baguchan.earthmobsmod.handler.EarthLootTables;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -15,6 +17,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +28,13 @@ public class RainbowSheepEntity extends SheepEntity {
 
     public static AttributeModifierMap.MutableAttribute createMutableAttribute() {
         return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.23F);
+    }
+
+    @Override
+    public RainbowSheepEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+        RainbowSheepEntity sheepentity = (RainbowSheepEntity) p_241840_2_;
+        RainbowSheepEntity sheepentity1 = EarthEntitys.RAINBOW_SHEEP.create(p_241840_1_);
+        return sheepentity1;
     }
 
     public ResourceLocation getLootTable() {
