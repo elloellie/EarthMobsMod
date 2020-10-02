@@ -35,4 +35,19 @@ public class RainbowCarpetBlock extends Block {
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         return !worldIn.isAirBlock(pos.down());
     }
+
+    @Override
+    public boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+        return true;
+    }
+
+    @Override
+    public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+        return 20;
+    }
+
+    @Override
+    public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+        return 60;
+    }
 }
