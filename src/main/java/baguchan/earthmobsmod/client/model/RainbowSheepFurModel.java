@@ -5,8 +5,6 @@ package baguchan.earthmobsmod.client.model;// Made with Blockbench 3.6.6
 
 import baguchan.earthmobsmod.entity.RainbowSheepEntity;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.QuadrupedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
@@ -76,16 +74,6 @@ public class RainbowSheepFurModel<T extends RainbowSheepEntity> extends Quadrupe
 
         this.head.rotationPointY = 6.0F + entityIn.getHeadRotationPointY(partialTick) * 9.0F;
         this.headRotationAngleX = entityIn.getHeadRotationAngleX(partialTick);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        body.render(matrixStack, buffer, packedLight, packedOverlay);
-        head.render(matrixStack, buffer, packedLight, packedOverlay);
-        leg1.render(matrixStack, buffer, packedLight, packedOverlay);
-        leg2.render(matrixStack, buffer, packedLight, packedOverlay);
-        leg3.render(matrixStack, buffer, packedLight, packedOverlay);
-        leg4.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
