@@ -26,8 +26,8 @@ public class HornedSheepModel<T extends HornedSheepEntity> extends QuadrupedMode
         textureHeight = 32;
 
         body = new ModelRenderer(this);
-        body.setRotationPoint(0.0F, 12.0F, -1.0F);
-        setRotationAngle(body, 1.5708F, 0.0F, 0.0F);
+        body.setRotationPoint(0.0F, 6.0F, 1.0F);
+        setRotationAngle(body, -1.5708F, 0.0F, 0.0F);
         body.setTextureOffset(22, 10).addBox(-4.0F, -6.0F, 0.0F, 8.0F, 16.0F, 6.0F, 0.0F, true);
 
         head = new ModelRenderer(this);

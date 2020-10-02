@@ -3,6 +3,7 @@ package baguchan.earthmobsmod;
 import baguchan.earthmobsmod.client.ClientRegistrar;
 import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
+import baguchan.earthmobsmod.entity.RainbowSheepEntity;
 import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
 import baguchan.earthmobsmod.handler.*;
 import net.minecraft.block.Block;
@@ -12,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
@@ -26,6 +28,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -190,6 +193,29 @@ public class EarthMobsMod
             PigEntity pig = (PigEntity) event.getEntity();
             pig.goalSelector.addGoal(0, new GoToMudGoal(pig, 1.0D));
         }
+    }
+
+    @SubscribeEvent
+    public void onEntityStruckByLightning(EntityStruckByLightningEvent event) {
+        if (event.getEntity().getType() == EntityType.SHEEP) {
+            SheepEntity oldEntity = (SheepEntity) event.getEntity();
+
+            RainbowSheepEntity rainbowsheep = EarthEntitys.RAINBOW_SHEEP.create(oldEntity.world);
+            rainbowsheep.setLocationAndAngles(oldEntity.getPosX(), oldEntity.getPosY(), oldEntity.getPosZ(), oldEntity.rotationYaw, oldEntity.rotationPitch);
+            rainbowsheep.setNoAI(oldEntity.isAIDisabled());
+            if (oldEntity.hasCustomName()) {
+                rainbowsheep.setCustomName(oldEntity.getCustomName());
+                rainbowsheep.setCustomNameVisible(oldEntity.isCustomNameVisible());
+            }
+
+            if (oldEntity.isChild()) {
+                rainbowsheep.setGrowingAge(oldEntity.getGrowingAge());
+            }
+
+            oldEntity.world.addEntity(rainbowsheep);
+            oldEntity.remove();
+        }
+
     }
 
     public void onBlockRegistry(final RegistryEvent.Register<Block> event) {
