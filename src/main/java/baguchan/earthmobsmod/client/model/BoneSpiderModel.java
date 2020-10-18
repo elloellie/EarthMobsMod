@@ -41,36 +41,36 @@ public class BoneSpiderModel<T extends BoneSpiderEntity> extends EntityModel<T> 
         body.setTextureOffset(0, 12).addBox(-5.0F, -4.0F, -6.0F, 10.0F, 8.0F, 12.0F, 0.0F, true);
 
         leg1 = new ModelRenderer(this);
-        leg1.setRotationPoint(4.0F, 15.0F, 4.0F);
-        leg1.setTextureOffset(18, 0).addBox(-23.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg1.setRotationPoint(-4.0F, 15.0F, 2.0F);
+        leg1.setTextureOffset(18, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg2 = new ModelRenderer(this);
-        leg2.setRotationPoint(-4.0F, 15.0F, 4.0F);
-        leg2.setTextureOffset(18, 0).addBox(7.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg2.setRotationPoint(4.0F, 15.0F, 2.0F);
+        leg2.setTextureOffset(18, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg3 = new ModelRenderer(this);
-        leg3.setRotationPoint(4.0F, 15.0F, 1.0F);
-        leg3.setTextureOffset(18, 0).addBox(-23.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg3.setRotationPoint(-4.0F, 15.0F, 1.0F);
+        leg3.setTextureOffset(18, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg4 = new ModelRenderer(this);
-        leg4.setRotationPoint(-4.0F, 15.0F, 1.0F);
-        leg4.setTextureOffset(18, 0).addBox(7.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg4.setRotationPoint(4.0F, 15.0F, 1.0F);
+        leg4.setTextureOffset(18, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg5 = new ModelRenderer(this);
-        leg5.setRotationPoint(4.0F, 15.0F, -2.0F);
-        leg5.setTextureOffset(18, 0).addBox(-23.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg5.setRotationPoint(-4.0F, 15.0F, 0.0F);
+        leg5.setTextureOffset(18, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg6 = new ModelRenderer(this);
-        leg6.setRotationPoint(-4.0F, 15.0F, -2.0F);
-        leg6.setTextureOffset(18, 0).addBox(7.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg6.setRotationPoint(4.0F, 15.0F, 0.0F);
+        leg6.setTextureOffset(18, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg7 = new ModelRenderer(this);
-        leg7.setRotationPoint(4.0F, 15.0F, -5.0F);
-        leg7.setTextureOffset(18, 0).addBox(-23.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg7.setRotationPoint(-4.0F, 15.0F, -1.0F);
+        leg7.setTextureOffset(18, 0).addBox(-15.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
 
         leg8 = new ModelRenderer(this);
-        leg8.setRotationPoint(-4.0F, 15.0F, -5.0F);
-        leg8.setTextureOffset(18, 0).addBox(7.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
+        leg8.setRotationPoint(4.0F, 15.0F, -1.0F);
+        leg8.setTextureOffset(18, 0).addBox(-1.0F, -1.0F, -1.0F, 16.0F, 2.0F, 2.0F, 0.0F, true);
     }
 
     @Override
