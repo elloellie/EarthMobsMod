@@ -10,10 +10,12 @@
   "item.earthmobsmod.moobloom_spawnegg": "Moobloom Spawn Egg",
   "item.earthmobsmod.horned_sheep_spawnegg": "HornedSheep Spawn Egg",
   "item.earthmobsmod.rainbow_sheep_spawnegg": "RainbowSheep SpawnEgg",
+  "item.earthmobsmod.bone_spider_spawnegg": "BoneSpider SpawnEgg",
   "entity.earthmobsmod.muddypig": "Muddy Pig",
   "entity.earthmobsmod.cluckshroom": "Cluckshroom",
   "entity.earthmobsmod.moobloom": "Moobloom",
   "entity.earthmobsmod.horned_sheep": "Horned Sheep",
   "entity.earthmobsmod.rainbow_sheep": "Rainbow Sheep",
+  "entity.earthmobsmod.bone_spider": "BoneSpider",
   "fluid.earthmobsmod.mud": "Mud"
 }

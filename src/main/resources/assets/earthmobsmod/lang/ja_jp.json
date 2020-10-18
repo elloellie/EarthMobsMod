@@ -10,10 +10,12 @@
   "item.earthmobsmod.moobloom_spawnegg": "ムーブロームのスポーンエッグ",
   "item.earthmobsmod.horned_sheep_spawnegg": "角のある羊のスポーンエッグ",
   "item.earthmobsmod.rainbow_sheep_spawnegg": "虹色の羊のスポーンエッグ",
+  "item.earthmobsmod.bone_spider_spawnegg": "骨クモ",
   "entity.earthmobsmod.muddypig": "泥まみれのブタ",
   "entity.earthmobsmod.cluckshroom": "きのコッコ",
   "entity.earthmobsmod.moobloom": "ムーブローム",
   "entity.earthmobsmod.horned_sheep": "角のある羊",
   "entity.earthmobsmod.rainbow_sheep": "虹色の羊",
+  "entity.earthmobsmod.bone_spider": "骨クモ",
   "fluid.earthmobsmod.mud": "泥"
 }

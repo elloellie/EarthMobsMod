@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -20,6 +21,7 @@ public class EarthEntitys {
     public static final EntityType<MooBloomEntity> MOOBLOOM = EntityType.Builder.create(MooBloomEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("moobloom"));
     public static final EntityType<HornedSheepEntity> HORNED_SHEEP = EntityType.Builder.create(HornedSheepEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("horned_sheep"));
     public static final EntityType<RainbowSheepEntity> RAINBOW_SHEEP = EntityType.Builder.create(RainbowSheepEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("rainbow_sheep"));
+    public static final EntityType<BoneSpiderEntity> BONE_SPIDER = EntityType.Builder.create(BoneSpiderEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(1.4F, 0.9F).build(prefix("bone_spider"));
 
     public static final EntityType<SmellyEggEntity> SMELLYEGG = EntityType.Builder.<SmellyEggEntity>create(SmellyEggEntity::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(SmellyEggEntity::new).size(0.25F, 0.25F).build(prefix("smellyegg"));
 
@@ -30,18 +32,21 @@ public class EarthEntitys {
         event.register(SMELLYEGG.setRegistryName("smellyegg"));
         event.register(HORNED_SHEEP.setRegistryName("horned_sheep"));
         event.register(RAINBOW_SHEEP.setRegistryName("rainbow_sheep"));
+        event.register(BONE_SPIDER.setRegistryName("bone_spider"));
 
         GlobalEntityTypeAttributes.put(MUDDYPIG, MuddyPigEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(CLUCKSHROOM, CluckShroomEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(MOOBLOOM, MooBloomEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(HORNED_SHEEP, HornedSheepEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(RAINBOW_SHEEP, RainbowSheepEntity.createMutableAttribute().create());
+        GlobalEntityTypeAttributes.put(BONE_SPIDER, BoneSpiderEntity.createMutableAttribute().create());
 
         EntitySpawnPlacementRegistry.register(MOOBLOOM, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MooBloomEntity::spawnHandler);
         EntitySpawnPlacementRegistry.register(CLUCKSHROOM, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, CluckShroomEntity::spawnHandler);
         EntitySpawnPlacementRegistry.register(MUDDYPIG, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MuddyPigEntity::spawnHandler);
         EntitySpawnPlacementRegistry.register(HORNED_SHEEP, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
         EntitySpawnPlacementRegistry.register(RAINBOW_SHEEP, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
+        EntitySpawnPlacementRegistry.register(BONE_SPIDER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
     }
 
     private static String prefix(String path) {
