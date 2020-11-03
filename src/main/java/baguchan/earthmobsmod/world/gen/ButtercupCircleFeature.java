@@ -20,7 +20,7 @@ public class ButtercupCircleFeature extends Feature<NoFeatureConfig> {
     }
 
     @Override
-    public boolean func_241855_a(ISeedReader worldIn, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos pos, NoFeatureConfig p_241855_5_) {
+    public boolean generate(ISeedReader worldIn, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos pos, NoFeatureConfig p_241855_5_) {
         BlockState flower = EarthBlocks.BUTTERCUP.getDefaultState();
         if (flower.isValidPosition(worldIn, pos)) {
             for (int i = -8; i <= 8; i++) {
