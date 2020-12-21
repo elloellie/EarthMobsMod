@@ -53,7 +53,7 @@ public class EarthItems {
         register(registry, HORNED_SHEEP_SPAWNEGG, "horned_sheep_spawnegg");
         register(registry, RAINBOW_SHEEP_SPAWNEGG, "rainbow_sheep_spawnegg");
         register(registry, BONE_SPIDER_SPAWNEGG, "bone_spider_spawnegg");
-        register(registry, BOULDERING_ZOMBIE_SPAWNEGG, "bouldering_spawnegg");
+        register(registry, BOULDERING_ZOMBIE_SPAWNEGG, "bouldering_zombie_spawnegg");
         DispenserBlock.registerDispenseBehavior(EarthItems.SMELLY_EGG, new ProjectileDispenseBehavior() {
             protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
                 return Util.make(new SmellyEggEntity(worldIn, position.getX(), position.getY(), position.getZ()), (p_218408_1_) -> {
