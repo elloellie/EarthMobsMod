@@ -43,10 +43,15 @@ public class BoulderingZombieEntity extends ZombieEntity {
         return ZombieEntity.func_234342_eQ_().createMutableAttribute(Attributes.FOLLOW_RANGE, 35.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.24F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.ARMOR, 3.0D).createMutableAttribute(Attributes.ZOMBIE_SPAWN_REINFORCEMENTS);
     }
 
+    @Override
+    public boolean onLivingFall(float distance, float damageMultiplier) {
+        return super.onLivingFall(distance, damageMultiplier * 0.85F);
+    }
+
     public void tick() {
         super.tick();
         Vector3d vector3d2 = this.getLook(1.0F).scale(0.6F);
-        this.setClimingBoundingBox(this.getBoundingBox().contract(0.0F, -0.15F, 0.0F).offset(vector3d2));
+        this.setClimingBoundingBox(this.getBoundingBox().grow(0.0F, 0.2F, 0.0F).offset(vector3d2));
 
         if (!this.world.isRemote) {
             if (this.getClimingBoundingBox() != null && !this.world.hasNoCollisions(this.getClimingBoundingBox())) {
