@@ -1,10 +1,10 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthEntitys;
-import baguchan.earthmobsmod.handler.EarthFluids;
-import baguchan.earthmobsmod.handler.EarthTags;
+import baguchan.earthmobsmod.init.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthFluids;
+import baguchan.earthmobsmod.init.EarthTags;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.block.Block;

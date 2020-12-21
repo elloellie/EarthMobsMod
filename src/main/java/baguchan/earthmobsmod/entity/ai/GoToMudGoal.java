@@ -1,8 +1,8 @@
 package baguchan.earthmobsmod.entity.ai;
 
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthTags;
+import baguchan.earthmobsmod.init.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthTags;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.entity.passive.PigEntity;

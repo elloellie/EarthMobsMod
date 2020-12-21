@@ -1,8 +1,8 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.entity.ai.MoveToMushroom;
-import baguchan.earthmobsmod.handler.EarthEntitys;
-import baguchan.earthmobsmod.handler.EarthItems;
+import baguchan.earthmobsmod.init.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

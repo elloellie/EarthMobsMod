@@ -2,7 +2,7 @@ package baguchan.earthmobsmod.client;
 
 
 import baguchan.earthmobsmod.client.render.*;
-import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthEntitys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,6 +21,8 @@ public class EarthRender {
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.HORNED_SHEEP, HornedSheepRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.RAINBOW_SHEEP, RainbowSheepRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BONE_SPIDER, BoneSpiderRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BOULDERING_ZOMBIE, BoulderingZombieRender::new);
+
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.SMELLYEGG, manager -> new SpriteRenderer(MC.getRenderManager(), MC.getItemRenderer()));
     }
 

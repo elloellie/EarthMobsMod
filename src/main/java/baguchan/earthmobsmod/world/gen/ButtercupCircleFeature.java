@@ -1,8 +1,8 @@
 package baguchan.earthmobsmod.world.gen;
 
 import baguchan.earthmobsmod.entity.MooBloomEntity;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthEntitys;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;

@@ -5,7 +5,7 @@ import baguchan.earthmobsmod.entity.MooBloomEntity;
 import baguchan.earthmobsmod.entity.MuddyPigEntity;
 import baguchan.earthmobsmod.entity.RainbowSheepEntity;
 import baguchan.earthmobsmod.entity.ai.GoToMudGoal;
-import baguchan.earthmobsmod.handler.*;
+import baguchan.earthmobsmod.init.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;

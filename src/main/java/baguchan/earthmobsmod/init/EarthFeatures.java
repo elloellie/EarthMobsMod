@@ -1,4 +1,4 @@
-package baguchan.earthmobsmod.handler;
+package baguchan.earthmobsmod.init;
 
 import baguchan.earthmobsmod.world.gen.ButtercupCircleFeature;
 import net.minecraft.world.gen.feature.Feature;

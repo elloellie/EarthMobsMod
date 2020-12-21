@@ -1,8 +1,8 @@
 package baguchan.earthmobsmod.entity;
 
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthEntitys;
-import baguchan.earthmobsmod.handler.EarthLootTables;
+import baguchan.earthmobsmod.init.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthLootTables;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;

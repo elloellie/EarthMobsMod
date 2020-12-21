@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.entity.ai;
 
-import baguchan.earthmobsmod.handler.EarthTags;
+import baguchan.earthmobsmod.init.EarthTags;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 

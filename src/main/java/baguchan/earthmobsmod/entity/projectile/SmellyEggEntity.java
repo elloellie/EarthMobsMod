@@ -1,8 +1,8 @@
 package baguchan.earthmobsmod.entity.projectile;
 
 import baguchan.earthmobsmod.entity.CluckShroomEntity;
-import baguchan.earthmobsmod.handler.EarthEntitys;
-import baguchan.earthmobsmod.handler.EarthItems;
+import baguchan.earthmobsmod.init.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;

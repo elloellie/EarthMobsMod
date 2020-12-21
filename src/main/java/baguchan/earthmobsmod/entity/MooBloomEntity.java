@@ -1,8 +1,8 @@
 package baguchan.earthmobsmod.entity;
 
 import baguchan.earthmobsmod.entity.ai.EatGrassOrBloomGoal;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthEntitys;
+import baguchan.earthmobsmod.init.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthEntitys;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;

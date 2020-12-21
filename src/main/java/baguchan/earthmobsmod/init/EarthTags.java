@@ -1,4 +1,4 @@
-package baguchan.earthmobsmod.handler;
+package baguchan.earthmobsmod.init;
 
 import baguchan.earthmobsmod.EarthMobsMod;
 import net.minecraft.fluid.Fluid;

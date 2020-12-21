@@ -1,4 +1,4 @@
-package baguchan.earthmobsmod.handler;
+package baguchan.earthmobsmod.init;
 
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;

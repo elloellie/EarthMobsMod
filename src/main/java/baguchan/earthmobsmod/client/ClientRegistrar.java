@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.client;
 
-import baguchan.earthmobsmod.handler.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthBlocks;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;

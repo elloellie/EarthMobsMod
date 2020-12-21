@@ -1,7 +1,7 @@
 package baguchan.earthmobsmod.entity.ai;
 
 import baguchan.earthmobsmod.entity.MooBloomEntity;
-import baguchan.earthmobsmod.handler.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockStateMatcher;

@@ -1,6 +1,6 @@
 package baguchan.earthmobsmod.block;
 
-import baguchan.earthmobsmod.handler.EarthParticles;
+import baguchan.earthmobsmod.init.EarthParticles;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowerBlock;

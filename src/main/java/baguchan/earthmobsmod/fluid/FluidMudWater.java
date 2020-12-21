@@ -1,10 +1,10 @@
 package baguchan.earthmobsmod.fluid;
 
 import baguchan.earthmobsmod.EarthMobsMod;
-import baguchan.earthmobsmod.handler.EarthBlocks;
-import baguchan.earthmobsmod.handler.EarthFluids;
-import baguchan.earthmobsmod.handler.EarthItems;
-import baguchan.earthmobsmod.handler.EarthTags;
+import baguchan.earthmobsmod.init.EarthBlocks;
+import baguchan.earthmobsmod.init.EarthFluids;
+import baguchan.earthmobsmod.init.EarthItems;
+import baguchan.earthmobsmod.init.EarthTags;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
