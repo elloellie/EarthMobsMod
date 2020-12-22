@@ -1,4 +1,4 @@
-package baguchan.earthmobsmod.event;
+package baguchan.earthmobsmod.client;
 
 import baguchan.earthmobsmod.EarthMobsMod;
 import baguchan.earthmobsmod.entity.BoulderingZombieEntity;
@@ -9,13 +9,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = EarthMobsMod.MODID)
-public class CommonEventHandler {
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = EarthMobsMod.MODID)
+public class ClientEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPostRenderLiving(RenderLivingEvent.Post<?, ?> event) {
         LivingEntity entity = event.getEntity();
