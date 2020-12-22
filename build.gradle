@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.16.4-0.2.0-Beta'
+version = '1.16.4-0.2.1-Beta'
 group = 'baguchan.earthmobsmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'earthmobsmod'
 
