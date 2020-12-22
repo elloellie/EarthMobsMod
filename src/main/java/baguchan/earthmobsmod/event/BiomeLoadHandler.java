@@ -49,6 +49,9 @@ public class BiomeLoadHandler {
         if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OVERWORLD)) {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
                 event.getGeneration().withFeature(GenerationStage.Decoration.LAKES, LAKE_MUD);
+                event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.LOBBER_ZOMBIE, 25, 2, 4));
+            } else {
+                event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.LOBBER_ZOMBIE, 5, 2, 4));
             }
 
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MOUNTAIN)) {

@@ -29,7 +29,7 @@ public class LobberZombieEntity extends ZombieEntity implements IRangedAttackMob
     }
 
     @Override
-    protected void registerGoals() {
+    protected void applyEntityAI() {
         this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, 80, 12.0F));
         this.goalSelector.addGoal(6, new MoveThroughVillageGoal(this, 1.0D, true, 4, this::isBreakDoorsTaskSet));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
