@@ -22,8 +22,11 @@ public class EarthRender {
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.RAINBOW_SHEEP, RainbowSheepRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BONE_SPIDER, BoneSpiderRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BOULDERING_ZOMBIE, BoulderingZombieRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.LOBBER_ZOMBIE, LobberZombieRender::new);
+
 
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.SMELLYEGG, manager -> new SpriteRenderer(MC.getRenderManager(), MC.getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.FLESH, manager -> new SpriteRenderer(MC.getRenderManager(), MC.getItemRenderer()));
     }
 
 }
