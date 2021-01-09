@@ -55,8 +55,12 @@ public class BiomeLoadHandler {
             }
 
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MOUNTAIN)) {
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.HORNED_SHEEP, 6, 2, 3));
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.HORNED_SHEEP, 8, 2, 3));
                 event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.BOULDERING_ZOMBIE, 5, 2, 4));
+            }
+
+            if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MOUNTAIN) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.SNOWY)) {
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.JOLLY_LLAMA, 6, 3, 4));
             }
 
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY)) {

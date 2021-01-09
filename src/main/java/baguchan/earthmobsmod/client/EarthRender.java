@@ -20,6 +20,7 @@ public class EarthRender {
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.MOOBLOOM, MooBloomRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.HORNED_SHEEP, HornedSheepRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.RAINBOW_SHEEP, RainbowSheepRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.JOLLY_LLAMA, JollyLlamaRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BONE_SPIDER, BoneSpiderRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BOULDERING_ZOMBIE, BoulderingZombieRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.LOBBER_ZOMBIE, LobberZombieRender::new);
