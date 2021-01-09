@@ -73,10 +73,10 @@ public class FleshEntity extends ProjectileItemEntity {
 
         Entity entity = p_213868_1_.getEntity();
 
-        entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), 3.0F);
-
-        if (entity instanceof LivingEntity) {
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HUNGER, 200, 0));
+        if (entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), 3.0F)) {
+            if (entity instanceof LivingEntity) {
+                ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.HUNGER, 200, 0));
+            }
         }
     }
 
