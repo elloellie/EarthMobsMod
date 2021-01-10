@@ -27,6 +27,7 @@ public class EarthItems {
     public static final Item BONE_SPIDER_SPAWNEGG = new SpawnEggItem(EarthEntitys.BONE_SPIDER, 0x2F121E, 0x6130B7, (new Item.Properties()).group(ItemGroup.MISC));
     public static final Item BOULDERING_ZOMBIE_SPAWNEGG = new SpawnEggItem(EarthEntitys.BOULDERING_ZOMBIE, 0x4D575A, 0x5A2A1D, (new Item.Properties()).group(ItemGroup.MISC));
     public static final Item LOBBER_ZOMBIE_SPAWNEGG = new SpawnEggItem(EarthEntitys.LOBBER_ZOMBIE, 0x899274, 0x355246, (new Item.Properties()).group(ItemGroup.MISC));
+    public static final Item VILER_WITCH_SPAWNEGG = new SpawnEggItem(EarthEntitys.VILER_WITCH, 0x1E2337, 0x0D0E19, (new Item.Properties()).group(ItemGroup.MISC));
 
 
     public static void register(IForgeRegistry<Item> registry, Item item, String id) {
@@ -58,6 +59,7 @@ public class EarthItems {
         register(registry, BONE_SPIDER_SPAWNEGG, "bone_spider_spawnegg");
         register(registry, BOULDERING_ZOMBIE_SPAWNEGG, "bouldering_zombie_spawnegg");
         register(registry, LOBBER_ZOMBIE_SPAWNEGG, "lobber_zombie_spawnegg");
+        register(registry, VILER_WITCH_SPAWNEGG, "viler_witch_spawnegg");
         DispenserBlock.registerDispenseBehavior(EarthItems.SMELLY_EGG, new ProjectileDispenseBehavior() {
             protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
                 return Util.make(new SmellyEggEntity(worldIn, position.getX(), position.getY(), position.getZ()), (p_218408_1_) -> {

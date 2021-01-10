@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.raid.Raid;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import static baguchan.earthmobsmod.EarthMobsMod.MODID;
@@ -27,6 +28,8 @@ public class EarthEntitys {
     public static final EntityType<BoulderingZombieEntity> BOULDERING_ZOMBIE = EntityType.Builder.<BoulderingZombieEntity>create(BoulderingZombieEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.6F, 1.95F).build(prefix("bouldering_zombie"));
     public static final EntityType<LobberZombieEntity> LOBBER_ZOMBIE = EntityType.Builder.<LobberZombieEntity>create(LobberZombieEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.6F, 1.95F).build(prefix("lobber_zombie"));
 
+    public static final EntityType<VilerWitchEntity> VILER_WITCH = EntityType.Builder.create(VilerWitchEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.6F, 1.95F).build(prefix("viler_witch"));
+
 
     public static final EntityType<SmellyEggEntity> SMELLYEGG = EntityType.Builder.<SmellyEggEntity>create(SmellyEggEntity::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(SmellyEggEntity::new).size(0.25F, 0.25F).build(prefix("smellyegg"));
     public static final EntityType<FleshEntity> FLESH = EntityType.Builder.<FleshEntity>create(FleshEntity::new, EntityClassification.MISC).setTrackingRange(64).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(FleshEntity::new).size(0.3F, 0.3F).build(prefix("flesh"));
@@ -43,6 +46,7 @@ public class EarthEntitys {
         event.register(BONE_SPIDER.setRegistryName("bone_spider"));
         event.register(BOULDERING_ZOMBIE.setRegistryName("bouldering_zombie"));
         event.register(LOBBER_ZOMBIE.setRegistryName("lobber_zombie"));
+        event.register(VILER_WITCH.setRegistryName("viler_witch"));
         event.register(FLESH.setRegistryName("flesh"));
 
         GlobalEntityTypeAttributes.put(MUDDYPIG, MuddyPigEntity.createMutableAttribute().create());
@@ -54,6 +58,7 @@ public class EarthEntitys {
         GlobalEntityTypeAttributes.put(BONE_SPIDER, BoneSpiderEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(BOULDERING_ZOMBIE, BoulderingZombieEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(LOBBER_ZOMBIE, LobberZombieEntity.createMutableAttribute().create());
+        GlobalEntityTypeAttributes.put(VILER_WITCH, VilerWitchEntity.createMutableAttribute().create());
 
 
         EntitySpawnPlacementRegistry.register(MOOBLOOM, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MooBloomEntity::spawnHandler);
@@ -65,6 +70,9 @@ public class EarthEntitys {
         EntitySpawnPlacementRegistry.register(BONE_SPIDER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
         EntitySpawnPlacementRegistry.register(BOULDERING_ZOMBIE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
         EntitySpawnPlacementRegistry.register(LOBBER_ZOMBIE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+        EntitySpawnPlacementRegistry.register(VILER_WITCH, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+
+        Raid.WaveMember.create("viler_witch", VILER_WITCH, new int[]{0, 0, 0, 0, 0, 1, 1, 1});
     }
 
     private static String prefix(String path) {

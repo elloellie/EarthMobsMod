@@ -14,6 +14,7 @@
   "item.earthmobsmod.bone_spider_spawnegg": "BoneSpider SpawnEgg",
   "item.earthmobsmod.bouldering_zombie_spawnegg": "Bouldering Zombie SpawnEgg",
   "item.earthmobsmod.lobber_zombie_spawnegg": "Lobber Zombie SpawnEgg",
+  "item.earthmobsmod.viler_witch_spawnegg": "Viler Witch SpawnEgg",
   "entity.earthmobsmod.muddypig": "Muddy Pig",
   "entity.earthmobsmod.cluckshroom": "Cluckshroom",
   "entity.earthmobsmod.moobloom": "Moobloom",
@@ -23,5 +24,6 @@
   "entity.earthmobsmod.bone_spider": "Bone Spider",
   "entity.earthmobsmod.bouldering_zombie": "Bouldering Zombie",
   "entity.earthmobsmod.lobber_zombie": "Lobber Zombie",
+  "entity.earthmobsmod.viler_witch": "Viler Witch",
   "fluid.earthmobsmod.mud": "Mud"
 }

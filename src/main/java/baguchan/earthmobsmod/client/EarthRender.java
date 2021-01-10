@@ -24,6 +24,7 @@ public class EarthRender {
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BONE_SPIDER, BoneSpiderRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.BOULDERING_ZOMBIE, BoulderingZombieRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.LOBBER_ZOMBIE, LobberZombieRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.VILER_WITCH, VilerWitchRender::new);
 
 
         RenderingRegistry.registerEntityRenderingHandler(EarthEntitys.SMELLYEGG, manager -> new SpriteRenderer(MC.getRenderManager(), MC.getItemRenderer()));

@@ -14,6 +14,7 @@
   "item.earthmobsmod.bone_spider_spawnegg": "骨クモ",
   "item.earthmobsmod.bouldering_zombie_spawnegg": "ボルダリングゾンビのスポーンエッグ",
   "item.earthmobsmod.lobber_zombie_spawnegg": "ロバ―ゾンビのスポーンエッグ",
+  "item.earthmobsmod.viler_witch_spawnegg": "Viler Witchのスポーンエッグ",
   "entity.earthmobsmod.muddypig": "泥まみれのブタ",
   "entity.earthmobsmod.cluckshroom": "きのコッコ",
   "entity.earthmobsmod.moobloom": "ムーブローム",
@@ -23,5 +24,6 @@
   "entity.earthmobsmod.bone_spider": "骨クモ",
   "entity.earthmobsmod.bouldering_zombie": "ボルダリングゾンビ",
   "entity.earthmobsmod.lobber_zombie": "ロバ―ゾンビ",
+  "entity.earthmobsmod.viler_witch": "Viler Witch",
   "fluid.earthmobsmod.mud": "泥"
 }
