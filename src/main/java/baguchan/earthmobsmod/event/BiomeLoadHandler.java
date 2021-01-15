@@ -1,5 +1,6 @@
 package baguchan.earthmobsmod.event;
 
+import baguchan.earthmobsmod.EarthConfig;
 import baguchan.earthmobsmod.EarthMobsMod;
 import baguchan.earthmobsmod.init.EarthBlocks;
 import baguchan.earthmobsmod.init.EarthEntitys;
@@ -38,7 +39,7 @@ public class BiomeLoadHandler {
 
         RegistryKey<Biome> biome = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
 
-        if (event.getName().toString().contains("minecraft:flower_forest")) {
+        if (EarthConfig.spawnEarthMobsMoobloom && event.getName().toString().contains("minecraft:flower_forest")) {
             event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.MOOBLOOM, 10, 2, 3));
         }
 
@@ -50,7 +51,7 @@ public class BiomeLoadHandler {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
                 event.getGeneration().withFeature(GenerationStage.Decoration.LAKES, LAKE_MUD);
                 event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.LOBBER_ZOMBIE, 25, 2, 4));
-            } else {
+            } else if (!BiomeDictionary.hasType(biome, BiomeDictionary.Type.MUSHROOM)) {
                 event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.LOBBER_ZOMBIE, 5, 2, 4));
             }
 
