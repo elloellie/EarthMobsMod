@@ -1,5 +1,6 @@
 package baguchan.earthmobsmod.init;
 
+import baguchan.earthmobsmod.EarthConfig;
 import baguchan.earthmobsmod.EarthMobsMod;
 import baguchan.earthmobsmod.entity.projectile.SmellyEggEntity;
 import baguchan.earthmobsmod.item.SmellyEggItem;
@@ -11,6 +12,7 @@ import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class EarthItems {
@@ -52,7 +54,10 @@ public class EarthItems {
         register(registry, SMELLY_EGG, "smelly_egg");
         register(registry, HORN, "horn");
         register(registry, CLUCKSHROOM_SPAWNEGG, "cluckshroom_spawnegg");
-        register(registry, MOOBLOOM_SPAWNEGG, "moobloom_spawnegg");
+        if (EarthConfig.spawnEarthMobsMoobloom && !ModList.get().isLoaded("buzzier_bees")) {
+            register(registry, MOOBLOOM_SPAWNEGG, "moobloom_spawnegg");
+        }
+
         register(registry, HORNED_SHEEP_SPAWNEGG, "horned_sheep_spawnegg");
         register(registry, RAINBOW_SHEEP_SPAWNEGG, "rainbow_sheep_spawnegg");
         register(registry, JOLLY_LLAMA_SPAWNEGG, "jolly_llama_spawnegg");

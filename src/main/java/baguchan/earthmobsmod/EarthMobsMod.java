@@ -55,7 +55,7 @@ public class EarthMobsMod
 
     public static final String MODID = "earthmobsmod";
 
-    public static  EarthMobsMod instance;
+    public static EarthMobsMod instance;
 
     public EarthMobsMod() {
         instance = this;

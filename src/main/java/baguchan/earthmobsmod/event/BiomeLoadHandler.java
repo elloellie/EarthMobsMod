@@ -22,6 +22,7 @@ import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EarthMobsMod.MODID)
@@ -39,8 +40,10 @@ public class BiomeLoadHandler {
 
         RegistryKey<Biome> biome = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
 
-        if (EarthConfig.spawnEarthMobsMoobloom && event.getName().toString().contains("minecraft:flower_forest")) {
-            event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.MOOBLOOM, 10, 2, 3));
+        if (event.getName().toString().contains("minecraft:flower_forest")) {
+            if (EarthConfig.spawnEarthMobsMoobloom && !ModList.get().isLoaded("buzzier_bees")) {
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.MOOBLOOM, 10, 2, 3));
+            }
         }
 
         if (event.getName().toString().contains("minecraft:mushroom_fields")) {
