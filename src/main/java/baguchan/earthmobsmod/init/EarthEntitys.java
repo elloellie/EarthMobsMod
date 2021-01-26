@@ -24,6 +24,7 @@ public class EarthEntitys {
     public static final EntityType<HornedSheepEntity> HORNED_SHEEP = EntityType.Builder.create(HornedSheepEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("horned_sheep"));
     public static final EntityType<RainbowSheepEntity> RAINBOW_SHEEP = EntityType.Builder.create(RainbowSheepEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("rainbow_sheep"));
     public static final EntityType<JollyLlamaEntity> JOLLY_LLAMA = EntityType.Builder.create(JollyLlamaEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.87F).build(prefix("jolly_llama"));
+    public static final EntityType<WoolyCowEntity> WOOLY_COW = EntityType.Builder.create(WoolyCowEntity::new, EntityClassification.CREATURE).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.9F, 1.4F).build(prefix("wooly_cow"));
     public static final EntityType<BoneSpiderEntity> BONE_SPIDER = EntityType.Builder.create(BoneSpiderEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(1.4F, 0.9F).build(prefix("bone_spider"));
     public static final EntityType<BoulderingZombieEntity> BOULDERING_ZOMBIE = EntityType.Builder.<BoulderingZombieEntity>create(BoulderingZombieEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.6F, 1.95F).build(prefix("bouldering_zombie"));
     public static final EntityType<LobberZombieEntity> LOBBER_ZOMBIE = EntityType.Builder.<LobberZombieEntity>create(LobberZombieEntity::new, EntityClassification.MONSTER).setTrackingRange(80).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).size(0.6F, 1.95F).build(prefix("lobber_zombie"));
@@ -43,6 +44,7 @@ public class EarthEntitys {
         event.register(HORNED_SHEEP.setRegistryName("horned_sheep"));
         event.register(RAINBOW_SHEEP.setRegistryName("rainbow_sheep"));
         event.register(JOLLY_LLAMA.setRegistryName("jolly_llama"));
+        event.register(WOOLY_COW.setRegistryName("wooly_cow"));
         event.register(BONE_SPIDER.setRegistryName("bone_spider"));
         event.register(BOULDERING_ZOMBIE.setRegistryName("bouldering_zombie"));
         event.register(LOBBER_ZOMBIE.setRegistryName("lobber_zombie"));
@@ -55,6 +57,7 @@ public class EarthEntitys {
         GlobalEntityTypeAttributes.put(HORNED_SHEEP, HornedSheepEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(RAINBOW_SHEEP, RainbowSheepEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(JOLLY_LLAMA, JollyLlamaEntity.createMutableAttribute().create());
+        GlobalEntityTypeAttributes.put(WOOLY_COW, WoolyCowEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(BONE_SPIDER, BoneSpiderEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(BOULDERING_ZOMBIE, BoulderingZombieEntity.createMutableAttribute().create());
         GlobalEntityTypeAttributes.put(LOBBER_ZOMBIE, LobberZombieEntity.createMutableAttribute().create());
@@ -67,6 +70,7 @@ public class EarthEntitys {
         EntitySpawnPlacementRegistry.register(HORNED_SHEEP, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
         EntitySpawnPlacementRegistry.register(RAINBOW_SHEEP, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
         EntitySpawnPlacementRegistry.register(JOLLY_LLAMA, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
+        EntitySpawnPlacementRegistry.register(WOOLY_COW, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
         EntitySpawnPlacementRegistry.register(BONE_SPIDER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
         EntitySpawnPlacementRegistry.register(BOULDERING_ZOMBIE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
         EntitySpawnPlacementRegistry.register(LOBBER_ZOMBIE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);

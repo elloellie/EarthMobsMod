@@ -50,16 +50,17 @@ public class BiomeLoadHandler {
             event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.CLUCKSHROOM, 8, 2, 3));
         }
 
-        if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OVERWORLD)) {
+        if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OVERWORLD) && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.MUSHROOM)) {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
                 event.getGeneration().withFeature(GenerationStage.Decoration.LAKES, LAKE_MUD);
                 event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.LOBBER_ZOMBIE, 25, 2, 4));
-            } else if (!BiomeDictionary.hasType(biome, BiomeDictionary.Type.MUSHROOM)) {
+            } else {
                 event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.LOBBER_ZOMBIE, 5, 2, 4));
             }
 
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MOUNTAIN)) {
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.HORNED_SHEEP, 8, 2, 3));
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.WOOLY_COW, 10, 2, 3));
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(EarthEntitys.HORNED_SHEEP, 10, 2, 3));
                 event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(EarthEntitys.BOULDERING_ZOMBIE, 5, 2, 4));
             }
 
