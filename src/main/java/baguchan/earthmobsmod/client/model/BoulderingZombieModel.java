@@ -12,16 +12,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BoulderingZombieModel<T extends BoulderingZombieEntity> extends ZombieModel<T> {
     public BoulderingZombieModel(float modelSize, float yOffsetIn, int textureWidthIn, int textureHeightIn) {
         super(modelSize, yOffsetIn, textureWidthIn, textureHeightIn);
-        this.bipedRightArm = new ModelRenderer(this, 16, 32);
-        this.bipedRightArm.addBox(-3.0F, -2.0F, -2.0F, 5.0F, 12.0F, 4.0F, modelSize);
-        this.bipedRightArm.setRotationPoint(-5.0F, 2.0F + yOffsetIn, 0.0F);
+        this.bipedRightArm = new ModelRenderer(this);
+        this.bipedRightArm.setRotationPoint(5.0F, 2.0F, 0.0F);
+        this.bipedRightArm.setTextureOffset(34, 32).addBox(-4.0F, -2.0F, -2.0F, 5.0F, 14.0F, 4.0F, 0.0F, false);
         this.bipedLeftArm = new ModelRenderer(this, 34, 32);
         this.bipedLeftArm.mirror = true;
-        this.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, modelSize);
+        this.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 5.0F, 14.0F, 4.0F, modelSize);
         this.bipedLeftArm.setRotationPoint(5.0F, 2.0F + yOffsetIn, 0.0F);
-        this.bipedRightLeg = new ModelRenderer(this, 0, 47);
-        this.bipedRightLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, modelSize);
-        this.bipedRightLeg.setRotationPoint(-1.9F, 12.0F + yOffsetIn, 0.0F);
+        this.bipedRightLeg = new ModelRenderer(this);
+        this.bipedRightLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
+        this.bipedRightLeg.setTextureOffset(0, 16).addBox(-5.9F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        this.bipedRightLeg.setTextureOffset(48, 46).addBox(-5.9F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
         this.bipedLeftLeg = new ModelRenderer(this, 48, 46);
         this.bipedLeftLeg.mirror = true;
         this.bipedLeftLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, modelSize);

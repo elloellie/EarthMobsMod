@@ -15,7 +15,7 @@ public class LobberZombieModel<T extends ZombieEntity> extends ZombieModel<T> {
         this.bipedRightArm.setRotationPoint(-5.0F, 2.0F + p_i48915_2_, 0.0F);
         this.bipedLeftArm = new ModelRenderer(this, 16, 32);
         this.bipedLeftArm.mirror = true;
-        this.bipedLeftArm.addBox(-3.0F, -2.0F, -2.0F, 4.0F, 14.0F, 4.0F, p_i48915_1_);
+        this.bipedLeftArm.addBox(-3.0F, -2.0F, -2.0F, 5.0F, 14.0F, 4.0F, p_i48915_1_);
         this.bipedLeftArm.setRotationPoint(5.0F, 2.0F + p_i48915_2_, 0.0F);
         this.bipedRightLeg = new ModelRenderer(this, 0, 47);
         this.bipedRightLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, p_i48915_1_);
