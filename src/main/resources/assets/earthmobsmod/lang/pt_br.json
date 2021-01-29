@@ -1,13 +1,24 @@
 {
-  "block.earthmobsmod.buttercup": "Hibisco amarelo",
-  "block.earthmobsmod.potted_buttercup": "Hibisco amarelo envasado",
-  "item.earthmobsmod.mud_bucket": "Balde de lama",
-  "item.earthmobsmod.smelly_egg": "Ovo fedorento",
-  "item.earthmobsmod.cluckshroom_spawnegg": "Ovo invocador de cogalinha",
-  "item.earthmobsmod.moobloom_spawnegg": "Ovo invocador de florvaca",
-  "entity.earthmobsmod.muddy_pig": "Porco lamacento",
+  "block.earthmobsmod.buttercup": "Hibisco Amarelo",
+  "block.earthmobsmod.potted_buttercup": "Hibisco Amarelo Envasado",
+  "block.earthmobsmod.rainbow_wool": "Lã Arco-Íris",
+  "item.earthmobsmod.mud_bucket": "Balde de Lama",
+  "item.earthmobsmod.smelly_egg": "Ovo Fedorento",
+  "item.earthmobsmod.horn": "Chifre",
+  "item.earthmobsmod.cluckshroom_spawnegg": "Ovo Gerador de Cogalinha",
+  "item.earthmobsmod.moobloom_spawnegg": "Ovo Gerador de Florvaca",
+  "item.earthmobsmod.horned_sheep_spawnegg": "Ovo Gerador de Ovelha com Chifres",
+  "item.earthmobsmod.rainbow_sheep_spawnegg": "Ovo Gerador de Ovelha Arco-Íris",
+  "item.earthmobsmod.bone_spider_spawnegg": "Ovo Gerador de Aranha de Osso",
+  "item.earthmobsmod.bouldering_zombie_spawnegg": "Ovo Gerador de Zombie Escalador",
+  "item.earthmobsmod.lobber_zombie_spawnegg": "Ovo Gerador de Zombie Cuspidor",
+  "entity.earthmobsmod.muddy_pig": "Porco Lamacento",
   "entity.earthmobsmod.cluckshroom": "Cogalinha",
-  "entity.earthmobsmod.moobloom": "Florvaca"
-
-  "fluid.earthmobsmod.mud": "Mud"
+  "entity.earthmobsmod.moobloom": "Florvaca",
+  "entity.earthmobsmod.horned_sheep": "Ovelha com Chifres",
+  "entity.earthmobsmod.rainbow_sheep": "Ovelha Arco-Íris",
+  "entity.earthmobsmod.bone_spider": "Aranha de Osso",
+  "entity.earthmobsmod.bouldering_zombie": "Zombie Escalador",
+  "entity.earthmobsmod.lobber_zombie": "Zombie Cuspidor",
+  "fluid.earthmobsmod.mud": "Lama"
 }
